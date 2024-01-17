@@ -38,7 +38,7 @@ def create_task(request):
                 task_detail["id"] = int(df.at[0,"id"])
                 task_detail["title"] = str(df.at[0,"title"])
 
-            return JsonResponse(task_detail)
+            return JsonResponse(task_detail, status=200)
         except exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     else:
