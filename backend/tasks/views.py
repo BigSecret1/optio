@@ -42,4 +42,4 @@ def create_task(request):
         except exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     else:
-        return JsonResponse({'error': 'Only POST requests are allowed.'})
+        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=400)
