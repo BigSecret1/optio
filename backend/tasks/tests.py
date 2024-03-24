@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from unittest.mock import patch, ANY, MagicMock
 from unittest import mock
 import json 
-from tasks.views import create_task
+from tasks.views import create_task 
 
 from psycopg2.extras import RealDictCursor
 
@@ -14,6 +14,26 @@ class CreateTaskViewTestCase(TestCase):
     
     def setUp(self):
         self.client = Client()
+
+    def create_task(self):
+        
+        request_body = {
+            "title": "something new is here",
+            "subtasks": [
+                "Subtask1",
+                "Subtask2"
+            ],
+            "due_date": "2024-02-04",
+            "comments": [
+                "This is the first test comment",
+                "This is the second comment"
+            ],
+            "description": "This is test description",
+            "task_status": "In Progress"
+            }
+        response = self.client.post('/tasks/create/', data=request_body, content_type="application/json")
+        task = dict(response.json())
+        return task['id'], task['title']
 
     def test_wrong_request_method(self):
         expected_result = {
@@ -32,7 +52,7 @@ class CreateTaskViewTestCase(TestCase):
         print(request_body)
         response = self.client.get('/tasks/create/')
 
-        self.assertEqual(response.status_code,400)
+        self.assertEqual(response.status_code,405)
         self.assertEqual(response.json(),{'error': 'Only POST requests are allowed.'})
 
 
@@ -77,6 +97,33 @@ class CreateTaskViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response.json(),{'error': 'wrong request body'})
+
+
+    def test_wrong_request_get_task(self):
+        
+        response = self.client.post('/tasks/get/80/')
+
+        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.json(),{'ERROR': "Only GET requests are allowed."})
+
+    
+    def test_get_task(self):
+
+        created_task_id, created_task_title = self.create_task()
+        created_task_id = int(created_task_id)
+
+        url = f'/tasks/get/{created_task_id}/'
+
+        response = self.client.get(url)
+        task = dict(response.json())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(task['title'], created_task_title)
+        
+  
+
+
+
 
 
 

@@ -4,22 +4,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 import json
 import pandas as pd
-from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
-
-
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
-
-
-
-
 import logging
 
-# Configure the logging module (usually done at the beginning of your script)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# logging module configuration for loggin 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def create_connection():
@@ -37,6 +30,7 @@ def create_connection():
         except Exception as err:
             print("Error when trying to connect to PostgreSQL DB -> ", err)
             time.sleep(2)
+
 
 def close_connection(conn, cur):
     cur.close()
@@ -57,7 +51,7 @@ def create_task(request):
                 VALUES (%s, %s, %s, %s, %s, %s)
                 RETURNING *;
                """ 
-            logging.info(query)
+            logging.info("executing query :  %s", query)
             cur.execute(query, (data.get('title', ''),
                                 data.get('subtasks', []),
                                 data.get('due_date', None),
@@ -65,23 +59,52 @@ def create_task(request):
                                 data.get('description', ''),
                                 data.get('task_status', 'To Do'),
                                 ))
-            post = cur.fetchone()
-            logging.info(post)
+            task = cur.fetchone()
+            logging.info(task)
 
 
             conn.commit()
-            conn.close()
-            return JsonResponse(post, status=200)
+            close_connection(conn,cur)
+            return JsonResponse(task, status=200)
 
         except Exception as err:
-            #return Response({"error": "wrong request body"},status=status.HTTP_201_CREATED)
              return JsonResponse({"error": "wrong request body"}, status=500, content_type='application/json')
     else:
-        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=400)
+        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
 
 
+@csrf_exempt
+def get_task_by_id(request, task_id : int):
 
+    if request.method == 'GET':
+    
+        conn, cur = create_connection() 
 
+        try:
+            query = """SELECT * FROM tasks WHERE id = %s"""
+            task_id = str(task_id)
+            cur.execute(query, (task_id,))
+
+            task = cur.fetchone()
+            task = dict(task)
+            response_task = {
+                "title": task['title'],
+                "subtasks": task['subtasks'],
+                "due_date": task['due_date'],
+                "comments": task['comments'],
+                "description": task['description'],
+                "task_status": task['task_status']
+            } 
+
+            close_connection(conn,cur)
+            logging.info("task by id : %s", task)
+            return JsonResponse(response_task)
+
+        except Exception as err:
+            return JsonResponse({'ERROR': "Bad Request"}, status=500)
+
+    else:
+        return JsonResponse({'ERROR': "Only GET requests are allowed."}, status=405)
 
 
 
