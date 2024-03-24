@@ -70,7 +70,7 @@ def create_task(request):
         except Exception as err:
              return JsonResponse({"error": "wrong request body"}, status=500, content_type='application/json')
     else:
-        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=404)
+        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
 
 
 @csrf_exempt
