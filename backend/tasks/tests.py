@@ -6,8 +6,12 @@ from unittest.mock import patch, ANY, MagicMock
 from unittest import mock
 import json 
 from tasks.views import create_task 
-
+import logging
 from psycopg2.extras import RealDictCursor
+
+# logging module configuration for loggin 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 
 class CreateTaskViewTestCase(TestCase):
@@ -122,9 +126,36 @@ class CreateTaskViewTestCase(TestCase):
         
   
 
+    def test_update_task(self):
 
+        request_data = {
+            "title": "response changed from unit test",
+            "subtasks": [
+            "Subtask1",
+            "Subtask2"
+            ],
+            "due_date": "2024-02-04",
+            "comments": [
+            "This is the first test comment",
+            "This is the second comment"
+            ],
+            "description": "This is test description",
+            "task_status": "In Progress"
+            }
 
+        update_task_id : int = 80
+        url = f'/tasks/update/{update_task_id}/'
+        response = self.client.post(url, data=request_data)
+        task = dict(response.json())
+        
+        self.assertEqual({'ERROR': "Only UPDATE requests are allowed."}, task)
 
+        request_data = json.dumps(request_data)
+        response = self.client.put(url, data=request_data)
+        task = dict(response.json())
+
+        self.assertEqual(task['title'], "response changed from unit test")
+           
 
 
 

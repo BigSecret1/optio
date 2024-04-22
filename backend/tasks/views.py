@@ -158,6 +158,7 @@ def update_task(request, task_id: int):
                 }
 
                 logging.info("Task updated successfully")
+                logging.info("update task is %s", response_task)
                 return JsonResponse(response_task)
             else:
                 return JsonResponse({"error": "Task not found"}, status=404)
