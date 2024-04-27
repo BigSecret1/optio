@@ -143,7 +143,7 @@ class CreateTaskViewTestCase(TestCase):
             "task_status": "In Progress"
             }
 
-        update_task_id : int = 80
+        update_task_id : int = 1 
         url = f'/tasks/update/{update_task_id}/'
         response = self.client.post(url, data=request_data)
         task = dict(response.json())
