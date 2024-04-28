@@ -114,8 +114,6 @@ def get_task_by_id(request, task_id : int):
 @csrf_exempt
 def update_task(request, task_id: int):
 
-    logging.info("request method is %s", request.method)
-
     if request.method == 'PUT':
     
         conn, cur = create_connection() 
@@ -132,7 +130,6 @@ def update_task(request, task_id: int):
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
-
 
             if existing_task:
                 query = """
@@ -158,8 +155,8 @@ def update_task(request, task_id: int):
                 }
 
                 logging.info("Task updated successfully")
-                logging.info("update task is %s", response_task)
                 return JsonResponse(response_task)
+
             else:
                 return JsonResponse({"error": "Task not found"}, status=404)
 
@@ -172,10 +169,35 @@ def update_task(request, task_id: int):
         return JsonResponse({'ERROR': "Only UPDATE requests are allowed."}, status=405)
 
 
+@csrf_exempt
+def delete_task(request, task_id: int):
 
+    if request.method == 'DELETE':
 
+        conn, cur = create_connection() 
+        try:
+            
+            logging.info("executing the delete query")
 
+            # Execute the DELETE query
+            cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
+            conn.commit()
+            logging.info("committed query")
 
+            # Check if any rows were affected
+            if cur.rowcount == 0:
+                return JsonResponse({"error": "Task not found"})
+            else:
+                return JsonResponse({"message": "Task deleted successfully"})
+        except psycopg2.Error as e:
+            logging.error("Error deleting task: %s", e)
+            return {"error": "Failed to delete task"}
+        finally:
+            if conn:
+                conn.close()
+
+    else: 
+        return JsonResponse({'ERROR': "Only DELETE requests are allowed."}, status=405)
 
 
 
