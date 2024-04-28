@@ -114,19 +114,11 @@ def get_task_by_id(request, task_id : int):
 @csrf_exempt
 def update_task(request, task_id: int):
 
-    if request.method == 'PUT':
+    if request.method == 'UPDATE':
     
         conn, cur = create_connection() 
         
         try:
-            data = json.loads(request.body.decode('utf-8'))
-            data = dict(data)
-            title = data.get('title', '')
-            subtasks = data.get('subtasks', '')
-            due_date = data.get('due_date', '')
-            comments = data.get('comments', '')
-            description = data.get('description', '')
-            task_status = data.get('task_status', '')
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
@@ -155,9 +147,7 @@ def update_task(request, task_id: int):
                 }
 
                 logging.info("Task updated successfully")
-                return JsonResponse(response_task)
-
-            else:
+                return JsonResponse(response_task) else:
                 return JsonResponse({"error": "Task not found"}, status=404)
 
         except Exception as e:
@@ -166,37 +156,34 @@ def update_task(request, task_id: int):
 
 
     else:
-        return JsonResponse({'ERROR': "Only UPDATE requests are allowed."}, status=405)
+        return JsonResponse({'ERROR': "Only GET requests are allowed."}, status=405)
 
 
-@csrf_exempt
-def delete_task(request, task_id: int):
 
-    if request.method == 'DELETE':
+    def delete_task(request, task_id: int):
 
-        conn, cur = create_connection() 
-        try:
-            
-            logging.info("executing the delete query")
+        if request.method == 'DELETE':
 
-            # Execute the DELETE query
-            cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
-            conn.commit()
-            logging.info("committed query")
+            conn, cur = create_connection() 
+            try:
+                
+                # Execute the DELETE query
+                cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
+                conn.commit()
 
-            # Check if any rows were affected
-            if cur.rowcount == 0:
-                return JsonResponse({"error": "Task not found"})
-            else:
-                return JsonResponse({"message": "Task deleted successfully"})
-        except psycopg2.Error as e:
-            logging.error("Error deleting task: %s", e)
-            return {"error": "Failed to delete task"}
-        finally:
-            if conn:
-                conn.close()
+                # Check if any rows were affected
+                if cur.rowcount == 0:
+                    return {"error": "Task not found"}
+                else:
+                    return {"message": "Task deleted successfully"}
+            except psycopg2.Error as e:
+                logging.error("Error deleting task: %s", e)
+                return {"error": "Failed to delete task"}
+            finally:
+                if conn:
+                    conn.close()
 
-    else: 
-        return JsonResponse({'ERROR': "Only DELETE requests are allowed."}, status=405)
+        else: 
+            return JsonResponse({'ERROR': "Only DELETE requests are allowed."}, status=405)
 
 
