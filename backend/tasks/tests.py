@@ -123,7 +123,6 @@ class CreateTaskViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(task['title'], created_task_title)
-        
   
 
     def test_update_task(self):
@@ -142,9 +141,10 @@ class CreateTaskViewTestCase(TestCase):
             "description": "This is test description",
             "task_status": "In Progress"
             }
+        created_task_id, created_task_title = self.create_task()
+        created_task_id = int(created_task_id)
 
-        update_task_id : int = 20 
-        url = f'/tasks/update/{update_task_id}/'
+        url = f'/tasks/update/{created_task_id}/'
         response = self.client.post(url, data=request_data)
         task = dict(response.json())
         
@@ -157,8 +157,22 @@ class CreateTaskViewTestCase(TestCase):
         self.assertEqual(task['title'], "response changed from unit test")
            
 
+    def test_delete_task(self):
 
+        created_task_id, created_task_title = self.create_task()
+        created_task_id = int(created_task_id)
 
+        url = f'/tasks/delete/{created_task_id}/'
 
+        response = self.client.delete(url)
+        response = response.json()
 
+        self.assertEqual(response, {"message": "Task deleted successfully"})
+
+        # test wrong request
+        response = self.client.post(url)
+        status_code = response.status_code
+        response = response.json()
+        self.assertEqual(response, {'ERROR': "Only DELETE requests are allowed."})
+        self.assertEqual(status_code, 405)
 
