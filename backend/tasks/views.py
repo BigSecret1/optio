@@ -48,9 +48,10 @@ def create_task(request):
             data = json.loads(request.body.decode('utf-8'))
 
             conn, cur = create_connection() 
+
             query = """ 
-                INSERT INTO tasks(title, subtasks, due_date, comments, description, task_status)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO tasks(title, subtasks, due_date, comments, description, task_status, project_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
                """ 
             logging.info("executing query :  %s", query)
@@ -60,6 +61,7 @@ def create_task(request):
                                 data.get('comments', ''),
                                 data.get('description', ''),
                                 data.get('task_status', 'To Do'),
+                                data.get('project_id', ''),
                                 ))
             task = cur.fetchone()
             logging.info(task)

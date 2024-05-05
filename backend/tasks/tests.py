@@ -23,6 +23,7 @@ class CreateTaskViewTestCase(TestCase):
         
         request_body = {
             "title": "something new is here",
+            "project_id": 1,
             "subtasks": [
                 "Subtask1",
                 "Subtask2"
@@ -68,6 +69,7 @@ class CreateTaskViewTestCase(TestCase):
         }
         request_data = {
             "title": "Request from tests",
+            "project_id": 1,
             "subtasks": ["Subtask1", "Subtask2"],
             "due_date": "2024-02-04",
             "comments": ["This is the first test comment", "This is the second comment"],
