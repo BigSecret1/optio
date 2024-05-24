@@ -12,7 +12,6 @@ import time
 import logging
 
 
-
 # logging module configuration for loggin 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -40,6 +39,17 @@ def close_connection(conn, cur):
     print("Database connection closed")
 
 
+# This function converts data into lower case: string, list
+def to_lowercase(value):
+    
+    logging.info("Inside to_lowercase function")
+    if isinstace(value, str):
+        return value.lower()
+    if isinstance(value, list):
+        return [to_lowercase(item) for item in value]
+    return value
+
+
 @csrf_exempt
 def create_task(request):
 
@@ -54,14 +64,21 @@ def create_task(request):
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
                """ 
+            
+            logging.info("Converting task into lowercase")
+            data = dict(data)
+            # Convert the data into lowered case data
+            new_task = {key: to_lowercase(value) for key, value in data.items()}
+            logging.infor("Converted task is %s", new_task)
+
             logging.info("executing query :  %s", query)
-            cur.execute(query, (data.get('title', ''),
-                                data.get('subtasks', []),
-                                data.get('due_date', None),
-                                data.get('comments', ''),
-                                data.get('description', ''),
-                                data.get('task_status', 'To Do'),
-                                data.get('project_id', ''),
+            cur.execute(query, (new_task.get('title', ''),
+                                new_task.get('subtasks', []),
+                                new_task.get('due_date', None),
+                                new_task.get('comments', ''),
+                                new_task.get('description', ''),
+                                new_task.get('task_status', 'To Do'),
+                                new_task.get('project_id', ''),
                                 ))
             task = cur.fetchone()
             logging.info(task)

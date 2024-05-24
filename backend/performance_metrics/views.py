@@ -26,7 +26,8 @@ def execute_query(query: str):
 
 
 def total_completed():
-    pass
+    query = "SELECT COUNT(task_status) as total_complted_tasks  FROM tasks WHERE task_status='completed'"
+    
  
 
 def total_to_do():
