@@ -42,12 +42,14 @@ def close_connection(conn, cur):
 # This function converts data into lower case: string, list
 def to_lowercase(value):
     
-    logging.info("Inside to_lowercase function")
-    if isinstace(value, str):
-        return value.lower()
+    converted_value = value 
+    logging.info("CONVERTING VALUE %s ", value)
+    if isinstance(value, str):
+        converted_value = value.lower()
     if isinstance(value, list):
-        return [to_lowercase(item) for item in value]
-    return value
+        converted_value = [to_lowercase(item) for item in value]
+    logging.info("CONVERTED VALUE : %s", converted_value)
+    return converted_value 
 
 
 @csrf_exempt
@@ -69,7 +71,7 @@ def create_task(request):
             data = dict(data)
             # Convert the data into lowered case data
             new_task = {key: to_lowercase(value) for key, value in data.items()}
-            logging.infor("Converted task is %s", new_task)
+            logging.info("Converted task is %s", new_task)
 
             logging.info("executing query :  %s", query)
             cur.execute(query, (new_task.get('title', ''),
