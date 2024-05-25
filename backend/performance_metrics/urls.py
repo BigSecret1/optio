@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import test_view 
+from .views import total_completed_tasks 
 urlpatterns = [
-    path('test/', test_view, name='test-view'),
+    path('total-completed-tasks/', total_completed_tasks, name='total-completed-tasks'),
 ]
 

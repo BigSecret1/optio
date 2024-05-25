@@ -4,30 +4,37 @@ import logging
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse 
 
+
 # logging module configuration for loggin 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-logging.info("performance_metrics activating ..")
+logging.info("PERFORMANCE_METRICS_ACTIVATING..")
 conn, cur =  create_connection()
 
+
+def execute_query(query):
+
+    logging.info("EXECUTING QUERY FOR PERFORMANCE METRICS %s ", query)
+    cur.execute(query)
+    result = dict(cur.fetchone())
+    logging.info("QUERY RETURNED %s ", result)
+    return result
+
+
 @csrf_exempt
-def test_view(request):
-    test_query = "SELECT * FROM tasks"
-    id = 1
-    cur.execute(test_query)
-    result = cur.fetchall()
-    close_connection(conn,cur)
-    return JsonResponse({"message": f"{result}"}) 
-
-
-def execute_query(query: str):
-    pass
-
-
-def total_completed():
-    query = "SELECT COUNT(task_status) as total_complted_tasks  FROM tasks WHERE task_status='completed'"
-    
+def total_completed_tasks(request):
+    if request.method == 'GET':
+        try:
+            query = """SELECT COUNT(task_status) as total_completed_tasks  FROM tasks WHERE task_status='completed'"""
+            total_completed_tasks : int = execute_query(query)['total_completed_tasks']
+            logging.info("TOTAL COMPLETED TASKS ARE : %s ", total_completed_tasks)
+            return JsonResponse({"total_completed_tasks": f"{total_completed_tasks}"}, status=200)
+        except Exception as err:
+            logging.info("AN ERROR OCCURED WHILE EXECUTING THE QUERY : %s ", query)
+            return JsonResponse({'Error': f"{err} occured"})
+    else:
+        return JsonResponse({'Error' : 'Only GET requests are allowed.'}, status=405)
  
 
 def total_to_do():
@@ -49,5 +56,11 @@ def to_do_in_projec(project_id: int):
 def in_progress_in_project(project_id: int):
     pass
     
+#logging.info("CLOSING DATABASE CONNECTION")
+#close_connection(conn,cur)
+
+
+
+
 
 
