@@ -14,7 +14,7 @@ logging.info("PERFORMANCE_METRICS_ACTIVATING..")
 conn, cur =  create_connection()
 
 
-class PerformanceMetrics():
+class TaskPerformanceMetrics():
     def __init__(self):
         self._total_completed_tasks : int  = 0
         self._total_pending_tasks : int = 0
@@ -91,35 +91,33 @@ class PerformanceMetrics():
 
 @csrf_exempt
 def total_completed_tasks(request):
-    performance_metrics = PerformanceMetrics()
-    result = performance_metrics.get_total_completed_tasks()
+    task_performance_metrics = TaskPerformanceMetrics()
+    result = task_performance_metrics.get_total_completed_tasks()
     return JsonResponse({"total_completed_tasks": result})
 
 @csrf_exempt
 def total_to_do_tasks(request):
-    performance_metrics = PerformanceMetrics()
-    result = performance_metrics.get_total_to_do_tasks()
+    task_performance_metrics = TaskPerformanceMetrics()
+    result = task_performance_metrics.get_total_to_do_tasks()
     return JsonResponse({"total_to_do_tasks" : result})
 
 @csrf_exempt
 def total_in_progress_tasks(request):
-    performance_metrics = PerformanceMetrics()
-    result = performance_metrics.get_total_in_progress_tasks()
+    task_performance_metrics = TaskPerformanceMetrics()
+    result = task_performance_metrics.get_total_in_progress_tasks()
     return JsonResponse({"total_in_progress_tasks": result})
 
 @csrf_exempt
 def total_pending_tasks(request):
-    performance_metrics = PerformanceMetrics()
-    result = performance_metrics.get_total_pending_tasks()
+    task_performance_metrics = TaskPerformanceMetrics()
+    result = task_performance_metrics.get_total_pending_tasks()
     return JsonResponse({"total_pending_tasks" : result})
 
 def success_in_project(project_id: int):
     pass
 
-
 def to_do_in_projec(project_id: int):
     pass
-
 
 def in_progress_in_project(project_id: int):
     pass
@@ -128,7 +126,13 @@ def in_progress_in_project(project_id: int):
 #close_connection(conn,cur)
 
 
-
+'''
+1. Change the schema to get last modified time
+2. Implment logic to calculate performance on month basis
+    (I) All Projects
+    (II) Per Project
+3. Unit test cases
+'''
 
 
 
