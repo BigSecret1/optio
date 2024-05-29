@@ -89,27 +89,25 @@ class TaskPerformanceMetrics():
             logging.info("AN ERROR OCCURED WHILE EXECUTING THE QUERY")
             return JsonResponse({'Error': f"{err} occured"})
 
+task_performance_metrics = TaskPerformanceMetrics()
+
 @csrf_exempt
 def total_completed_tasks(request):
-    task_performance_metrics = TaskPerformanceMetrics()
     result = task_performance_metrics.get_total_completed_tasks()
     return JsonResponse({"total_completed_tasks": result})
 
 @csrf_exempt
 def total_to_do_tasks(request):
-    task_performance_metrics = TaskPerformanceMetrics()
     result = task_performance_metrics.get_total_to_do_tasks()
     return JsonResponse({"total_to_do_tasks" : result})
 
 @csrf_exempt
 def total_in_progress_tasks(request):
-    task_performance_metrics = TaskPerformanceMetrics()
     result = task_performance_metrics.get_total_in_progress_tasks()
     return JsonResponse({"total_in_progress_tasks": result})
 
 @csrf_exempt
 def total_pending_tasks(request):
-    task_performance_metrics = TaskPerformanceMetrics()
     result = task_performance_metrics.get_total_pending_tasks()
     return JsonResponse({"total_pending_tasks" : result})
 
@@ -124,6 +122,7 @@ def in_progress_in_project(project_id: int):
     
 #logging.info("CLOSING DATABASE CONNECTION")
 #close_connection(conn,cur)
+
 
 
 '''
