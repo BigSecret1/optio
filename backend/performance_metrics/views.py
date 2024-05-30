@@ -127,6 +127,21 @@ def in_progress_in_project(project_id: int):
 
 '''
 1. Change the schema to get last modified time
+    - The new query will be this 
+        
+            SELECT
+                DATE(created_time) AS task_date,
+                task_status,
+                COUNT(*) AS task_count
+            FROM
+                tasks
+            GROUP BY
+                DATE(created_time),
+                task_status
+            ORDER BY
+                task_date,
+                task_status;
+
 2. Implment logic to calculate performance on month basis
     (I) All Projects
     (II) Per Project
