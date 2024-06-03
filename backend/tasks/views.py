@@ -142,12 +142,13 @@ def update_task(request, task_id: int):
         try:
             data = json.loads(request.body.decode('utf-8'))
             data = dict(data)
-            title = data.get('title', '')
-            subtasks = data.get('subtasks', '')
-            due_date = data.get('due_date', '')
-            comments = data.get('comments', '')
-            description = data.get('description', '')
-            task_status = data.get('task_status', '')
+            new_task = {key: to_lowercase(value) for key, value in data.items()}
+            title = new_task.get('title', '')
+            subtasks = new_task.get('subtasks', '')
+            due_date = new_task.get('due_date', '')
+            comments = new_task.get('comments', '')
+            description = new_task.get('description', '')
+            task_status = new_task.get('task_status', '')
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
