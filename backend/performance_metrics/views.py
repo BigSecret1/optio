@@ -4,6 +4,7 @@ import logging
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse 
 import pandas as pd
+import json
 
 
 # logging module configuration for logging 
@@ -16,22 +17,22 @@ conn, cur =  create_connection()
 
 class TaskPerformanceMetrics():
     def __init__(self):
-        self._total_completed_tasks : int  = 0
+        self._total_completed_task_per_month  = [] 
         self._total_pending_tasks : int = 0
         self._total_in_progress_task : int = 0
         self._total_to_do_tasks : int = 0
         self.__task_status()
 
     def get_total_completed_tasks(self):
-        logging.info("GETTING TOTAL COMPLETED TASK VALUE AS : %s", self._total_completed_tasks)
-        return self._total_completed_tasks
+        logging.info("GETTING TOTAL COMPLETED TASK VALUE AS : %s", self._total_completed_task_per_month)
+        return self._total_completed_task_per_month 
 
-    def set_total_completed_tasks(self, value):
-        logging.info("TOTAL COMPLETED TASKS ARE : %s", value)
-        if not isinstance(value, int) or value < 0:
-            raise ValueError("Total completed tasks must be a non-negative integer")
-        self._total_completed_tasks = value
-        logging.info("VALUE SET TO : %s", self._total_completed_tasks)
+    def set_total_completed_task_per_month(self, completed_task_status):
+        logging.info("TOTAL COMPLETED TASKS ARE : %s", type(completed_task_status))
+        if not isinstance(completed_task_status, dict) or  completed_task_status == None:
+            raise ValueError("something is wrong with completed_task_status")
+        self._total_completed_task_per_month.append(completed_task_status) 
+        logging.info("VALUE SET TO : %s", self._total_completed_task_per_month)
 
     def get_total_pending_tasks(self):
         return self._total_pending_tasks
@@ -70,31 +71,79 @@ class TaskPerformanceMetrics():
 
     def __task_status(self):
         try:
-            query = """SELECT task_status, COUNT(task_status) as count  FROM tasks GROUP BY task_status"""
-            
-            task_performance_status = {} 
+                         
+            query = """
+            WITH LatestStatus AS (
+                SELECT
+                    task_id,
+                    new_status,
+                    date_trunc('month', update_time) AS month,
+                    update_time,
+                    ROW_NUMBER() OVER (PARTITION BY task_id, date_trunc('month', update_time) ORDER BY update_time DESC) AS rn
+                FROM
+                    task_status_history
+            )
+            SELECT
+                month,
+                new_status,
+                COUNT(*) AS status_count
+            FROM
+                LatestStatus
+            WHERE
+                rn = 1
+            GROUP BY
+                month, new_status
+            ORDER BY
+                month, new_status;
+            """
+                        
+            task_performance_status = [] 
 
             task_stats = self.__execute_query(query)
             for index, row in task_stats.iterrows():
-                task_performance_status[row[0]] = row['count']
-                
-            logging.info("PERFORMANCE STATS ARE : %s", task_performance_status)
-            self.set_total_completed_tasks(task_performance_status['completed'])
-            self.set_total_pending_tasks(task_performance_status['pending'])
-            self.set_total_in_progress_tasks(task_performance_status['in progress'])
-            self.set_total_to_do_tasks(task_performance_status['to do'])
+                per_status_stat = {}
+
+                # Extract date from pandas timestamp
+                timestamp = row['month']
+                date = timestamp.date()
+                logging.info("EXTRACTED DATE IS %s", date)
+
+                status = row['new_status']
+                task_count = row['status_count']
+
+                per_status_stat['month'] = date 
+                per_status_stat['status'] = status 
+                per_status_stat['count'] = task_count 
+
+                if status == 'completed':
+                    self.set_total_completed_task_per_month(per_status_stat)
+                    
+                task_performance_status.append(per_status_stat) 
+            logging.info("PER TYPE OF TASK METRICS %s", task_performance_status)
             
-            return JsonResponse({"total_completed_tasks": f"{total_completed_tasks}"}, status=200)
+            for object in task_performance_status:
+                for key, value in object.items():
+                    logging.info("key : %s value : %s", key, value)
+            
+#            for index, row in task_stats.iterrows():
+#                task_performance_status[row[0]] = row['count']
+#                
+#            logging.info("PERFORMANCE STATS ARE : %s", task_performance_status)
+#            self.set_total_completed_tasks(task_performance_status['completed'])
+#            self.set_total_pending_tasks(task_performance_status['pending'])
+#            self.set_total_in_progress_tasks(task_performance_status['in progress'])
+#            self.set_total_to_do_tasks(task_performance_status['to do'])
+
         except Exception as err:
-            logging.info("AN ERROR OCCURED WHILE EXECUTING THE QUERY")
+            logging.info("AN ERROR OCCURED %s", err)
             return JsonResponse({'Error': f"{err} occured"})
 
 task_performance_metrics = TaskPerformanceMetrics()
 
 @csrf_exempt
-def total_completed_tasks(request):
+def total_completed_tasks_in_month(request):
     result = task_performance_metrics.get_total_completed_tasks()
-    return JsonResponse({"total_completed_tasks": result})
+    return JsonResponse(result, safe=False)
 
 @csrf_exempt
 def total_to_do_tasks(request):
@@ -125,28 +174,42 @@ def in_progress_in_project(project_id: int):
 
 
 
-'''
+
+
+"""
 1. Change the schema to get last modified time
     - The new query will be this 
+    
+
         
-            SELECT
-                DATE(created_time) AS task_date,
-                task_status,
-                COUNT(*) AS task_count
-            FROM
-                tasks
-            GROUP BY
-                DATE(created_time),
-                task_status
-            ORDER BY
-                task_date,
-                task_status;
+WITH LatestStatus AS (
+    SELECT
+        task_id,
+        new_status,
+        date_trunc('month', update_time) AS month,
+        update_time,
+        ROW_NUMBER() OVER (PARTITION BY task_id, date_trunc('month', update_time) ORDER BY update_time DESC) AS rn
+    FROM
+        task_status_history
+)
+SELECT
+    month,
+    new_status,
+    COUNT(*) AS status_count
+FROM
+    LatestStatus
+WHERE
+    rn = 1
+GROUP BY
+    month, new_status
+ORDER BY
+    month, new_status;
 
 2. Implment logic to calculate performance on month basis
     (I) All Projects
     (II) Per Project
 3. Unit test cases
-'''
+"""
 
 
 
