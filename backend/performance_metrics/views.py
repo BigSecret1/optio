@@ -19,8 +19,8 @@ class TaskPerformanceMetrics():
     def __init__(self):
         self._total_completed_task_per_month  = [] 
         self._total_pending_tasks_per_month = [] 
-        self._total_in_progress_task : int = 0
-        self._total_to_do_tasks : int = 0
+        self._total_in_progress_tasks_per_month : int = [] 
+        self._total_to_do_tasks_per_month = [] 
         self.__task_status()
 
     def get_total_completed_tasks(self):
@@ -39,24 +39,24 @@ class TaskPerformanceMetrics():
     def set_total_pending_tasks_per_month(self, pending_task_status):
         logging.info("RECEIVING PENDING TASK STAT AS : %s", pending_task_status)
         if not isinstance(pending_task_status, dict) or pending_task_status == None:
-            raise ValueError("Something went wrong with pendign task status")
+            raise ValueError("Something went wrong with pending task status")
         self._total_pending_tasks_per_month.append(pending_task_status)
  
     def get_total_in_progress_tasks_per_month(self):
-        return self._total_pending_tasks_per_month
+        return self._total_in_progress_tasks_per_month
 
-    def set_total_in_progress_tasks(self, value):
-        if not isinstance(value, int) or value < 0:
-            raise ValueError("Total in-progress tasks must be a non-negative integer")
-        self._total_in_progress_tasks = value
+    def set_total_in_progress_tasks_per_month(self, in_progress_task_status):
+        if not isinstance(in_progress_task_status, dict) or in_progress_task_status == None:
+            raise ValueError("Something went wrong with in progress task status")
+        self._total_in_progress_tasks_per_month.append(in_progress_task_status)
 
-    def get_total_to_do_tasks(self):
-        return self._total_to_do_tasks
+    def get_total_to_do_tasks_per_month(self):
+        return self._total_to_do_tasks_per_month
 
-    def set_total_to_do_tasks(self, value):
-        if not isinstance(value, int) or value < 0:
-            raise ValueError("Total to-do tasks must be a non-negative integer")
-        self._total_to_do_tasks = value
+    def set_total_to_do_tasks_per_month(self, to_do_task_status):
+        if not isinstance(to_do_task_status, dict) or to_do_task_status == None:
+            raise ValueError("Something went wrong with to do task status")
+        self._total_to_do_tasks_per_month  = to_do_task_status 
 
     def __execute_query(self,query):
         logging.info("EXECUTING QUERY FOR PERFORMANCE METRICS %s ", query)
@@ -119,6 +119,10 @@ class TaskPerformanceMetrics():
                     self.set_total_completed_task_per_month(per_status_stat)
                 elif status == 'pending':
                     self.set_total_pending_tasks_per_month(per_status_stat) 
+                elif status == 'in progress':
+                    self.set_total_in_progress_tasks_per_month(per_status_stat)
+                elif status == 'to do':
+                    self.set_total_to_do_tasks_per_month(per_status_stat)
 
 
                 task_performance_status.append(per_status_stat) 
@@ -150,13 +154,13 @@ def total_completed_tasks_in_month(request):
 
 @csrf_exempt
 def total_to_do_tasks_in_month(request):
-    result = task_performance_metrics.get_total_to_do_tasks()
-    return JsonResponse({"total_to_do_tasks" : result})
+    result = task_performance_metrics.get_total_to_do_tasks_per_month()
+    return JsonResponse(result, safe=False)
 
 @csrf_exempt
 def total_in_progress_tasks_in_month(request):
-    result = task_performance_metrics.get_total_in_progress_tasks()
-    return JsonResponse({"total_in_progress_tasks": result})
+    result = task_performance_metrics.get_total_in_progress_tasks_per_month()
+    return JsonResponse(result, safe=False)
 
 @csrf_exempt
 def total_pending_tasks_in_month(request):
@@ -174,7 +178,6 @@ def in_progress_in_project(project_id: int):
     
 #logging.info("CLOSING DATABASE CONNECTION")
 #close_connection(conn,cur)
-
 
 
 
