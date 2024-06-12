@@ -131,15 +131,6 @@ class TaskPerformanceMetrics():
             for object in task_performance_status:
                 for key, value in object.items():
                     logging.info("key : %s value : %s", key, value)
-            
-#            for index, row in task_stats.iterrows():
-#                task_performance_status[row[0]] = row['count']
-#                
-#            logging.info("PERFORMANCE STATS ARE : %s", task_performance_status)
-#            self.set_total_completed_tasks(task_performance_status['completed'])
-#            self.set_total_pending_tasks(task_performance_status['pending'])
-#            self.set_total_in_progress_tasks(task_performance_status['in progress'])
-#            self.set_total_to_do_tasks(task_performance_status['to do'])
 
         except Exception as err:
             logging.info("AN ERROR OCCURED %s", err)
