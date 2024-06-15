@@ -14,14 +14,14 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 logging.info("PERFORMANCE_METRICS_ACTIVATING..")
 conn, cur =  create_connection()
 
-
+    
 class TaskPerformanceMetrics():
     def __init__(self):
         self._total_completed_task_per_month  = [] 
         self._total_pending_tasks_per_month = [] 
         self._total_in_progress_tasks_per_month : int = [] 
         self._total_to_do_tasks_per_month = [] 
-        self.__task_status()
+        self.__overall_task_status()
 
     def get_total_completed_tasks(self):
         logging.info("GETTING TOTAL COMPLETED TASK VALUE AS : %s", self._total_completed_task_per_month)
@@ -69,7 +69,7 @@ class TaskPerformanceMetrics():
         df = pd.DataFrame(result_list)
         return df 
 
-    def __task_status(self):
+    def __overall_task_status(self):
         try:
                          
             query = """
@@ -136,6 +136,9 @@ class TaskPerformanceMetrics():
             logging.info("AN ERROR OCCURED %s", err)
             return JsonResponse({'Error': f"{err} occured"})
 
+    def __project_tasks_status():
+        pass
+
 task_performance_metrics = TaskPerformanceMetrics()
 
 @csrf_exempt
@@ -158,7 +161,7 @@ def total_pending_tasks_in_month(request):
     result = task_performance_metrics.get_total_pending_tasks_per_month()
     return JsonResponse(result, safe=False)
 
-def success_in_project(project_id: int):
+def total_success_in_project(project_id: int):
     pass
 
 def to_do_in_projec(project_id: int):
@@ -177,7 +180,6 @@ def in_progress_in_project(project_id: int):
 1. Change the schema to get last modified time
     - The new query will be this 
     
-
         
 WITH LatestStatus AS (
     SELECT
