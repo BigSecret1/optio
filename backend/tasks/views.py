@@ -144,6 +144,7 @@ def update_task(request, task_id: int):
             data = dict(data)
             new_task = {key: to_lowercase(value) for key, value in data.items()}
             title = new_task.get('title', '')
+            project_id = new_task.get('project_id','')
             subtasks = new_task.get('subtasks', '')
             due_date = new_task.get('due_date', '')
             comments = new_task.get('comments', '')
@@ -157,10 +158,10 @@ def update_task(request, task_id: int):
                 query = """
                     UPDATE tasks
                     SET title = %s, subtasks = %s, due_date = %s, comments = %s,
-                        description = %s, task_status = %s
+                        description = %s, task_status = %s, project_id = %s
                     WHERE id = %s
                 """
-                cur.execute(query, (title, subtasks, due_date, comments, description, task_status, task_id))
+                cur.execute(query, (title, subtasks, due_date, comments, description, task_status,project_id, task_id))
                 conn.commit()
 
                 # Fetch the updated task details
@@ -169,6 +170,7 @@ def update_task(request, task_id: int):
 
                 response_task = {
                     "title": updated_task['title'],
+                    "project_id": updated_task['project_id'],
                     "subtasks": updated_task['subtasks'],
                     "due_date": updated_task['due_date'],
                     "comments": updated_task['comments'],
