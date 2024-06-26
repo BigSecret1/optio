@@ -230,17 +230,9 @@ def total_pending_tasks_in_month(request):
 
 @api_view(['GET'])
 @csrf_exempt
-def total_completed_tasks_per_project_in_month(request, project_id: int, task_status_type: str):
+def project_task_status_in_month(request, project_id: int, task_status_type: str):
     result = task_performance_metrics.per_project_tasks_status(project_id, task_status_type)
     return JsonResponse(result, safe=False)
-
-
-def to_do_in_projec(project_id: int):
-    pass
-
-
-def in_progress_in_project(project_id: int):
-    pass
 
 
 # logging.info("CLOSING DATABASE CONNECTION")
