@@ -239,35 +239,3 @@ def project_task_status_in_month(request, project_id: int, task_status_type: str
 # close_connection(conn,cur)
 
 
-"""
-1. Change the schema to get last modified time
-    - The new query will be this     
-        
-WITH LatestStatus AS (
-    SELECT
-        task_id,
-        new_status,
-        date_trunc('month', update_time) AS month,
-        update_time,
-        ROW_NUMBER() OVER (PARTITION BY task_id, date_trunc('month', update_time) ORDER BY update_time DESC) AS rn
-    FROM
-        task_status_history
-)
-SELECT
-    month,
-    new_status,
-    COUNT(*) AS status_count
-FROM
-    LatestStatus
-WHERE
-    rn = 1
-GROUP BY
-    month, new_status
-ORDER BY
-    month, new_status;
-
-2. Implment logic to calculate performance on month basis
-    (I) All Projects
-    (II) Per Project
-3. Unit test cases
-"""
