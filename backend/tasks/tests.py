@@ -131,6 +131,7 @@ class CreateTaskViewTestCase(TestCase):
 
         request_data = {
             "title": "response changed from unit test",
+            "project_id": 2,
             "subtasks": [
             "Subtask1",
             "Subtask2"
