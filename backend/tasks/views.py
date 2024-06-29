@@ -12,7 +12,6 @@ import time
 import logging
 
 
-
 # logging module configuration for loggin 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -40,6 +39,19 @@ def close_connection(conn, cur):
     print("Database connection closed")
 
 
+# This function converts data into lower case: string, list
+def to_lowercase(value):
+    
+    converted_value = value 
+    logging.info("CONVERTING VALUE %s ", value)
+    if isinstance(value, str):
+        converted_value = value.lower()
+    if isinstance(value, list):
+        converted_value = [to_lowercase(item) for item in value]
+    logging.info("CONVERTED VALUE : %s", converted_value)
+    return converted_value 
+
+
 @csrf_exempt
 def create_task(request):
 
@@ -54,14 +66,21 @@ def create_task(request):
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
                """ 
+            
+            logging.info("Converting task into lowercase")
+            data = dict(data)
+            # Convert the data into lowered case data
+            new_task = {key: to_lowercase(value) for key, value in data.items()}
+            logging.info("Converted task is %s", new_task)
+
             logging.info("executing query :  %s", query)
-            cur.execute(query, (data.get('title', ''),
-                                data.get('subtasks', []),
-                                data.get('due_date', None),
-                                data.get('comments', ''),
-                                data.get('description', ''),
-                                data.get('task_status', 'To Do'),
-                                data.get('project_id', ''),
+            cur.execute(query, (new_task.get('title', ''),
+                                new_task.get('subtasks', []),
+                                new_task.get('due_date', None),
+                                new_task.get('comments', ''),
+                                new_task.get('description', ''),
+                                new_task.get('task_status', 'To Do'),
+                                new_task.get('project_id', ''),
                                 ))
             task = cur.fetchone()
             logging.info(task)
@@ -123,12 +142,14 @@ def update_task(request, task_id: int):
         try:
             data = json.loads(request.body.decode('utf-8'))
             data = dict(data)
-            title = data.get('title', '')
-            subtasks = data.get('subtasks', '')
-            due_date = data.get('due_date', '')
-            comments = data.get('comments', '')
-            description = data.get('description', '')
-            task_status = data.get('task_status', '')
+            new_task = {key: to_lowercase(value) for key, value in data.items()}
+            title = new_task.get('title', '')
+            project_id = new_task.get('project_id','')
+            subtasks = new_task.get('subtasks', '')
+            due_date = new_task.get('due_date', '')
+            comments = new_task.get('comments', '')
+            description = new_task.get('description', '')
+            task_status = new_task.get('task_status', '')
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
@@ -137,10 +158,10 @@ def update_task(request, task_id: int):
                 query = """
                     UPDATE tasks
                     SET title = %s, subtasks = %s, due_date = %s, comments = %s,
-                        description = %s, task_status = %s
+                        description = %s, task_status = %s, project_id = %s
                     WHERE id = %s
                 """
-                cur.execute(query, (title, subtasks, due_date, comments, description, task_status, task_id))
+                cur.execute(query, (title, subtasks, due_date, comments, description, task_status,project_id, task_id))
                 conn.commit()
 
                 # Fetch the updated task details
@@ -149,6 +170,7 @@ def update_task(request, task_id: int):
 
                 response_task = {
                     "title": updated_task['title'],
+                    "project_id": updated_task['project_id'],
                     "subtasks": updated_task['subtasks'],
                     "due_date": updated_task['due_date'],
                     "comments": updated_task['comments'],
