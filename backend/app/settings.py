@@ -39,8 +39,18 @@ INSTALLED_APPS = [
         'django.contrib.staticfiles',
         'tasks',
         'performance_metrics',
-        'profiles'
+        'profiles',
+        'rest_framework',
+        'rest_framework_simplejwt.token_blacklist'
         ]
+
+#For jwt token added
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
 
 MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
