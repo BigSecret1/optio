@@ -8,6 +8,9 @@ import json
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view, permission_classes
 
 
 # logging module configuration for logging
@@ -205,8 +208,10 @@ class TaskPerformanceMetrics():
 
 task_performance_metrics = TaskPerformanceMetrics()
 
-@csrf_exempt
+
+@permission_classes([IsAuthenticated])
 def total_completed_tasks_in_month(request):
+    permission_classes = [IsAuthenticated]
     result = task_performance_metrics.get_total_completed_tasks()
     return JsonResponse(result, safe=False)
 
