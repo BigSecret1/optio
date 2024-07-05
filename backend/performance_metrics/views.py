@@ -12,6 +12,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
 
 # logging module configuration for logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -208,12 +212,15 @@ class TaskPerformanceMetrics():
 
 task_performance_metrics = TaskPerformanceMetrics()
 
-
-@permission_classes([IsAuthenticated])
-def total_completed_tasks_in_month(request):
-    permission_classes = [IsAuthenticated]
-    result = task_performance_metrics.get_total_completed_tasks()
-    return JsonResponse(result, safe=False)
+class TotalCompletedTasksInMonth(APIView):
+#@permission_classes([IsAuthenticated])
+#def total_completed_tasks_in_month(request):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated,]
+    
+    def get(self, request):
+        result = task_performance_metrics.get_total_completed_tasks()
+        return JsonResponse(result, safe=False)
 
 
 @csrf_exempt

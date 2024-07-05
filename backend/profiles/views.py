@@ -12,6 +12,7 @@ import json
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class RegisterView(APIView):
@@ -33,6 +34,7 @@ class LoginView(APIView):
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
+        logging.info("REACHED TO LOGINVIEW")
         
         user = authenticate(request, email=email, password=password)
         
@@ -55,7 +57,7 @@ class LogoutView(APIView):
                 token.blacklist()
                 return Response({"msg": "logged out successfully"}, status=status.HTTP_205_RESET_CONTENT)
             except Exception as e:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response({"msg": f"{e}"},status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
