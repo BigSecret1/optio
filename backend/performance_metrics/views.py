@@ -221,7 +221,7 @@ class TotalCompletedTasksInMonth(APIView):
     def get(self, request):
         result = task_performance_metrics.get_total_completed_tasks()
         return JsonResponse(result, safe=False)
-
+        
 
 @csrf_exempt
 def total_to_do_tasks_in_month(request):

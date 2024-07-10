@@ -32,11 +32,13 @@ class RegisterView(APIView):
         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
-        logging.info("REACHED TO LOGINVIEW")
+        #logging.info("REACHED TO LOGINVIEW")
         
         user = authenticate(request, email=email, password=password)
         
