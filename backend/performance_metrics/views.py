@@ -213,15 +213,13 @@ class TaskPerformanceMetrics():
 task_performance_metrics = TaskPerformanceMetrics()
 
 class TotalCompletedTasksInMonth(APIView):
-#@permission_classes([IsAuthenticated])
-#def total_completed_tasks_in_month(request):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated,]
-    
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         result = task_performance_metrics.get_total_completed_tasks()
         return JsonResponse(result, safe=False)
-        
+
 
 @csrf_exempt
 def total_to_do_tasks_in_month(request):
@@ -251,3 +249,39 @@ def project_task_status_in_month(request, project_id: int, task_status_type: str
 # close_connection(conn,cur)
 
 
+
+
+class TotalToDoTasksInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        result = task_performance_metrics.get_total_to_do_tasks_per_month()
+        return JsonResponse(result, safe=False)
+
+
+class TotalInProgressTasksInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        result = task_performance_metrics.get_total_in_progress_tasks_per_month()
+        return JsonResponse(result, safe=False)
+
+
+class TotalPendingTasksInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        result = task_performance_metrics.get_total_pending_tasks_per_month()
+        return JsonResponse(result, safe=False)
+
+
+class ProjectTaskStatusInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, project_id, task_status_type):
+        result = task_performance_metrics.per_project_tasks_status(project_id, task_status_type)
+        return JsonResponse(result, safe=False)
