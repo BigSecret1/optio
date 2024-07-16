@@ -76,3 +76,6 @@ class ProfileView(APIView):
         profile.save()
         return Response(ProfileSerializer(profile).data)
 
+
+
+
