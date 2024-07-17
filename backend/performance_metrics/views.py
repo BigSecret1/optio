@@ -8,6 +8,13 @@ import json
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view, permission_classes
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 
 # logging module configuration for logging
@@ -205,10 +212,13 @@ class TaskPerformanceMetrics():
 
 task_performance_metrics = TaskPerformanceMetrics()
 
-@csrf_exempt
-def total_completed_tasks_in_month(request):
-    result = task_performance_metrics.get_total_completed_tasks()
-    return JsonResponse(result, safe=False)
+class TotalCompletedTasksInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        result = task_performance_metrics.get_total_completed_tasks()
+        return JsonResponse(result, safe=False)
 
 
 @csrf_exempt
@@ -239,3 +249,39 @@ def project_task_status_in_month(request, project_id: int, task_status_type: str
 # close_connection(conn,cur)
 
 
+
+
+class TotalToDoTasksInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        result = task_performance_metrics.get_total_to_do_tasks_per_month()
+        return JsonResponse(result, safe=False)
+
+
+class TotalInProgressTasksInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        result = task_performance_metrics.get_total_in_progress_tasks_per_month()
+        return JsonResponse(result, safe=False)
+
+
+class TotalPendingTasksInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        result = task_performance_metrics.get_total_pending_tasks_per_month()
+        return JsonResponse(result, safe=False)
+
+
+class ProjectTaskStatusInMonth(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, project_id, task_status_type):
+        result = task_performance_metrics.per_project_tasks_status(project_id, task_status_type)
+        return JsonResponse(result, safe=False)

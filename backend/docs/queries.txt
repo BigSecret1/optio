@@ -1,0 +1,17 @@
+# Trigger to Log Status Update
+
+CREATE OR REPLACE FUNCTION log_task_status_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.task_status IS DISTINCT FROM OLD.task_status THEN
+        INSERT INTO task_status_history (task_id, old_status, new_status, update_time)
+        VALUES (NEW.id, OLD.task_status, NEW.task_status, CURRENT_TIMESTAMP);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER task_status_update_trigger
+AFTER UPDATE ON tasks
+FOR EACH ROW
+EXECUTE FUNCTION log_task_status_update();

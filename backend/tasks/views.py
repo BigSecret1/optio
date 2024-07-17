@@ -1,18 +1,18 @@
-from django.shortcuts import render
-from django.http import JsonResponse 
-from django.views.decorators.csrf import csrf_exempt
-from django.db import connection
-import json
-import pandas as pd
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+import json
+import logging
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
-import logging
 
-
-# logging module configuration for loggin 
+# logging module configuration for logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
@@ -20,11 +20,11 @@ def create_connection():
     while True:
         try:
             conn = psycopg2.connect(
-                    host='localhost',
-                    database='todoler',
-                    user='dinesh',
-                    password='neverworry'
-                    )
+                host='localhost',
+                database='todoler',
+                user='dinesh',
+                password='neverworry'
+            )
             cur = conn.cursor(cursor_factory=RealDictCursor)
             print("Database connection was successful")
             return conn, cur
@@ -39,9 +39,7 @@ def close_connection(conn, cur):
     print("Database connection closed")
 
 
-# This function converts data into lower case: string, list
 def to_lowercase(value):
-    
     converted_value = value 
     logging.info("CONVERTING VALUE %s ", value)
     if isinstance(value, str):
@@ -52,104 +50,86 @@ def to_lowercase(value):
     return converted_value 
 
 
-@csrf_exempt
-def create_task(request):
+class CreateTask(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    if request.method == 'POST':
+    def post(self, request):
         try:
             data = json.loads(request.body.decode('utf-8'))
-
-            conn, cur = create_connection() 
+            conn, cur = create_connection()
 
             query = """ 
                 INSERT INTO tasks(title, subtasks, due_date, comments, description, task_status, project_id)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
-               """ 
-            
+            """
+
             logging.info("Converting task into lowercase")
             data = dict(data)
-            # Convert the data into lowered case data
             new_task = {key: to_lowercase(value) for key, value in data.items()}
             logging.info("Converted task is %s", new_task)
 
             logging.info("executing query :  %s", query)
-            cur.execute(query, (new_task.get('title', ''),
-                                new_task.get('subtasks', []),
-                                new_task.get('due_date', None),
-                                new_task.get('comments', ''),
-                                new_task.get('description', ''),
-                                new_task.get('task_status', 'To Do'),
-                                new_task.get('project_id', ''),
-                                ))
+            cur.execute(query, (
+                new_task.get('title', ''),
+                new_task.get('subtasks', []),
+                new_task.get('due_date', None),
+                new_task.get('comments', ''),
+                new_task.get('description', ''),
+                new_task.get('task_status', 'To Do'),
+                new_task.get('project_id', ''),
+            ))
             task = cur.fetchone()
             logging.info(task)
 
-
             conn.commit()
-            close_connection(conn,cur)
+            close_connection(conn, cur)
             return JsonResponse(task, status=200)
 
         except Exception as err:
-             return JsonResponse({"error": "wrong request body"}, status=500, content_type='application/json')
-    else:
-        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
+            return JsonResponse({"error": "wrong request body"}, status=500, content_type='application/json')
 
 
+class GetTaskById(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-@csrf_exempt
-def get_task_by_id(request, task_id : int):
-
-    if request.method == 'GET':
-    
-        conn, cur = create_connection() 
-
+    def get(self, request, task_id):
         try:
-            query = """SELECT * FROM tasks WHERE id = %s"""
-            task_id = str(task_id)
+            conn, cur = create_connection()
+            query = "SELECT * FROM tasks WHERE id = %s"
             cur.execute(query, (task_id,))
-
             task = cur.fetchone()
-            task = dict(task)
-            response_task = {
-                "title": task['title'],
-                "subtasks": task['subtasks'],
-                "due_date": task['due_date'],
-                "comments": task['comments'],
-                "description": task['description'],
-                "task_status": task['task_status']
-            } 
-
-            close_connection(conn,cur)
-            logging.info("task by id : %s", task)
-            return JsonResponse(response_task)
-
+            if task:
+                task = dict(task)
+                response_task = {
+                    "title": task['title'],
+                    "subtasks": task['subtasks'],
+                    "due_date": task['due_date'],
+                    "comments": task['comments'],
+                    "description": task['description'],
+                    "task_status": task['task_status']
+                }
+                close_connection(conn, cur)
+                logging.info("task by id : %s", task)
+                return JsonResponse(response_task)
+            else:
+                return JsonResponse({"error": "Task not found"}, status=404)
         except Exception as err:
             return JsonResponse({'ERROR': "Bad Request"}, status=500)
 
-    else:
-        return JsonResponse({'ERROR': "Only GET requests are allowed."}, status=405)
 
+class UpdateTask(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-
-@csrf_exempt
-def update_task(request, task_id: int):
-
-    if request.method == 'PUT':
-    
-        conn, cur = create_connection() 
-        
+    def put(self, request, task_id):
         try:
             data = json.loads(request.body.decode('utf-8'))
+            conn, cur = create_connection()
             data = dict(data)
             new_task = {key: to_lowercase(value) for key, value in data.items()}
-            title = new_task.get('title', '')
-            project_id = new_task.get('project_id','')
-            subtasks = new_task.get('subtasks', '')
-            due_date = new_task.get('due_date', '')
-            comments = new_task.get('comments', '')
-            description = new_task.get('description', '')
-            task_status = new_task.get('task_status', '')
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
@@ -161,67 +141,64 @@ def update_task(request, task_id: int):
                         description = %s, task_status = %s, project_id = %s
                     WHERE id = %s
                 """
-                cur.execute(query, (title, subtasks, due_date, comments, description, task_status,project_id, task_id))
+                cur.execute(query, (
+                    new_task.get('title', ''),
+                    new_task.get('subtasks', []),
+                    new_task.get('due_date', None),
+                    new_task.get('comments', ''),
+                    new_task.get('description', ''),
+                    new_task.get('task_status', 'To Do'),
+                    new_task.get('project_id', ''),
+                    task_id
+                ))
                 conn.commit()
 
-                # Fetch the updated task details
                 cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
                 updated_task = cur.fetchone()
-
-                response_task = {
-                    "title": updated_task['title'],
-                    "project_id": updated_task['project_id'],
-                    "subtasks": updated_task['subtasks'],
-                    "due_date": updated_task['due_date'],
-                    "comments": updated_task['comments'],
-                    "description": updated_task['description'],
-                    "task_status": updated_task['task_status']
-                }
-
-                logging.info("Task updated successfully")
-                return JsonResponse(response_task)
+                if updated_task:
+                    response_task = {
+                        "title": updated_task['title'],
+                        "project_id": updated_task['project_id'],
+                        "subtasks": updated_task['subtasks'],
+                        "due_date": updated_task['due_date'],
+                        "comments": updated_task['comments'],
+                        "description": updated_task['description'],
+                        "task_status": updated_task['task_status']
+                    }
+                    logging.info("Task updated successfully")
+                    return JsonResponse(response_task)
+                else:
+                    return JsonResponse({"error": "Task not found"}, status=404)
 
             else:
                 return JsonResponse({"error": "Task not found"}, status=404)
-
         except Exception as e:
             logging.error("Error updating task: %s", str(e))
             return JsonResponse({"error": "Failed to update task"}, status=500)
 
 
-    else:
-        return JsonResponse({'ERROR': "Only UPDATE requests are allowed."}, status=405)
+class DeleteTask(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-
-@csrf_exempt
-def delete_task(request, task_id: int):
-
-    if request.method == 'DELETE':
-
-        conn, cur = create_connection() 
+    def delete(self, request, task_id):
         try:
-            
-            logging.info("executing the delete query")
-
-            # Execute the DELETE query
+            conn, cur = create_connection()
             cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
             conn.commit()
-            logging.info("committed query")
 
-            # Check if any rows were affected
             if cur.rowcount == 0:
-                return JsonResponse({"error": "Task not found"})
+                return JsonResponse({"error": "Task not found"}, status=404)
             else:
-                return JsonResponse({"message": "Task deleted successfully"})
+                return JsonResponse({"message": "Task deleted successfully"}, status=200)
         except psycopg2.Error as e:
             logging.error("Error deleting task: %s", e)
-            return {"error": "Failed to delete task"}
+            return JsonResponse({"error": "Failed to delete task"}, status=500)
         finally:
             if conn:
-                conn.close()
+                close_connection(conn, cur)
 
-    else: 
-        return JsonResponse({'ERROR': "Only DELETE requests are allowed."}, status=405)
+
 
 
 
