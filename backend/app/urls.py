@@ -9,4 +9,5 @@ urlpatterns = [
     path('tasks/', include('tasks.urls')),
     path('performance-metrics/', include('performance_metrics.urls')),
     path('user/',include('profiles.urls')),
+    path('projects/', include('projects.urls')),
 ]
