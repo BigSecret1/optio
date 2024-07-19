@@ -5,7 +5,10 @@ from utils.db_connector import create_connection, close_connection
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
+import logging
 
+# logging module configuration for logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class ProjectListView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -15,8 +18,11 @@ class ProjectListView(APIView):
         conn, cur = create_connection()
         cur.execute("SELECT id, name FROM projects")
         projects = cur.fetchall()
+        
+        # Convert list of tuples to list of dictionaries
+        project_list = [{'id': p['id'], 'name': p['name']} for p in projects]
         close_connection(conn, cur)
-        serializer = ProjectSerializer([{'id': p[0], 'name': p[1]} for p in projects], many=True)
+        serializer = ProjectSerializer(project_list, many=True)
         return Response(serializer.data)
 
     def post(self, request):
