@@ -31,7 +31,7 @@ class ProjectListView(APIView):
             name = serializer.validated_data['name']
             conn, cur = create_connection()
             cur.execute("INSERT INTO projects (name) VALUES (%s) RETURNING id", (name,))
-            project_id = cur.fetchone()[0]
+            project_id = cur.fetchone()['id']
             conn.commit()
             close_connection(conn, cur)
             return Response({'id': project_id, 'name': name}, status=status.HTTP_201_CREATED)
@@ -48,7 +48,7 @@ class ProjectDetailView(APIView):
         close_connection(conn, cur)
         if project is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = ProjectSerializer({'id': project[0], 'name': project[1]})
+        serializer = ProjectSerializer({'id': project['id'], 'name': project['name']})
         return Response(serializer.data)
 
     def put(self, request, pk):
