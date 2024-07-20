@@ -10,7 +10,10 @@ import logging
 # logging module configuration for logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 class ProjectListView(APIView):
+
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -37,7 +40,10 @@ class ProjectListView(APIView):
             return Response({'id': project_id, 'name': name}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProjectDetailView(APIView):
+
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -64,10 +70,47 @@ class ProjectDetailView(APIView):
 
     def delete(self, request, pk):
         conn, cur = create_connection()
-        cur.execute("DELETE FROM projects WHERE id=%s", (pk,))
-        conn.commit()
-        close_connection(conn, cur)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        delete_table_entities = DeleteTableEntities()
+        
+        try:
+            #Find the references in all tables and then delete project 
+            cur.execute("SELECT id FROM tasks WHERE project_id=%s", (pk,))
+            tasks_id = cur.fetchall()
+            tasks_id = [task_id['id'] for task_id in tasks_id]
+            delete_table_entities.delete_task_status_history_references(tasks_id)
+            delete_table_entities.delete_tasks(pk)
+            
+            cur.execute("DELETE FROM projects WHERE id=%s", (pk,))
+            conn.commit()
+            close_connection(conn, cur)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as err:
+            return Response(f"An error occured while deleting the project {err}")
+
+
+class DeleteTableEntities:
+
+
+    def delete_tasks(self, project_id):
+        try:
+            conn, cur = create_connection()
+            cur.execute("DELETE FROM tasks WHERE project_id=%s", (project_id,))
+            conn.commit()
+            close_connection(conn, cur)
+        except Exception as err:
+            return Response(f"An error occured while deleting tasks {err}")
+
+    def delete_task_status_history_references(self, tasks_id): 
+        try:
+            conn, cur = create_connection()
+            logging.info("RECIVED IDS ARE : ", tasks_id)
+            for task_id in tasks_id:
+                cur.execute("DELETE FROM task_status_history WHERE task_id=%s", (task_id,))
+                conn.commit()
+            close_connection(conn, cur)
+        except Exception as err:
+            return Response(f"An error occured while deleting task status history {err}")
+
 
 
 
