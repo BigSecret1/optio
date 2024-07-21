@@ -83,7 +83,7 @@ class ProjectDetailView(APIView):
             cur.execute("DELETE FROM projects WHERE id=%s", (pk,))
             conn.commit()
             close_connection(conn, cur)
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response("Deleted the project and it's content successfully", status=status.HTTP_204_NO_CONTENT)
         except Exception as err:
             return Response(f"An error occured while deleting the project {err}")
 
