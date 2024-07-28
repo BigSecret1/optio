@@ -1,0 +1,15 @@
+
+/* src/components/Navbar.css */
+.custom-navbar {
+  background-color:  #851ced; 
+  color: white !important;
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+  color: white !important;
+}
+
+.custom-navbar .navbar-toggler-icon {
+  filter: invert(1);
+}
