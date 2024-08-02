@@ -7,12 +7,14 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // import custom components
-import Navbar from './components/Navbar';  
+import Navbar from './components/Navbar';
+import Dashboard from './components/Dashboard';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
   <Navbar/>
+  <Dashboard/>
   </React.StrictMode>
 );
 
