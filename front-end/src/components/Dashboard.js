@@ -3,9 +3,9 @@ import Card from './Card';
 
 const Dashboard = () => {
   const cards = [
-    { title: "Projects", text: "Status details" },
-    { title: "Tasks", text: "Datasources details" },
-    { title: "Performance", text: "Segments details" },
+    { title: "Projects", text: "total number of projects : x" },
+    { title: "Tasks", text: "14 completed  12 running 12 pending tasks: 18" },
+    { title: "Performance", text: "completed : 20%" },
   ];
 
   return (

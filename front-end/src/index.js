@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
@@ -9,16 +10,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import custom components
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
+import Auth from './components/Auth';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('access_token'); // Example check, can be adjusted
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
 root.render(
   <React.StrictMode>
-  <Navbar/>
-  <Dashboard/>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/login" element={<Auth />} />
+        <Route 
+          path="/dashboard" 
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } 
+        />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals(console.log);
