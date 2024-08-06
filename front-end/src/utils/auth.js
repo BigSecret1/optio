@@ -8,6 +8,8 @@ export async function login(email, password) {
         email: email,
         password: password
     };
+    
+    console.log("CREDENTIALS ", credentials);
 
     try {
         const response = await fetch(login_url, {
@@ -17,6 +19,8 @@ export async function login(email, password) {
             },
             body: JSON.stringify(credentials)
         });
+
+        console.log("RESPONSE : ", response);
 
         if (response.status === 200) {
             const data = await response.json();
