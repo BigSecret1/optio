@@ -16,13 +16,19 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('access_token'); // Example check, can be adjusted
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuthenticated ? (
+    <>
+      <Navbar />
+      {children}
+    </>
+  ) : (
+    <Navigate to="/login" />
+  );
 };
 
 root.render(
   <React.StrictMode>
     <Router>
-      <Navbar />
       <Routes>
         <Route path="/login" element={<Auth />} />
         <Route 
