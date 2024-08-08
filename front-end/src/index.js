@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
 import Auth from './components/Auth';
+import Projects from './components/Projects';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -39,6 +40,14 @@ root.render(
             </PrivateRoute>
           } 
         />
+        <Route 
+                  path="/projects" 
+                  element={
+                    <PrivateRoute>
+                      <Projects />
+                    </PrivateRoute>
+                  } 
+                />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
