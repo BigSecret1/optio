@@ -1,0 +1,47 @@
+.projects-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.project-card {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: black; /* Changed to a valid color */
+}
+
+.project-name {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+}
+
+.project-description {
+  font-size: 1em;
+  margin-bottom: 8px;
+  color: black; /* Changed to a valid color */
+}
+
+.project-info {
+  display: flex;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.project-stars,
+.project-updated {
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.project-stars {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.project-updated {
+  background-color: #f8d7da;
+  color: #721c24;
+}
