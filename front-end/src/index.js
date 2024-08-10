@@ -27,6 +27,8 @@ const PrivateRoute = ({ children }) => {
   );
 };
 
+document.title = "ToDOler";
+
 root.render(
   <React.StrictMode>
     <Router>
