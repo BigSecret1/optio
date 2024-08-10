@@ -1,0 +1,51 @@
+.projects-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.project-card {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color:  #304971;
+  color: white; 
+}
+
+.project-name {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  background-color: #304971;
+}
+
+.project-description {
+  font-size: 1em;
+  margin-bottom: 8px;
+  color: white; /* Changed to a valid color */
+  background-color: #304971;
+}
+
+.project-info {
+  display: flex;
+  gap: 8px;
+  font-size: 0.9em;
+  background-color: #304971;
+}
+
+.project-stars,
+.project-updated {
+  padding: 2px 4px;
+  border-radius: 4px;
+  background-color: #304971;
+}
+
+.project-stars {
+  background-color:  #304971;
+  color: #856404;
+}
+
+.project-updated {
+  background-color:  #304971;
+  color: #721c24;
+}
