@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-from . import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,8 +42,7 @@ INSTALLED_APPS = [
         'profiles',
         'rest_framework',
         'rest_framework_simplejwt.token_blacklist',
-        'rest_framework_simplejwt',
-        'corsheaders',
+        'rest_framework_simplejwt'
         ]
 
 #For jwt token added
@@ -66,15 +64,7 @@ MIDDLEWARE = [
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-        'corsheaders.middleware.CorsMiddleware',
-        'django.middleware.common.CommonMiddleware',
         ]
-
-
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
 
 ROOT_URLCONF = 'app.urls'
 
@@ -103,11 +93,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config.db_name,
-            'USER': config.db_user,
-            'PASSWORD': config.db_password,
-            'HOST': config.db_host,
-            'PORT': config.db_port,
+            'NAME': 'todoler',
+            'USER': 'dinesh',
+            'PASSWORD': 'neverworry',
+            'HOST': 'localhost',
+            'PORT': '5432',
             }
         }
 
@@ -159,7 +149,7 @@ AUTH_USER_MODEL = 'profiles.CustomUser'
 # For JWT token
 from datetime import timedelta
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
