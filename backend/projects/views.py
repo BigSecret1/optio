@@ -19,13 +19,12 @@ class ProjectListView(APIView):
 
     def get(self, request):
         conn, cur = create_connection()
-        cur.execute("SELECT * FROM projects")
+        cur.execute("SELECT id, name FROM projects")
         projects = cur.fetchall()
         
         # Convert list of tuples to list of dictionaries
-        project_list = [{'id': p['id'], 'name': p['name'], 'last_updated': p['project_updated'], 'stars': p['stars'], 'description': p['project_description']} for p in projects]
+        project_list = [{'id': p['id'], 'name': p['name']} for p in projects]
         close_connection(conn, cur)
-        logging.info("PROJECT LIST : %s", project_list)
         serializer = ProjectSerializer(project_list, many=True)
         return Response(serializer.data)
 

@@ -10,10 +10,6 @@ import json
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
-import logging
-
-# logging module configuration for logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class RegisterView(APIView):
@@ -39,7 +35,7 @@ class LoginView(APIView):
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
-        logging.info("REACHED TO LOGINVIEW")
+        #logging.info("REACHED TO LOGINVIEW")
         
         user = authenticate(request, email=email, password=password)
         
