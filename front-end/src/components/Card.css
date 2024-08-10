@@ -1,0 +1,25 @@
+.custom-card {
+  background-color: #304971 !important; /* Card background color */
+  color: white !important; /* Font color */
+  width: 350px; /* Custom width */
+  height: 200px; /* Custom height */
+  margin: 20px; /* Adjusted margin */
+  border: none; /* Remove default border */
+}
+
+.custom-card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: transparent !important; /* Ensure the card body background is transparent */
+}
+
+.custom-card .card-title,
+.custom-card .card-text {
+  background-color: transparent !important; /* Ensure text backgrounds are transparent */
+  color: white !important; /* Ensure text color is white */
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+}
