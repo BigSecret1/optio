@@ -15,7 +15,7 @@ const Navbar = () => {
             <Link className="nav-link" to="/projects"  target="_blank" rel="noopener noreferrer">Projects</Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="http://your-tasks-url.com" target="_blank" rel="noopener noreferrer">Tasks</a>
+            <Link className="nav-link" to="/tasks" target="_blank" rel="noopener noreferrer">Tasks</Link>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="http://your-performance-metrics-url.com" target="_blank" rel="noopener noreferrer">Performance Metrics</a>

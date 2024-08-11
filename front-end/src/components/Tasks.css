@@ -1,0 +1,50 @@
+.resizable-layout {
+  display: flex;
+  height: 100vh; /* Full height */
+  background-color: #222; /* Background similar to your screenshot */
+  overflow: hidden; /* Prevent horizontal scrolling */
+}
+
+.panel {
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #333;
+  color: #ff8c00; /* Text color matching your design */
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  width: 10px;
+  cursor: ew-resize;
+  background-color: transparent;
+  position: relative;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  background-image: url('/path-to-your-arrow-image.png'); /* Replace with your arrow image */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+input[type="text"] {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+h2 {
+  margin-top: 0;
+}
