@@ -1,50 +1,67 @@
-.resizable-layout {
-  display: flex;
-  height: 100vh; /* Full height */
-  background-color: #222; /* Background similar to your screenshot */
-  overflow: hidden; /* Prevent horizontal scrolling */
-}
+/* Set the background color of the entire layout */
 
+
+/* Style for the Panel component */
 .panel {
-  padding: 20px;
-  box-sizing: border-box;
-  background-color: #333;
-  color: #ff8c00; /* Text color matching your design */
-  border-radius: 12px;
-  overflow: hidden;
+  background-color: #3F5880; /* Darker panel background */
+  padding: 15px; /* Reduce padding to match Druid */
+  border-radius: 8px; /* Slightly rounded corners */
+  color: #ffffff; /* White text for better contrast */
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  min-width: 100px; /* Ensuring panels have a minimum width */
+  box-sizing: border-box; /* Include padding and border in width calculations */
 }
 
-.divider {
-  width: 10px;
-  cursor: ew-resize;
-  background-color: transparent;
-  position: relative;
+/* Panel title styling */
+.panel h2 {
+  font-size: 18px; /* Adjust font size */
+  font-weight: 600; /* Make the title bold */
+  margin-bottom: 10px; /* Space between title and input */
+  background-color: #3F5880;
 }
 
-.divider::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 24px;
-  height: 24px;
-  background-image: url('/path-to-your-arrow-image.png'); /* Replace with your arrow image */
-  background-size: contain;
-  background-repeat: no-repeat;
+/* Input box styling */
+.panel input[type="text"] {
+  margin-top: auto; /* Push the input box to the bottom */
+  padding: 8px 12px; /* Padding for better text spacing */
+  border: 1px solid #465562; /* Border to match Druid's input style */
+  border-radius: 4px; /* Slightly rounded input box */
+  background-color: pink; /* Input background color */
+  color: #ffffff; /* White text inside the input */
+  outline: none;
+  font-size: 14px; /* Font size for input text */
+  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
-input[type="text"] {
-  margin-top: 10px;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
+/* Ensure input is interactive and takes full width */
+.panel input[type="text"] {
+  background-color: #304971; /* Slightly different color on focus */
+  border-color: #738694; /* Lighter border on focus */
 }
 
-h2 {
-  margin-top: 0;
+/* Resize handle styling */
+.resize-handle {
+  width: 8px;
+  background-color: #304971; /* Darker handle to match Druid */
+  cursor: ew-resize; /* East-West resize cursor */
+  z-index: 1; /* Ensure it's above other elements */
+}
+
+.resize-handle:active {
+  background-color: orange; /* Active handle color */
+}
+
+/* Inactive resize handle to the right of the last panel */
+.resize-handle.inactive {
+  pointer-events: none;
+  background-color: #304971;
+}
+
+/* Ensure the panel can be resized */
+.panel.resizable {
+  flex-grow: 1; /* Allow panel to grow/shrink */
+  flex-basis: 0; /* Enable flexible width with other panels */
+  min-width: 100px; /* Minimum width to avoid collapsing */
 }
