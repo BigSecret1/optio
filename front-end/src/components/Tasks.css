@@ -50,7 +50,7 @@
 }
 
 .resize-handle:active {
-  background-color: orange; /* Active handle color */
+  background-color: none; /* Active handle color */
 }
 
 /* Inactive resize handle to the right of the last panel */
@@ -64,4 +64,23 @@
   flex-grow: 1; /* Allow panel to grow/shrink */
   flex-basis: 0; /* Enable flexible width with other panels */
   min-width: 100px; /* Minimum width to avoid collapsing */
+}
+
+
+.override-background{
+  background-color: #304971;
+}
+
+
+.col2{
+  background-color: #3F5880;
+}
+
+
+
+
+body {
+  font-family: Arial, sans-serif;
+  color: white; /* Global font color */
+  background-color: #3F5880; /* Global background color */
 }
