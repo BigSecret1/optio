@@ -1,8 +1,9 @@
 import * as React from 'react';
+import './EditTask.css';
 
 export default function FormDialog() {
-
-  const [task, setTask] = React.useState({
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [mainTask, setMainTask] = React.useState({
     title: "Task under project 7 number 2",
     project_id: 7,
     subtasks: [
@@ -18,92 +19,137 @@ export default function FormDialog() {
     task_status: "Pending"
   });
 
-  const [newComment, setNewComment] = React.useState("");
-
-  const handleTitleChange = (e) => {
-    setTask({ ...task, title: e.target.value });
+  const handleEdit = () => {
+    setIsEditing(true);
   };
 
-  const handleDescriptionChange = (e) => {
-    setTask({ ...task, description: e.target.value });
+  const handleSave = (event) => {
+    event.preventDefault();
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMainTask(prevTask => ({ ...prevTask, [name]: value }));
   };
 
   const handleSubtaskChange = (index, value) => {
-    const newSubtasks = [...task.subtasks];
-    newSubtasks[index] = value;
-    setTask({ ...task, subtasks: newSubtasks });
+    const updatedSubtasks = [...mainTask.subtasks];
+    updatedSubtasks[index] = value;
+    setMainTask(prevTask => ({ ...prevTask, subtasks: updatedSubtasks }));
   };
 
-  const handleNewCommentChange = (e) => {
-    setNewComment(e.target.value);
+  const handleAddSubtask = () => {
+    setMainTask(prevTask => ({
+      ...prevTask,
+      subtasks: [...prevTask.subtasks, ""]
+    }));
   };
 
-  const handleCommentSubmit = () => {
-    if (newComment.trim() !== "") {
-      setTask({ ...task, comments: [...task.comments, newComment] });
-      setNewComment("");
-    }
+  const handleAddComment = () => {
+    setMainTask(prevTask => ({
+      ...prevTask,
+      comments: [...prevTask.comments, ""]
+    }));
+  };
+
+  const handleCommentChange = (index, value) => {
+    const updatedComments = [...mainTask.comments];
+    updatedComments[index] = value;
+    setMainTask(prevTask => ({ ...prevTask, comments: updatedComments }));
   };
 
   return (
-    <>
-      <div>
-        <h2>
-          <input
-            type="text"
-            value={task.title}
-            onChange={handleTitleChange}
-            style={{ width: '100%', fontSize: '1.5em', fontWeight: 'bold' }}
+    <div className={isEditing ? 'formContainer' : 'fullScreenContainer'}>
+      <div className="header">
+        {isEditing ? (
+          <>
+            <button className="saveBtn" onClick={handleSave}>Save</button>
+            <button className="cancelBtn" onClick={handleCancel}>Cancel</button>
+          </>
+        ) : null}
+      </div>
+
+      <div className="taskHeader">
+        <h2>{mainTask.title}</h2>
+        {!isEditing && (
+          <button className="editBtn" onClick={handleEdit}>Edit</button>
+        )}
+      </div>
+
+      {isEditing ? (
+        <form onSubmit={handleSave}>
+          <h4>Description:</h4>
+          <textarea
+            name="description"
+            value={mainTask.description}
+            onChange={handleChange}
+            rows="4"
+            className="descriptionInput"
           />
-        </h2>
-      </div>
 
-      <div>
-        <h4>Description:</h4>
-        <textarea
-          rows="5"
-          cols="100"
-          value={task.description}
-          onChange={handleDescriptionChange}
-          placeholder="Enter the task description here..."
-        />
-      </div>
+          <h4>Sub Tasks</h4>
+          <ul className="subtaskList">
+            {mainTask.subtasks.map((subtask, index) => (
+              <li key={index} className="subtaskItem">
+                <input type="checkbox" id={`subtask-${index}`} />
+                <input
+                  type="text"
+                  value={subtask}
+                  onChange={(e) => handleSubtaskChange(index, e.target.value)}
+                  className="subtaskInput"
+                />
+              </li>
+            ))}
+          </ul>
+          <button type="button" onClick={handleAddSubtask} className="addSubtaskBtn">Add Subtask</button>
 
-      <div>
-        <h4>Sub Tasks</h4>
-        <ul>
-          {task.subtasks.map((subtask, index) => (
-            <li key={index}>
-              <input
-                type="text"
-                value={subtask}
-                onChange={(e) => handleSubtaskChange(index, e.target.value)}
-                style={{ width: '100%' }}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div>
-        <h4>Comments</h4>
-        <hr style={{ border: '1px solid white', margin: '20px 0' }} />
-        <ul>
-          {task.comments.map((comment, index) => (
-            <li key={index}>
-              {comment}
-            </li>
-          ))}
-        </ul>
-        <textarea
-          rows="5"
-          cols="100"
-          value={newComment}
-          onChange={handleNewCommentChange}
-          placeholder="Enter your comments here..."
-        />
-        <button onClick={handleCommentSubmit}>Add Comment</button>
-      </div>
-    </>
+          <h4>Comments</h4>
+          <ul className="commentsList">
+            {mainTask.comments.map((comment, index) => (
+              <li key={index} className="commentItem">
+                <textarea
+                  value={comment}
+                  onChange={(e) => handleCommentChange(index, e.target.value)}
+                  rows="2"
+                  className="commentInput"
+                  placeholder="Enter your comments here..."
+                />
+              </li>
+            ))}
+          </ul>
+          <button type="button" onClick={handleAddComment} className="addCommentBtn">Add Comment</button>
+        </form>
+      ) : (
+        <>
+          <h4>Description:</h4>
+          <p>{mainTask.description}</p>
+          <h4>Sub Tasks</h4>
+          <ul className="subtaskList">
+            {mainTask.subtasks.map((subtask, index) => (
+              <li key={index} className="subtaskItem">
+                <input type="checkbox" id={`subtask-${index}`} />
+                <label htmlFor={`subtask-${index}`}>
+                  {subtask}
+                </label>
+              </li>
+            ))}
+          </ul>
+          <h4>Comments</h4>
+          <ul className="commentsList">
+            {mainTask.comments.map((comment, index) => (
+              <li key={index} className="commentItem">
+                <p>{comment}</p>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
   );
 }
+
