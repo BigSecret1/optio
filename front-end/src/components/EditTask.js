@@ -83,6 +83,7 @@ export default function FormDialog() {
 
       {isEditing ? (
         <form onSubmit={handleSave}>
+        <div>
           <h4>Description:</h4>
           <textarea
             name="description"
@@ -91,7 +92,9 @@ export default function FormDialog() {
             rows="4"
             className="descriptionInput"
           />
+        </div>
 
+          <div>
           <h4>Sub Tasks</h4>
           <ul className="subtaskList">
             {mainTask.subtasks.map((subtask, index) => (
@@ -107,6 +110,8 @@ export default function FormDialog() {
             ))}
           </ul>
           <button type="button" onClick={handleAddSubtask} className="addSubtaskBtn">Add Subtask</button>
+          </div>
+          <div>
 
           <h4>Comments</h4>
           <ul className="commentsList">
@@ -123,11 +128,15 @@ export default function FormDialog() {
             ))}
           </ul>
           <button type="button" onClick={handleAddComment} className="addCommentBtn">Add Comment</button>
+          </div>
         </form>
       ) : (
         <>
+          <div>
           <h4>Description:</h4>
           <p>{mainTask.description}</p>
+          </div>
+          <div>
           <h4>Sub Tasks</h4>
           <ul className="subtaskList">
             {mainTask.subtasks.map((subtask, index) => (
@@ -139,6 +148,8 @@ export default function FormDialog() {
               </li>
             ))}
           </ul>
+          </div>
+          <div>
           <h4>Comments</h4>
           <ul className="commentsList">
             {mainTask.comments.map((comment, index) => (
@@ -147,6 +158,7 @@ export default function FormDialog() {
               </li>
             ))}
           </ul>
+          </div>
         </>
       )}
     </div>

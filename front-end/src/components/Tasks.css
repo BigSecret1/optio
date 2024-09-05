@@ -1,5 +1,8 @@
-/* Set the background color of the entire layout */
-
+body {
+  font-family: Arial, sans-serif;
+  color: white; /* Global font color */
+  background-color: #3F5880; /* Global background color */
+}
 
 /* Style for the Panel component */
 .panel {
@@ -14,6 +17,8 @@
   box-sizing: border-box; /* Include padding and border in width calculations */
 }
 
+permission_classes
+
 /* Panel title styling */
 .panel h2 {
   font-size: 18px; /* Adjust font size */
@@ -22,24 +27,20 @@
   background-color: #3F5880;
 }
 
-/* Input box styling */
 .panel input[type="text"] {
   margin-top: auto; /* Push the input box to the bottom */
   padding: 8px 12px; /* Padding for better text spacing */
   border: 1px solid #465562; /* Border to match Druid's input style */
   border-radius: 4px; /* Slightly rounded input box */
-  background-color: pink; /* Input background color */
+  background-color: none;
   color: #ffffff; /* White text inside the input */
   outline: none;
-  font-size: 14px; /* Font size for input text */
+  font-size: 14px;
   box-sizing: border-box; /* Ensure padding is included in width */
-}
-
-/* Ensure input is interactive and takes full width */
-.panel input[type="text"] {
   background-color: #304971; /* Slightly different color on focus */
   border-color: #738694; /* Lighter border on focus */
 }
+
 
 /* Resize handle styling */
 .resize-handle {
@@ -50,7 +51,7 @@
 }
 
 .resize-handle:active {
-  background-color: none; /* Active handle color */
+  background-color: none;
 }
 
 /* Inactive resize handle to the right of the last panel */
@@ -66,21 +67,22 @@
   min-width: 100px; /* Minimum width to avoid collapsing */
 }
 
-
 .override-background{
   background-color: #304971;
 }
-
 
 .col2{
   background-color: #3F5880;
 }
 
-
-
-
-body {
-  font-family: Arial, sans-serif;
-  color: white; /* Global font color */
-  background-color: #3F5880; /* Global background color */
+.task-item {
+  cursor: pointer;
 }
+
+.task-item p {
+  height: 8vh;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
