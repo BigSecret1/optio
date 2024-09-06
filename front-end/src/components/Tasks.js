@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import "./Tasks.css";
 import { Modal, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const ResizableLayout = ({ columns }) => {
   const data = [
     {
       title: "Add route with task id to task divs",
       project_id: 7,
+      id: 1,
       subtasks: ["some or other tasks to perform", "Implement fixes"],
       due_date: "2024-06-24",
       comments: ["make task as pending task", "Coordinate with QA for testing"],
@@ -17,6 +19,7 @@ const ResizableLayout = ({ columns }) => {
     {
       title: "Create a TaskForm componenet to edit and update the task",
       project_id: 7,
+      id: 2,
       subtasks: ["some or other tasks to perform", "Implement fixes"],
       due_date: "2024-06-24",
       comments: ["make task as pending task", "Coordinate with QA for testing"],
@@ -26,6 +29,7 @@ const ResizableLayout = ({ columns }) => {
     {
       title: "Task uder project7 number 2",
       project_id: 7,
+      id: 3,
       subtasks: ["some or other tasks to perform", "Implement fixes"],
       due_date: "2024-06-24",
       comments: ["make task as pending task", "Coordinate with QA for testing"],
@@ -83,7 +87,9 @@ const ResizableLayout = ({ columns }) => {
             className="task-item"
             style={{ backgroundColor: "#304971", marginBottom: "20px" }}
           >
-            <p>{task["title"]}</p>
+            <p>
+              <Link to={`/task-manager/${task["id"]}`}>{task["title"]}</Link>
+            </p>
           </div>
         ))}
       </div>
