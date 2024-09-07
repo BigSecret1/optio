@@ -3,6 +3,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import "./Tasks.css";
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Task from "./TaskEntity";
 
 const ResizableLayout = ({ columns }) => {
   const data = [
@@ -37,6 +38,8 @@ const ResizableLayout = ({ columns }) => {
       task_status: "Pending",
     },
   ];
+
+  const taskEntites = new Task();
 
   const [searchTerm, setSearchTerm] = useState(null);
   useEffect(() => {
@@ -88,7 +91,7 @@ const ResizableLayout = ({ columns }) => {
             style={{ backgroundColor: "#304971", marginBottom: "20px" }}
           >
             <p>
-              <Link to={`/task-manager/${task["id"]}`}>{task["title"]}</Link>
+              <Link to={`/task-manager/${task["id"]}`} state={{task}}>{task["title"]}</Link>
             </p>
           </div>
         ))}
