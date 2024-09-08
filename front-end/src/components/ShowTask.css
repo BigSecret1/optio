@@ -1,0 +1,39 @@
+.descriptionCommentsContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 19px;
+}
+
+.description{
+    display: flex;
+    position: absolute;
+    left: 0;
+    align-items: center;
+    width: 540px;
+    background-color: red;
+}
+
+.subTasks{
+    display: flex;
+    position: absolute;
+    left: 0;
+    margin-top: 120px;
+    width: 540px;
+    height: 50vh;
+    background-color: red;
+}
+
+.descriptionSubTasks {
+    background-color: purple;
+    width: 200%;
+}
+
+.comments {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 20px;
+    width: 55%;
+    background-color: yellow;
+    height: 70vh;   
+}

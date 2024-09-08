@@ -1,6 +1,8 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Task from "./TaskEntity";
+import ShowTask from "./ShowTask";
+import Navbar from "./Navbar";
 
 function TaskManager() {
     const location = useLocation();
@@ -15,12 +17,12 @@ function TaskManager() {
         task.description,
         task.task_status
     );
-    const { task_id } = useParams();
 
     return (
-        <h1>
-            This is task manager with id {task_id} and title {taskInstace.title}}
-        </h1>
+        <>
+            <Navbar />
+            <ShowTask />
+        </>
     );
 }
 

@@ -18,6 +18,10 @@ class Task {
         this.description = description;
         this.taskStatus = taskStatus;
     }
+
+    updateTask() {
+        console.log("UPDATING THE TASK");
+    }
 }
 
 export default Task;
