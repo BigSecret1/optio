@@ -36,3 +36,43 @@
     background-color: yellow;
     height: 82vh;
 }
+
+
+
+
+
+.container {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    gap: 10px; /* Add gap between columns */
+  }
+  
+  .column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .column-1 {
+    width: 200%;
+    flex: 1; /* First column takes up 50% of width */
+  }
+  
+  .column-2 {
+    flex: 1; /* Second column also takes up 50% of width */
+  }
+  
+  .box {
+    background-color: lightblue;
+    border: 1px solid #000;
+  }
+  
+  .big-box {
+    height: 400px; /* The big box in the first column */
+  }
+  
+  .small-box {
+    flex: 1; /* Each box takes up equal height in the second column */
+    background-color: lightcoral;
+  }
+  
