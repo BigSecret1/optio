@@ -1,6 +1,9 @@
 .custom-navbar {
   background-color: #304971; /* Same color as card background */
   color: white;
+  position: sticky;
+  z-index: 1000; /* Ensure it's on top of other elements */
+  top: 0;
 }
 
 .custom-navbar .navbar-brand,

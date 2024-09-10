@@ -1,78 +1,36 @@
-.descriptionCommentsContainer {
-    display: flex;
-    justify-content: space-between;
-    gap: 19px;
+/* .taskContainer {
+  background-color: red;
+  display: flex;
+  height: 91vh; /* Full viewport height */
+  gap: 10px;
 }
 
-.description{
-    display: flex;
-    position: absolute;
-    left: 0;
-    align-items: center;
-    width: 50%;
-    height: 20vh;
-    margin-top: 5px;
-    background-color: red;
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Allow columns to grow and fill available height */
 }
 
-.subTasks{
-    display: flex;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    margin-top: 30px;
-    width: 50%;
-    height: 60vh;
-    background-color: red;
+.column-1 {
+  flex: 1; /* Take 50% of the width of the container */
 }
 
-.comments {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    bottom: 0;
-    right: 0px;
-    width: 50%;
-    background-color: yellow;
-    height: 82vh;
+.column-2 {
+  flex: 1; /* Take 50% of the width */
 }
 
+.box {
+  background-color: lightblue;
+  border: 1px solid #000;
+  flex-grow: 1; /* Allow boxes to grow and fill the available height */
+}
 
+.big-box {
+  height: auto; /* Remove fixed height so it can dynamically grow */
+}
 
-
-
-.container {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    gap: 10px; /* Add gap between columns */
-  }
-  
-  .column {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .column-1 {
-    width: 200%;
-    flex: 1; /* First column takes up 50% of width */
-  }
-  
-  .column-2 {
-    flex: 1; /* Second column also takes up 50% of width */
-  }
-  
-  .box {
-    background-color: lightblue;
-    border: 1px solid #000;
-  }
-  
-  .big-box {
-    height: 400px; /* The big box in the first column */
-  }
-  
-  .small-box {
-    flex: 1; /* Each box takes up equal height in the second column */
-    background-color: lightcoral;
-  }
-  
+.small-box {
+  background-color: green;
+  flex-grow: 1; /* Allow small boxes to fill space */
+}
+ */
