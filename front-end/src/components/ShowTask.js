@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import './ShowTask.css';
 
 export default function ShowTasks() {
     return (
@@ -124,9 +125,9 @@ export default function ShowTasks() {
                     }),
                 ]}
             >
-                <h3>Comments</h3>
-                <div className='commentBox'>
-                    <textarea rows="10" cols="120"></textarea>
+                <div className="comments">
+                    <h3>Comments</h3>
+                    <textarea className="commentBox" ></textarea>
                 </div>
             </Box>
         </div>

@@ -1,36 +1,9 @@
-/* .taskContainer {
-  background-color: red;
-  display: flex;
-  height: 91vh; /* Full viewport height */
-  gap: 10px;
+.comments {
+  width: 100%;
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  flex: 1; /* Allow columns to grow and fill available height */
+.comments textarea {
+  width: 50%;
+  height: 80%;
 }
 
-.column-1 {
-  flex: 1; /* Take 50% of the width of the container */
-}
-
-.column-2 {
-  flex: 1; /* Take 50% of the width */
-}
-
-.box {
-  background-color: lightblue;
-  border: 1px solid #000;
-  flex-grow: 1; /* Allow boxes to grow and fill the available height */
-}
-
-.big-box {
-  height: auto; /* Remove fixed height so it can dynamically grow */
-}
-
-.small-box {
-  background-color: green;
-  flex-grow: 1; /* Allow small boxes to fill space */
-}
- */
