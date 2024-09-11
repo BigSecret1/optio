@@ -1,9 +1,20 @@
 .comments {
   width: 100%;
+  overflow: auto;
+}
+
+.commentBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comments button {
+  width: 110px;
 }
 
 .comments textarea {
-  width: 50%;
-  height: 80%;
+  width: 640px;
+  height: 230px;
 }
 

@@ -13,7 +13,7 @@ export default function ShowTasks() {
                         p: 1,
                         height: '10vh',
                         bgcolor: '#304971',
-                        color: 'grey.800',
+                        color: 'white',
                         border: '1px solid',
                         borderColor: 'grey.300',
                         borderRadius: 2,
@@ -21,7 +21,7 @@ export default function ShowTasks() {
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             bgcolor: '#101010',
-                            color: 'grey.300',
+                            color: 'white',
                             borderColor: 'grey.800',
                         }),
                     }),
@@ -37,7 +37,7 @@ export default function ShowTasks() {
                         p: 1,
                         height: '30vh',
                         bgcolor: '#304971',
-                        color: 'grey.800',
+                        color: 'white',
                         border: '1px solid',
                         borderColor: 'grey.300',
                         borderRadius: 2,
@@ -45,7 +45,7 @@ export default function ShowTasks() {
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             bgcolor: '#101010',
-                            color: 'grey.300',
+                            color: 'white',
                             borderColor: 'grey.800',
                         }),
                     }),
@@ -63,7 +63,7 @@ export default function ShowTasks() {
                         height: '40vh',
                         overflow: 'auto',
                         bgcolor: '#304971',
-                        color: 'grey.800',
+                        color: 'white',
                         border: '1px solid',
                         borderColor: 'grey.300',
                         borderRadius: 2,
@@ -71,7 +71,7 @@ export default function ShowTasks() {
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             bgcolor: '#101010',
-                            color: 'grey.300',
+                            color: 'white',
                             borderColor: 'grey.800',
                         }),
                     }),
@@ -108,18 +108,18 @@ export default function ShowTasks() {
                         display: 'flex',
                         m: 1,
                         p: 1,
-                        height: '50vh',
+                        height: '60vh',
                         overflow: 'auto',
                         bgcolor: '#304971',
-                        color: 'grey.800',
+                        color: 'white',
                         border: '1px solid',
-                        borderColor: 'grey.300',
+                        borderColor: 'grey-300',
                         borderRadius: 2,
                         fontSize: '0.875rem',
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             bgcolor: '#101010',
-                            color: 'grey.300',
+                            color: 'white',
                             borderColor: 'grey.800',
                         }),
                     }),
@@ -127,7 +127,12 @@ export default function ShowTasks() {
             >
                 <div className="comments">
                     <h3>Comments</h3>
-                    <textarea className="commentBox" ></textarea>
+                    <div className="commentBox">
+                        <textarea className="commentBox" ></textarea>
+                        <button type="button" className="btn btn-secondary btn-sm">
+                            Add comment
+                        </button>
+                    </div>
                 </div>
             </Box>
         </div>
