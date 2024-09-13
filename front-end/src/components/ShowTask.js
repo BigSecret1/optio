@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import './ShowTask.css';
 
 export default function ShowTasks() {
@@ -134,6 +135,10 @@ export default function ShowTasks() {
                             Add comment
                         </button>
                     </div>
+                    <hr />
+                    <Paper elevation={0} />
+                    <h4>This is first comment</h4>
+                    <p></p>
                 </div>
             </Box>
         </div>
