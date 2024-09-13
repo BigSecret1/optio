@@ -63,6 +63,7 @@ export default function ShowTasks() {
                         height: '40vh',
                         overflow: 'auto',
                         bgcolor: '#304971',
+                        position: 'relative',
                         color: 'white',
                         border: '1px solid',
                         borderColor: 'grey.300',

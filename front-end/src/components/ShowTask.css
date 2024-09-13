@@ -1,3 +1,24 @@
+.subTasks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: absolute;
+  left: 0;
+}
+
+.taskItem {
+  display: flex;
+  margin-top: 50px;
+  gap: 5px;
+  padding: 0;
+  background-color: red;
+}
+
+.taskItem input {
+  width: 20px;
+  height: 20px;
+}
+
 .comments {
   width: 100%;
   overflow: auto;
@@ -7,6 +28,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-left: 2px;
 }
 
 .comments button {
@@ -16,5 +38,6 @@
 .comments textarea {
   width: 640px;
   height: 230px;
+  background-color: #3F5880;
 }
 
