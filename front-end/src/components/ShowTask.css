@@ -33,6 +33,7 @@
   flex-direction: column;
   gap: 10px;
   margin-left: 2px;
+  overflow: auto;
 }
 
 .comments button {
@@ -49,3 +50,26 @@
   border: 1px solid red;
 }
 
+.commentHeader {
+  background-color: #3F5880;
+  height: 7vh;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+
+
+.commentHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.comment {
+  background-color: #3F5880;
+  margin-top: 10px;
+  height: 15vh;
+  border: 1px solid;
+  border-radius: 3px;
+}

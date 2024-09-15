@@ -110,7 +110,7 @@ export default function ShowTasks() {
                         display: 'flex',
                         m: 1,
                         p: 1,
-                        height: '60vh',
+                        height: '49vh',
                         overflow: 'auto',
                         bgcolor: '#304971',
                         color: 'white',
@@ -135,10 +135,14 @@ export default function ShowTasks() {
                             Add comment
                         </button>
                     </div>
-                    <hr />
-                    <Paper elevation={0} />
-                    <h4>This is first comment</h4>
-                    <p></p>
+                    <div className="commentHeader">
+                        <h5>0 Comments</h5>
+                    </div>
+                    <div className="comment">
+                        <h6>Added on Sep 15 2024: 11:40 IST</h6>
+                        <hr style={{ border: "1px solid white" }} />
+                        <p>This is my first comment on given</p>
+                    </div>
                 </div>
             </Box>
         </div>
