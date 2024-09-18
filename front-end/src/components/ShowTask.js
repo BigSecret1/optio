@@ -2,6 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import './ShowTask.css';
+import TextField from '@mui/material/TextField';
+
 
 export default function ShowTasks() {
     return (
@@ -110,8 +112,8 @@ export default function ShowTasks() {
                         display: 'flex',
                         m: 1,
                         p: 1,
-                        height: '49vh',
-                        overflow: 'auto',
+                        minHeight: '49vh',
+                        height: 'auto',
                         bgcolor: '#304971',
                         color: 'white',
                         border: '1px solid',
@@ -130,11 +132,8 @@ export default function ShowTasks() {
                 <div className="comments">
                     <h3>Comments</h3>
                     <div className="commentBox">
-                        <textarea className="commentBox" ></textarea>
-                        <button type="button" className="btn btn-secondary btn-sm">
-                            Add comment
-                        </button>
-                    </div>
+                        <TextField id="filled-basic" label="Add a comment" variant="filled" />
+                        <button type="button" className="btn btn-outline-success">Success</button>                    </div>
                     <div className="commentHeader">
                         <h5>0 Comments</h5>
                     </div>
@@ -143,8 +142,18 @@ export default function ShowTasks() {
                         <hr style={{ border: "1px solid white" }} />
                         <p>This is my first comment on given</p>
                     </div>
+                    <div className="comment">
+                        <h6>Added on Sep 15 2024: 11:40 IST</h6>
+                        <hr style={{ border: "1px solid white" }} />
+                        <p>This is my first comment on given</p>
+                    </div>
+                    <div className="comment">
+                        <h6>Added on Sep 15 2024: 11:40 IST</h6>
+                        <hr style={{ border: "1px solid white" }} />
+                        <p>This is my first comment on given</p>
+                    </div>
                 </div>
-            </Box>
-        </div>
+            </Box >
+        </div >
     );
 }

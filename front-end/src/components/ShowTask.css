@@ -38,6 +38,8 @@
 
 .comments button {
   width: 110px;
+  border: none;
+  font:white;
 }
 
 .comments textarea {
@@ -57,6 +59,10 @@
   border-radius: 3px;
 }
 
+#filled-basic {
+  background-color: #3F5880;
+  color: white;
+}
 
 
 .commentHeader {
@@ -69,7 +75,7 @@
 .comment {
   background-color: #3F5880;
   margin-top: 10px;
-  height: 15vh;
+  height: 25vh;
   border: 1px solid;
   border-radius: 3px;
 }
