@@ -37,12 +37,22 @@
 }
 
 .comments button {
-  width: 110px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 100px;
+  margin-left: auto;
+  /* height: 30px; */
   border: none;
   font:white;
+  color: white;
 }
 
-.comments textarea {
+/* .comments h5 {
+  margin-top: 20px;
+} */
+
+.comments TextField {
   width: 640px;
   height: 230px;
   background-color: #3F5880;
@@ -52,12 +62,6 @@
   border: 1px solid red;
 }
 
-.commentHeader {
-  background-color: #3F5880;
-  height: 7vh;
-  border: 1px solid;
-  border-radius: 3px;
-}
 
 #filled-basic {
   background-color: #3F5880;
@@ -67,15 +71,18 @@
 
 .commentHeader {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-top: 20px;
+  height: 7vh;
+  /* background-color: red; */
+
 }
 
 .comment {
-  background-color: #3F5880;
+  /* background-color: #3F5880; */
   margin-top: 10px;
   height: 25vh;
-  border: 1px solid;
-  border-radius: 3px;
+  /* border: 1px solid; */
+  /* border-radius: 3px; */
 }

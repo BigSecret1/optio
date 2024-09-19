@@ -17,13 +17,13 @@ export default function ShowTasks() {
                         height: '10vh',
                         bgcolor: '#304971',
                         color: 'white',
-                        border: '1px solid',
-                        borderColor: 'grey.300',
-                        borderRadius: 2,
+                        // border: '1px solid',
+                        // borderColor: 'grey.300',
+                        // borderRadius: 2,
                         fontSize: '0.875rem',
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
-                            bgcolor: '#101010',
+                            // bgcolor: '#101010',
                             color: 'white',
                             borderColor: 'grey.800',
                         }),
@@ -41,15 +41,15 @@ export default function ShowTasks() {
                         height: '30vh',
                         bgcolor: '#304971',
                         color: 'white',
-                        border: '1px solid',
-                        borderColor: 'grey.300',
-                        borderRadius: 2,
+                        // border: '1px solid',
+                        // borderColor: 'grey.300',
+                        // borderRadius: 2,
                         fontSize: '0.875rem',
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             bgcolor: '#101010',
                             color: 'white',
-                            borderColor: 'grey.800',
+                            // borderColor: 'grey.800',
                         }),
                     }),
                 ]}
@@ -68,15 +68,15 @@ export default function ShowTasks() {
                         bgcolor: '#304971',
                         position: 'relative',
                         color: 'white',
-                        border: '1px solid',
-                        borderColor: 'grey.300',
-                        borderRadius: 2,
+                        // border: '1px solid',
+                        // borderColor: 'grey.300',
+                        // borderRadius: 2,
                         fontSize: '0.875rem',
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             bgcolor: '#101010',
                             color: 'white',
-                            borderColor: 'grey.800',
+                            // borderColor: 'grey.800',
                         }),
                     }),
                 ]}
@@ -116,15 +116,15 @@ export default function ShowTasks() {
                         height: 'auto',
                         bgcolor: '#304971',
                         color: 'white',
-                        border: '1px solid',
-                        borderColor: 'grey-300',
-                        borderRadius: 2,
+                        // border: '1px solid',
+                        // borderColor: 'grey-300',
+                        // borderRadius: 2,
                         fontSize: '0.875rem',
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             bgcolor: '#101010',
                             color: 'white',
-                            borderColor: 'grey.800',
+                            // borderColor: 'grey.800',
                         }),
                     }),
                 ]}
@@ -133,23 +133,23 @@ export default function ShowTasks() {
                     <h3>Comments</h3>
                     <div className="commentBox">
                         <TextField id="filled-basic" label="Add a comment" variant="filled" />
-                        <button type="button" className="btn btn-outline-success">Success</button>                    </div>
+                        <button type="button" className="btn btn-outline-success">comment</button>                    </div>
                     <div className="commentHeader">
                         <h5>0 Comments</h5>
+                        <hr style={{ border: "1px solid white" }} />
                     </div>
                     <div className="comment">
                         <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                        <hr style={{ border: "1px solid white" }} />
                         <p>This is my first comment on given</p>
                     </div>
                     <div className="comment">
                         <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                        <hr style={{ border: "1px solid white" }} />
+                        {/* <hr style={{ border: "1px solid white" }} /> */}
                         <p>This is my first comment on given</p>
                     </div>
                     <div className="comment">
                         <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                        <hr style={{ border: "1px solid white" }} />
+                        {/* <hr style={{ border: "1px solid white" }} /> */}
                         <p>This is my first comment on given</p>
                     </div>
                 </div>
