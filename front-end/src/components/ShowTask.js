@@ -17,15 +17,15 @@ export default function ShowTasks() {
                         height: '10vh',
                         bgcolor: '#304971',
                         color: 'white',
-                        // border: '1px solid',
-                        // borderColor: 'grey.300',
-                        // borderRadius: 2,
+                        border: '1px solid',
+                        borderColor: '#3F5880',
+                        borderRadius: 2,
                         fontSize: '0.875rem',
                         fontWeight: '700',
                         ...theme.applyStyles('dark', {
                             // bgcolor: '#101010',
                             color: 'white',
-                            borderColor: 'grey.800',
+                            // borderColor: 'grey.800',
                         }),
                     }),
                 ]}
@@ -89,15 +89,15 @@ export default function ShowTasks() {
                     </div>
                     <div className='taskItem'>
                         <input type='checkbox' />
-                        <h6>Lay down all elementin one row</h6>
+                        <h6>Solve one leetcode problem</h6>
                     </div>
                     <div className='taskItem'>
                         <input type='checkbox' />
-                        <h6>Lay down all elementin one row</h6>
+                        <h6>Change lemeent width</h6>
                     </div>
                     <div className='taskItem'>
                         <input type='checkbox' />
-                        <h6>Lay down all elementin one row</h6>
+                        <h6>Fix the box auto height</h6>
                     </div>
                     <div className='taskItem'>
                         <input type='checkbox' />
@@ -132,7 +132,15 @@ export default function ShowTasks() {
                 <div className="comments">
                     <h3>Comments</h3>
                     <div className="commentBox">
-                        <TextField id="filled-basic" label="Add a comment" variant="filled" />
+                        <TextField
+                            id="filled-textarea"
+                            label="Add a comment"
+                            multiline
+                            variant="filled"
+                            InputLabelProps={{
+                                style: { color: 'white' }
+                            }}
+                        />
                         <button type="button" className="btn btn-outline-success">comment</button>                    </div>
                     <div className="commentHeader">
                         <h5>0 Comments</h5>
@@ -140,17 +148,17 @@ export default function ShowTasks() {
                     </div>
                     <div className="comment">
                         <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                        <p>This is my first comment on given</p>
+                        <p>This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
                     </div>
                     <div className="comment">
                         <h6>Added on Sep 15 2024: 11:40 IST</h6>
                         {/* <hr style={{ border: "1px solid white" }} /> */}
-                        <p>This is my first comment on given</p>
+                        <p>This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
                     </div>
                     <div className="comment">
                         <h6>Added on Sep 15 2024: 11:40 IST</h6>
                         {/* <hr style={{ border: "1px solid white" }} /> */}
-                        <p>This is my first comment on given</p>
+                        <p>This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
                     </div>
                 </div>
             </Box >
