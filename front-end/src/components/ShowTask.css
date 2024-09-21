@@ -1,12 +1,18 @@
+.subTasksContainer {
+  /* background-color: yellow; */
+  padding-top: 0px;
+  /* background-color: red; */
+}
+
 .subTasks {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  position: absolute;
-  left: 0;
-  padding-top: 45px;
-  padding-left: 10px;
+  /* position: absolute; */
+  padding-left: 2px;
   gap: 10px;
+  /* background-color: red; */
+  margin-top: 20px;
 }
 
 .taskItem {
@@ -25,7 +31,7 @@
 
 .comments {
   width: 100%;
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 .commentBox {
@@ -33,7 +39,7 @@
   flex-direction: column;
   gap: 10px;
   margin-left: 2px;
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 .comments button {
