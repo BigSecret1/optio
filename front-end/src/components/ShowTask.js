@@ -3,6 +3,11 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import './ShowTask.css';
 import TextField from '@mui/material/TextField';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
+import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
+
 
 
 export default function ShowTasks() {
@@ -31,6 +36,9 @@ export default function ShowTasks() {
                     }),
                 ]}
             >
+                <FontAwesomeIcon icon={farCircle} size="2x" />
+                {/* <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" /> */}
+                {/* <FontAwesomeIcon icon={farDotCircle} size="2x" color="blue" /> */}
                 <h3>Finish the front end task layout in this week end to end</h3>
             </Box>
             <Box
