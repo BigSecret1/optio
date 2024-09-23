@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import './ShowTask.css';
@@ -7,10 +8,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import Task from "./TaskEntity";
 
 
 
-export default function ShowTasks() {
+export default function ShowTasks({ taskId }) {
+    const [comment, setComment] = useState("");
+    const id = taskId;
+    const task = new Task();
+
+    function HandleAddComment() {
+        console.log("SHOW TASK IS SHOWING ID : ", taskId);
+        console.log("COMMENS ... ", comment);
+        // make a post call and update the comment
+        task.updateTask({id: id, comment: comment});
+    }
+
     return (
         <div style={{ width: '100%' }}>
             <Box
@@ -36,10 +49,12 @@ export default function ShowTasks() {
                     }),
                 ]}
             >
-                <FontAwesomeIcon icon={farCircle} size="2x" />
-                {/* <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" /> */}
-                {/* <FontAwesomeIcon icon={farDotCircle} size="2x" color="blue" /> */}
-                <h3>Finish the front end task layout in this week end to end</h3>
+                <div className="taskTitle">
+                    {/* <FontAwesomeIcon icon={farCircle} size="2x" color="blue" /> */}
+                    {/* <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" /> */}
+                    <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />
+                    <h3>Finish the front end task layout in this week end to end</h3>
+                </div>
             </Box>
             <Box
                 sx={[
@@ -167,15 +182,19 @@ export default function ShowTasks() {
                             placeholder='Add a comment...'
                             multiline
                             variant="filled"
+                            value = {comment}
+                            onChange={(event) => setComment(event.target.value)}
                             InputLabelProps={{
                                 style: { color: 'white' }
                             }}
+                            
                         />
-                        <button type="button" className="btn btn-outline-success">comment</button>                    </div>
+                        <button type="button" className="btn btn-outline-success" onClick={HandleAddComment}>comment</button>
+                    </div>
                     <div className="commentHeader">
                         <h5>0 Comments</h5>
                     </div>
-                    <div className="comment">
+                    <div className="comment">   
                         <h6>Added on Sep 15 2024: 11:40 IST</h6>
                         <p>This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
                     </div>

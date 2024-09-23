@@ -20,7 +20,7 @@ const ResizableLayout = ({ columns }) => {
     {
       title: "Create a TaskForm componenet to edit and update the task",
       project_id: 7,
-      id: 2,
+      id: 93,
       subtasks: ["some or other tasks to perform", "Implement fixes"],
       due_date: "2024-06-24",
       comments: ["make task as pending task", "Coordinate with QA for testing"],

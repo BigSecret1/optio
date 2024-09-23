@@ -133,6 +133,12 @@ class UpdateTask(APIView):
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
+            logging.info("EXITING TASK IS : %s", new_task['comment']);
+
+            if existing_task['comments'] is None:
+                existing_task['comments'] = []
+            if new_task['comment'] is not None:
+                existing_task['comments'].append(new_task['comment'])
 
             if existing_task:
                 query = """
@@ -145,7 +151,7 @@ class UpdateTask(APIView):
                     new_task.get('title', existing_task['title']),
                     new_task.get('subtasks', existing_task['subtasks']),
                     new_task.get('due_date', existing_task['due_date']),
-                    new_task.get('comments', existing_task['comments']),
+                    existing_task['comments'],
                     new_task.get('description', existing_task['description']),
                     new_task.get('task_status', existing_task['task_status']),
                     new_task.get('project_id', existing_task['project_id']),

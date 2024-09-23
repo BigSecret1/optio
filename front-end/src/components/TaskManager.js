@@ -21,7 +21,7 @@ function TaskManager() {
     return (
         <>
             <Navbar />
-            <ShowTask />
+            <ShowTask taskId={taskInstace.id} />
         </>
     );
 }
