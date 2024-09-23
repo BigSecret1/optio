@@ -142,13 +142,13 @@ class UpdateTask(APIView):
                     WHERE id = %s
                 """
                 cur.execute(query, (
-                    new_task.get('title', ''),
-                    new_task.get('subtasks', []),
-                    new_task.get('due_date', None),
-                    new_task.get('comments', ''),
-                    new_task.get('description', ''),
-                    new_task.get('task_status', 'To Do'),
-                    new_task.get('project_id', ''),
+                    new_task.get('title', existing_task['title']),
+                    new_task.get('subtasks', existing_task['subtasks']),
+                    new_task.get('due_date', existing_task['due_date']),
+                    new_task.get('comments', existing_task['comments']),
+                    new_task.get('description', existing_task['description']),
+                    new_task.get('task_status', existing_task['task_status']),
+                    new_task.get('project_id', existing_task['project_id']),
                     task_id
                 ))
                 conn.commit()
