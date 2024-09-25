@@ -1,7 +1,16 @@
+import React from "react";
+import { Navigate } from "react-router-dom";
+
 const base_url = 'http://localhost:8000';
 
 const login_url = `${base_url}/user/login/`;
 const logout_url = `${base_url}/user/logout/`;
+
+export function isAuthenticated() {
+    let loggedIn = localStorage.getItem("access_token");
+    loggedIn = null;
+    return loggedIn ? true : <Navigate to="/login" />
+}
 
 export async function login(email, password) {
     const credentials = {

@@ -1,3 +1,5 @@
+import { isAuthenticated } from '../utils/auth';
+
 class Task {
     baseUrl = "http://localhost:8000/tasks";
 
@@ -22,7 +24,9 @@ class Task {
     }
 
     async updateTask(params = {}) {
-        console.log("UPDATING THE TASK WITH PARAMS : ",params);
+        // Authentication is required
+        isAuthenticated();
+        const accessToken = localStorage.getItem("access_token"); 
 
         const requestBody = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value != undefined)
@@ -41,6 +45,7 @@ class Task {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(requestBody),
             }
