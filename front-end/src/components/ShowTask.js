@@ -17,7 +17,7 @@ export default function ShowTasks({ taskId }) {
     const id = taskId;
     const task = new Task();
 
-    function HandleAddComment() {
+    function handleAddComment() {
         console.log("SHOW TASK IS SHOWING ID : ", taskId);
         console.log("COMMENS ... ", comment);
         // make a post call and update the comment
@@ -189,7 +189,7 @@ export default function ShowTasks({ taskId }) {
                             }}
                             
                         />
-                        <button type="button" className="btn btn-outline-success" onClick={HandleAddComment}>comment</button>
+                        <button type="button" className="btn btn-outline-success" onClick={handleAddComment}>comment</button>
                     </div>
                     <div className="commentHeader">
                         <h5>0 Comments</h5>

@@ -8,8 +8,7 @@ const logout_url = `${base_url}/user/logout/`;
 
 export function isAuthenticated() {
     let loggedIn = localStorage.getItem("access_token");
-    loggedIn = null;
-    return loggedIn ? true : <Navigate to="/login" />
+    return loggedIn ? true : false;
 }
 
 export async function login(email, password) {

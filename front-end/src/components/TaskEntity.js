@@ -25,8 +25,12 @@ class Task {
 
     async updateTask(params = {}) {
         // Authentication is required
-        isAuthenticated();
-        const accessToken = localStorage.getItem("access_token"); 
+        const loggedIn = isAuthenticated();
+        if(!loggedIn) {
+            window.location.href = '/login';
+            return;
+        }
+        const accessToken = localStorage.getItem("access_token");
 
         const requestBody = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value != undefined)
