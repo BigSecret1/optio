@@ -26,7 +26,7 @@ class Task {
     async updateTask(params = {}) {
         // Authentication is required
         const loggedIn = isAuthenticated();
-        if(!loggedIn) {
+        if (!loggedIn) {
             window.location.href = '/login';
             return;
         }
@@ -52,10 +52,9 @@ class Task {
                     "Authorization": `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify(requestBody),
-            }
-            );
+            });
 
-            if(response.ok) {
+            if (response.ok) {
                 const data = await response.json();
                 console.log("TASK UPDATED SUCCESSFULLY:", data);
             }

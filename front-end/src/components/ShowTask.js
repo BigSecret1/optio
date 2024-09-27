@@ -12,16 +12,15 @@ import Task from "./TaskEntity";
 
 
 
-export default function ShowTasks({ taskId }) {
+export default function ShowTasks({ task }) {
     const [comment, setComment] = useState("");
-    const id = taskId;
-    const task = new Task();
+    const id = task.id;
 
     function handleAddComment() {
-        console.log("SHOW TASK IS SHOWING ID : ", taskId);
+        console.log("SHOW TASK IS SHOWING ID : ", id);
         console.log("COMMENS ... ", comment);
         // make a post call and update the comment
-        task.updateTask({id: id, comment: comment});
+        task.updateTask({ id: id, comment: comment });
     }
 
     return (
@@ -53,7 +52,7 @@ export default function ShowTasks({ taskId }) {
                     {/* <FontAwesomeIcon icon={farCircle} size="2x" color="blue" /> */}
                     {/* <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" /> */}
                     <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />
-                    <h3>Finish the front end task layout in this week end to end</h3>
+                    <h3>{task.title}</h3>
                 </div>
             </Box>
             <Box
@@ -81,7 +80,7 @@ export default function ShowTasks({ taskId }) {
             >
                 <div>
                     <h3>Description</h3>
-                    <p>This is my first comment on given This is my first comfirst comfirst comfirst comfirst com first comfirst com first comfirst comment on givenThis is my  s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my  s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my s is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
+                    <p>{task.description}</p>
                 </div>
 
             </Box>
@@ -113,39 +112,15 @@ export default function ShowTasks({ taskId }) {
                 <div className="subTasksContainer">
                     <h3>SubTasks</h3>
                     <div className='subTasks'>
-                        <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h5>Lay down all elementin one row</h5>
-                        </div>
-                        <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h5>Solve one leetcode problem</h5>
-                        </div>
-                        <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h6>Change lemeent width</h6>
-                        </div>
-                        <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h5>Fix the box auto height</h5>
-                        </div>
-                        <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h6>Lay down all elementin one row</h6>
-                        </div>
-                        <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h6>Lay down all elementin one row</h6>
-                        </div>  <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h6>Lay down all elementin one row</h6>
-                        </div>  <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h6>Lay down all elementin one row</h6>
-                        </div>  <div className='taskItem'>
-                            <input type='checkbox' />
-                            <h6>Lay down all elementin one row</h6>
-                        </div>
+                        {task.subtasks.map((subtask, index) => {
+                            return (
+                                <div className='taskItem' key={index}>
+                                    <input type="checkbox" />
+                                    <h5>{subtask}</h5>
+                                </div>
+                            );
+                        })}
+
                     </div>
                 </div>
             </Box>
@@ -182,32 +157,28 @@ export default function ShowTasks({ taskId }) {
                             placeholder='Add a comment...'
                             multiline
                             variant="filled"
-                            value = {comment}
+                            value={comment}
                             onChange={(event) => setComment(event.target.value)}
                             InputLabelProps={{
                                 style: { color: 'white' }
                             }}
-                            
+
                         />
                         <button type="button" className="btn btn-outline-success" onClick={handleAddComment}>comment</button>
                     </div>
                     <div className="commentHeader">
-                        <h5>0 Comments</h5>
+                        <h5>{task.comments.length} Comments</h5>
                     </div>
-                    <div className="comment">   
-                        <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                        <p>This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
-                    </div>
-                    <div className="comment">
-                        <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                        {/* <hr style={{ border: "0.5px solid white" }} /> */}
-                        <p>This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
-                    </div>
-                    <div className="comment">
-                        <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                        {/* <hr style={{ border: "0.5px solid white" }} /> */}
-                        <p>This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given This is my first comment on given This is my first comment on given This is my first comment on givenThis is my first comment on givenThis is my first comment on givenThis is my first comment on given</p>
-                    </div>
+                    {
+                        task.comments.map((comment, index) => {
+                            return (
+                                <div className="comment" key={index}>
+                                    <h6>Added on Sep 15 2024: 11:40 IST</h6>
+                                    <p>{comment}</p>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             </Box >
         </div >

@@ -11,7 +11,7 @@ const ResizableLayout = ({ columns }) => {
       title: "Add route with task id to task divs",
       project_id: 7,
       id: 1,
-      subtasks: ["some or other tasks to perform", "Implement fixes"],
+      subtasks: ["some or other tasks to perform", "Implement fixes", "finally getting on the mark", "Tasks are getting fetch dynamically"],
       due_date: "2024-06-24",
       comments: ["make task as pending task", "Coordinate with QA for testing"],
       description: "Addressing reported bugs in the application",
@@ -23,7 +23,7 @@ const ResizableLayout = ({ columns }) => {
       id: 93,
       subtasks: ["some or other tasks to perform", "Implement fixes"],
       due_date: "2024-06-24",
-      comments: ["make task as pending task", "Coordinate with QA for testing"],
+      comments: ["make task as pending task","one", "Coordinate with QA for testing", "adding few more comment", "last comment"],
       description: "Addressing reported bugs in the application",
       task_status: "Pending",
     },
@@ -91,7 +91,7 @@ const ResizableLayout = ({ columns }) => {
             style={{ backgroundColor: "#304971", marginBottom: "20px" }}
           >
             <p>
-              <Link to={`/task-manager/${task["id"]}`} state={{task}}>{task["title"]}</Link>
+              <Link to={`/task-manager/${task["id"]}`} state={{ task }}>{task["title"]}</Link>
             </p>
           </div>
         ))}
