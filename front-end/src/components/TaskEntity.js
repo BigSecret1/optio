@@ -55,8 +55,10 @@ class Task {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log("TASK UPDATED SUCCESSFULLY:", data);
+                console.log("TASK WAS UPDATED SUCCESSFULLY");
+                const updatedTask = await response.json();
+                console.log("new comments ",updatedTask["comments"]);
+                return updatedTask;
             }
             else {
                 console.log("FAILED TO UPDATE THE TASK:", response.statusText);

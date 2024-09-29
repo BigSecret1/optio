@@ -8,20 +8,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
-import Task from "./TaskEntity";
 
 
 
 export default function ShowTasks({ task }) {
-    const [comment, setComment] = useState("");
-    const id = task.id;
+    const [currentTask, setCurrentTask] = useState(task);
+    const [newComment, setNewComment] = useState("");
+    const [comments, setComments] = useState(task.comments);
 
-    function handleAddComment() {
-        console.log("SHOW TASK IS SHOWING ID : ", id);
-        console.log("COMMENS ... ", comment);
-        // make a post call and update the comment
-        task.updateTask({ id: id, comment: comment });
+    async function handleAddComment() {
+        const updatedTask = await task.updateTask({ id: task.id, comment: newComment });
+        setCurrentTask(updatedTask);
+        setNewComment("");
     }
+
+    useEffect(() => {
+        setCurrentTask(task);
+    }, [task]);
 
     return (
         <div style={{ width: '100%' }}>
@@ -157,8 +160,8 @@ export default function ShowTasks({ task }) {
                             placeholder='Add a comment...'
                             multiline
                             variant="filled"
-                            value={comment}
-                            onChange={(event) => setComment(event.target.value)}
+                            value={newComment}
+                            onChange={(event) => setNewComment(event.target.value)}
                             InputLabelProps={{
                                 style: { color: 'white' }
                             }}
@@ -170,7 +173,7 @@ export default function ShowTasks({ task }) {
                         <h5>{task.comments.length} Comments</h5>
                     </div>
                     {
-                        task.comments.map((comment, index) => {
+                        currentTask.comments.map((comment, index) => {
                             return (
                                 <div className="comment" key={index}>
                                     <h6>Added on Sep 15 2024: 11:40 IST</h6>
