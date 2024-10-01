@@ -8,7 +8,13 @@ const logout_url = `${base_url}/user/logout/`;
 
 export function isAuthenticated() {
     let loggedIn = localStorage.getItem("access_token");
-    return loggedIn ? true : false;
+    if(loggedIn) {
+        return true;
+    }
+    else {
+        window.location.href = '/login';
+        return false;
+    }
 }
 
 export async function login(email, password) {

@@ -23,11 +23,34 @@ class Task {
         this.taskStatus = taskStatus;
     }
 
+    async getTasks(params = {}) {
+        const loggedIn = isAuthenticated();
+        if (!loggedIn) {
+            return;
+        }
+
+        const projectId = params["projectId"]
+        const endpoint = `/tasks/get-task-by-id/${projectId}`;
+        const accessToken = localStorage.getItem("access_token");
+
+        try {
+            const response = await fetch(`${this.baseUrl}${endpoint}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            })
+        }
+        catch(err) {
+            console.log("SOME ERROR OCCURED WHILE FETCHING PROJECT TASKS", err);
+        }
+    }
+
     async updateTask(params = {}) {
         // Authentication is required
         const loggedIn = isAuthenticated();
         if (!loggedIn) {
-            window.location.href = '/login';
             return;
         }
         const accessToken = localStorage.getItem("access_token");

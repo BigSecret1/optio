@@ -51,6 +51,7 @@ def to_lowercase(value):
 
 
 class CreateTask(APIView):
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -91,7 +92,33 @@ class CreateTask(APIView):
             return JsonResponse({"error": "wrong request body"}, status=500, content_type='application/json')
 
 
+class GetTasks(APIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            conn, cur = create_connection()
+            project_id = request.GET.get("project_id")
+            logging.info("Project id is %s", project_id)
+
+            if not project_id:
+                query = "SELECT * FROM tasks"
+                param = []
+            else:
+                query = "SELECT * FROM tasks WHERE project_id=%s"
+                param = [project_id]
+
+            cur.execute(query, (param,))
+            tasks = cur.fetchall()
+            return JsonResponse(tasks, safe=False)
+        except Exception as err:
+            return JsonResponse({'ERROR': "Bad Request"}, status=500)
+
+
 class GetTaskById(APIView):
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -121,6 +148,7 @@ class GetTaskById(APIView):
 
 
 class UpdateTask(APIView):
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -184,6 +212,7 @@ class UpdateTask(APIView):
 
 
 class DeleteTask(APIView):
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 

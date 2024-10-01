@@ -40,6 +40,7 @@ const ResizableLayout = ({ columns }) => {
   ];
 
   const taskEntites = new Task();
+  taskEntites.getTasks({projectId: 1});
 
   const [searchTerm, setSearchTerm] = useState(null);
   useEffect(() => {

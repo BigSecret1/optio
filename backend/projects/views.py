@@ -13,7 +13,6 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 class ProjectListView(APIView):
 
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -43,7 +42,6 @@ class ProjectListView(APIView):
 
 
 class ProjectDetailView(APIView):
-
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -90,7 +88,6 @@ class ProjectDetailView(APIView):
 
 
 class DeleteTableEntities:
-
 
     def delete_tasks(self, project_id):
         try:
