@@ -101,6 +101,7 @@ class GetTasks(APIView):
         try:
             conn, cur = create_connection()
             project_id = request.GET.get("project_id")
+            # project_id = None
             logging.info("Project id is %s", project_id)
 
             if not project_id:
@@ -110,7 +111,7 @@ class GetTasks(APIView):
                 query = "SELECT * FROM tasks WHERE project_id=%s"
                 param = [project_id]
 
-            cur.execute(query, (param,))
+            cur.execute(query, (param))
             tasks = cur.fetchall()
             return JsonResponse(tasks, safe=False)
         except Exception as err:
