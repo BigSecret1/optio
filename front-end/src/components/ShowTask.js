@@ -8,25 +8,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import Task from './task-service';
 
 
 
-export default function ShowTasks({ task }) {
-    const [currentTask, setCurrentTask] = useState(task);
+export default function ShowTasks({ taskId }) {
     const [newComment, setNewComment] = useState("");
-    const [comments, setComments] = useState(task.comments);
+    const [task, setTask] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const taskService = new Task();
 
     async function handleAddComment() {
-        const updatedTask = await task.updateTask({ id: task.id, comment: newComment });
-        setCurrentTask(updatedTask);
+        taskService.updateTask({ id: taskId, comment: newComment });
+        getTask();
         setNewComment("");
     }
 
-    useEffect(() => {
-        setCurrentTask(task);
-    }, [task]);
+    async function getTask() {
+        const currentTask = await taskService.getTask(taskId);
+        console.log("CURRENT TASK ", currentTask);
+        setLoading(false);
+        setTask(currentTask);
+    }
 
-    return (
+    useEffect(() => {
+        getTask();
+    }, [taskId]);
+
+    return loading ? <p>Loading Task...</p> : (
         <div style={{ width: '100%' }}>
             <Box
                 sx={[
@@ -173,7 +182,7 @@ export default function ShowTasks({ task }) {
                         <h5>{task.comments.length} Comments</h5>
                     </div>
                     {
-                        currentTask.comments.map((comment, index) => {
+                        task.comments.map((comment, index) => {
                             return (
                                 <div className="comment" key={index}>
                                     <h6>Added on Sep 15 2024: 11:40 IST</h6>

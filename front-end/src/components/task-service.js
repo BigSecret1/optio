@@ -30,7 +30,7 @@ class Task {
         }
 
         const projectId = params["projectId"]
-        const endpoint = `/tasks/get-task-by-id/${projectId}`;
+        const endpoint = `/get-tasks/?project_id=${projectId}`;
         const accessToken = localStorage.getItem("access_token");
 
         try {
@@ -41,14 +41,48 @@ class Task {
                     "Authorization": `Bearer ${accessToken}`,
                 },
             })
+            const tasks = await response.json();
+            return tasks;
         }
-        catch(err) {
-            console.log("SOME ERROR OCCURED WHILE FETCHING PROJECT TASKS", err);
+        catch (err) {
+            console.log("SOME ERROR OCCURED WHILE FETCHING PROJECT TASKS: ", err);
         }
     }
 
+    async getTask(taskId) {
+        const loggedIn = isAuthenticated();
+        if (!loggedIn) {
+            return;
+        }
+        const accessToken = localStorage.getItem("access_token");
+
+        const endpoint = `/get-task-by-id/${taskId}`;
+
+        try {
+            console.log("FETCHING TASK WITH ID : ", taskId);
+            const response = await fetch(`${this.baseUrl}${endpoint}`,{
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            })
+            const task = await response.json();
+            if(response.ok) {
+                console.log("SUCCESSFULLY FETCHED TASK ", task);
+                return task;
+            }
+            else {
+                console.log("COULDN'T FETCH TASK");
+            }
+        }
+        catch (error) {
+            console.log("AN ERROR OCCURED WHILE FETCHING THE TASK WITH ID : ", error);
+        }
+
+    }
+
     async updateTask(params = {}) {
-        // Authentication is required
         const loggedIn = isAuthenticated();
         if (!loggedIn) {
             return;
@@ -76,11 +110,10 @@ class Task {
                 },
                 body: JSON.stringify(requestBody),
             });
-
+            const updatedTask = await response.json();
             if (response.ok) {
                 console.log("TASK WAS UPDATED SUCCESSFULLY");
-                const updatedTask = await response.json();
-                console.log("new comments ",updatedTask["comments"]);
+                console.log("new comments ", updatedTask["comments"]);
                 return updatedTask;
             }
             else {

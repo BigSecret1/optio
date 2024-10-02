@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
-import Task from "./TaskEntity";
+import Task from "./task-service";
 import ShowTask from "./ShowTask";
 import Navbar from "./Navbar";
 
@@ -21,7 +21,7 @@ function TaskManager() {
     return (
         <>
             <Navbar />
-            <ShowTask task={taskInstace} />
+            <ShowTask taskId={taskInstace.id} />
         </>
     );
 }

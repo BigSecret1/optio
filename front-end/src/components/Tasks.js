@@ -3,60 +3,20 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import "./Tasks.css";
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Task from "./TaskEntity";
+import Task from "./task-service";
 
 const ResizableLayout = ({ columns }) => {
-  const data = [
-    {
-      title: "Add route with task id to task divs",
-      project_id: 7,
-      id: 1,
-      subtasks: ["some or other tasks to perform", "Implement fixes", "finally getting on the mark", "Tasks are getting fetch dynamically"],
-      due_date: "2024-06-24",
-      comments: ["make task as pending task", "Coordinate with QA for testing"],
-      description: "Addressing reported bugs in the application",
-      task_status: "Running",
-    },
-    {
-      title: "Create a TaskForm componenet to edit and update the task",
-      project_id: 7,
-      id: 93,
-      subtasks: ["some or other tasks to perform", "Implement fixes"],
-      due_date: "2024-06-24",
-      comments: ["make task as pending task","one", "Coordinate with QA for testing", "adding few more comment", "last comment"],
-      description: "Addressing reported bugs in the application",
-      task_status: "Pending",
-    },
-    {
-      title: "Task uder project7 number 2",
-      project_id: 7,
-      id: 3,
-      subtasks: ["some or other tasks to perform", "Implement fixes"],
-      due_date: "2024-06-24",
-      comments: ["make task as pending task", "Coordinate with QA for testing"],
-      description: "Addressing reported bugs in the application",
-      task_status: "Pending",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
-  const taskEntites = new Task();
-  taskEntites.getTasks({projectId: 1});
-
-  const [searchTerm, setSearchTerm] = useState(null);
   useEffect(() => {
-    const filterTasks = () => {
-      console.log("Searching for the task");
-    };
-
-    if (searchTerm) {
-      filterTasks();
+    const fetchTasks = async () => {
+      const task = new Task();
+      const tasksUnderProject = await task.getTasks({ projectId: 2 });
+      setTasks(tasksUnderProject);
     }
-  }, [searchTerm]);
-
-  const handleInputChange = (event) => {
-    const newText = event.target.value;
-    setSearchTerm(newText);
-  };
+    fetchTasks();
+  }, [])
 
   return (
     <div className="resizable-layout-container">
@@ -68,8 +28,8 @@ const ResizableLayout = ({ columns }) => {
               <Panel className="panel">
                 <h2>{col}</h2>
                 <input
-                  value="searchTerm"
-                  onChange={handleInputChange}
+                  // value="searchTerm"
+                  // onChange={handleInputChange}
                   type="text"
                   placeholder={`Enter ${col} details...`}
                 />
@@ -85,7 +45,7 @@ const ResizableLayout = ({ columns }) => {
 
       {/* List all tasks  */}
       <div className="dialogue-box">
-        {data.map((task, index) => (
+        {tasks.map((task, index) => (
           <div
             key={index}
             className="task-item"
