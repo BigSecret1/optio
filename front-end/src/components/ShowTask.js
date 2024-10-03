@@ -28,6 +28,9 @@ export default function ShowTasks({ taskId }) {
         const currentTask = await taskService.getTask(taskId);
         console.log("CURRENT TASK ", currentTask);
         setLoading(false);
+
+        // For latest comment to come on top
+        currentTask.comments.reverse();
         setTask(currentTask);
     }
 
@@ -61,9 +64,12 @@ export default function ShowTasks({ taskId }) {
                 ]}
             >
                 <div className="taskTitle">
-                    {/* <FontAwesomeIcon icon={farCircle} size="2x" color="blue" /> */}
-                    {/* <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" /> */}
-                    <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />
+                    {
+                        task.task_status === 'completed' ? (
+                            <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />) :
+                            task.task_status === 'in progress' ? (< FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" />) :
+                                <FontAwesomeIcon icon={farCircle} size="2x" color="blue" />
+                    }
                     <h3>{task.title}</h3>
                 </div>
             </Box>
