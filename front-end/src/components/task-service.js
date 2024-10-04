@@ -1,3 +1,4 @@
+import { Class } from '@mui/icons-material';
 import { isAuthenticated } from '../utils/auth';
 
 class Task {
@@ -125,4 +126,9 @@ class Task {
     }
 }
 
+export class Search {
+}
+
 export default Task;
+
+

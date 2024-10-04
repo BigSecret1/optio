@@ -8,12 +8,33 @@ import Task from "./task-service";
 const ResizableLayout = ({ columns }) => {
   const [data, setData] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [searchByProject, setSearchByProject] = useState("");
+  const [searchByTask, setSearchByTask] = useState("");
+  const [searchByStatus, setSearchByStatus] = useState("");
+
+  const handleSearch = (event) => {
+    const searchType = String(event.target.name).toLowerCase();
+    const searchTasksWith = String(event.target.value).toLowerCase();
+
+    if(searchType === "project") {
+      setSearchByProject(searchTasksWith);
+    }
+    else if(searchType === "task") {
+      setSearchByTask(searchTasksWith);
+    }
+    else if(searchType === "status") {
+      setSearchByStatus(searchTasksWith);
+    }
+  }
+  console.log("project search ", searchByProject);
+  console.log("task search ", searchByTask);
+  console.log("task search ", searchByStatus);
 
   useEffect(() => {
     const fetchTasks = async () => {
       const task = new Task();
-      const tasksUnderProject = await task.getTasks({ projectId: 2 });
-      setTasks(tasksUnderProject);
+      const allTasks = await task.getTasks({ projectId: 2 });
+      setTasks(allTasks);
     }
     fetchTasks();
   }, [])
@@ -28,16 +49,18 @@ const ResizableLayout = ({ columns }) => {
               <Panel className="panel">
                 <h2>{col}</h2>
                 <input
-                  // value="searchTerm"
-                  // onChange={handleInputChange}
+                  onChange={handleSearch}
                   type="text"
+                  name={col}
                   placeholder={`Enter ${col} details...`}
                 />
               </Panel>
 
-              {index < columns.length - 1 && (
-                <PanelResizeHandle className="resize-handle inactive" />
-              )}
+              {
+                index < columns.length - 1 && (
+                  <PanelResizeHandle className="resize-handle inactive" />
+                )
+              }
             </React.Fragment>
           );
         })}
