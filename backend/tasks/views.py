@@ -16,6 +16,7 @@ import time
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
+
 def create_connection():
     while True:
         try:
@@ -234,6 +235,56 @@ class DeleteTask(APIView):
             if conn:
                 close_connection(conn, cur)
 
+
+class Searcher(APIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        title = request.GET.get("title")
+        project = request.GET.get("project")
+        status = request.GET.get("status")
+
+        tasks = self.search_tasks(title=title, project=project)
+        return JsonResponse(tasks, safe=False)
+
+
+    def search_tasks(self, **kwargs):
+        conn, cur = create_connection()
+
+        title = (kwargs.get("title", "") or "").strip()
+        project = (kwargs.get("project", "") or "").strip()
+        status = (kwargs.get("status", "") or "").strip()
+
+        logging.info("task in searcher is %s and project is %s ", title, project)
+
+        query = '''
+            SELECT * 
+            FROM tasks
+            JOIN projects ON tasks.project_id = projects.id
+            WHERE 1 = 1
+            AND (tasks.title IS NULL OR tasks.title LIKE %s)
+            AND (projects.name IS NULL OR projects.name LIKE %s)
+            AND (tasks.task_status IS NULL OR tasks.task_status LIKE %s);
+        '''
+
+        params = (
+            f"%{title}%" if title else '%',
+            f"%{project}%" if project else '%',
+            f"%{status}%" if status else '%',
+        )
+
+        # Debug: Format query for logging
+        debug_query = query % tuple(repr(p) for p in params)
+        logging.debug("Executing SQL query: %s", debug_query)
+
+        cur.execute(query, params)
+        tasks = cur.fetchall()
+        conn.close()
+        cur.close()
+
+        return tasks
 
 
 

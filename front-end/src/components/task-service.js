@@ -126,7 +126,7 @@ class Task {
     }
 }
 
-export class Search {
+export class Searcher {
 }
 
 export default Task;

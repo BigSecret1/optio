@@ -4,7 +4,8 @@ from .views import (
     GetTaskById,
     UpdateTask,
     DeleteTask,
-    GetTasks
+    GetTasks,
+    Searcher
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path('get-tasks/', GetTasks.as_view(), name='get-tasks'),
     path('update-task/<int:task_id>/', UpdateTask.as_view(), name='update-task'),
     path('delete-task/<int:task_id>/', DeleteTask.as_view(), name='delete-task'),
+    path('search/', Searcher.as_view(), name='search-tasks'),
 ]
