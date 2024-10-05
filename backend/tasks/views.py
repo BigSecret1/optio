@@ -246,13 +246,14 @@ class Searcher(APIView):
         project = request.GET.get("project")
         status = request.GET.get("status")
 
-        tasks = self.search_tasks(title=title, project=project)
+        tasks = self.__search(title=title, status=status, project=project)
         return JsonResponse(tasks, safe=False)
 
-
-    def search_tasks(self, **kwargs):
+    # To filter the tasks
+    def __search(self, **kwargs):
         conn, cur = create_connection()
 
+        # \n was getting appended so trimmed white space
         title = (kwargs.get("title", "") or "").strip()
         project = (kwargs.get("project", "") or "").strip()
         status = (kwargs.get("status", "") or "").strip()
@@ -260,14 +261,14 @@ class Searcher(APIView):
         logging.info("task in searcher is %s and project is %s ", title, project)
 
         query = '''
-            SELECT * 
-            FROM tasks
-            JOIN projects ON tasks.project_id = projects.id
-            WHERE 1 = 1
-            AND (tasks.title IS NULL OR tasks.title LIKE %s)
-            AND (projects.name IS NULL OR projects.name LIKE %s)
-            AND (tasks.task_status IS NULL OR tasks.task_status LIKE %s);
-        '''
+                    SELECT * 
+                    FROM tasks
+                    JOIN projects ON tasks.project_id = projects.id
+                    WHERE 1 = 1
+                    AND (tasks.title IS NULL OR tasks.title LIKE %s)
+                    AND (projects.name IS NULL OR projects.name LIKE %s)
+                    AND (tasks.task_status IS NULL OR tasks.task_status LIKE %s);
+                '''
 
         params = (
             f"%{title}%" if title else '%',
