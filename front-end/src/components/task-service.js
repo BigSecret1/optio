@@ -1,7 +1,10 @@
 import { Class } from '@mui/icons-material';
 import { isAuthenticated } from '../utils/auth';
 
+
+
 class Task {
+
     baseUrl = "http://localhost:8000/tasks";
 
     constructor(
@@ -61,7 +64,7 @@ class Task {
 
         try {
             console.log("FETCHING TASK WITH ID : ", taskId);
-            const response = await fetch(`${this.baseUrl}${endpoint}`,{
+            const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -69,7 +72,7 @@ class Task {
                 },
             })
             const task = await response.json();
-            if(response.ok) {
+            if (response.ok) {
                 console.log("SUCCESSFULLY FETCHED TASK ", task);
                 return task;
             }
@@ -124,10 +127,42 @@ class Task {
             console.log("ERROR DURING THE TASK UPDATE :", error);
         }
     }
+
+    async search(searchTexts = {}) {
+        const loggedIn = isAuthenticated();
+        if (!loggedIn) {
+            return;
+        }
+        const accessToken = localStorage.getItem("access_token");
+
+        const taskTitle = searchTexts["task"];
+        const projectName = searchTexts["project"];
+        const taskStatus = searchTexts["status"];
+
+        const endpoint = `/search/?title=${taskTitle}&status=${taskStatus}&project=${projectName}`;
+        const url = `${this.baseUrl}${endpoint}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+
+            const tasks = await response.json();
+            console.log("search texts are ", searchTexts);
+            console.log("founded tasks ", tasks);
+            return tasks;
+        }
+        catch(error) {
+            console.log("An error occured while searching for task ", error);
+        }
+    }
+
 }
 
-export class Searcher {
-}
 
 export default Task;
 
