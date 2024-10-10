@@ -8,12 +8,20 @@ import Task from "./task-service";
 
 
 const ResizableLayout = ({ columns }) => {
+  const task = new Task();
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const allTasks = await task.getTasks({ projectId: 2 });
+      setTasks(allTasks);
+    }
+    fetchTasks();
+  }, [])
+
   const [tasks, setTasks] = useState([]);
   const [searchByProject, setSearchByProject] = useState("");
   const [searchByTask, setSearchByTask] = useState("");
   const [searchByStatus, setSearchByStatus] = useState("");
-
-  const task = new Task();
 
   const handleSearch = async (event) => {
     const searchType = String(event.target.name).toLowerCase();
@@ -30,7 +38,7 @@ const ResizableLayout = ({ columns }) => {
       searchHandler(searchTasksWith);
     }
 
-    // Since state updates in React are not immediate, passing event value directly instead of relying on the state.
+    // Since state updates in React are not immediate, passing event value directly instead of relying on the state
     const searchedTasks = await task.search({
       task: searchType === 'task' ? searchTasksWith : searchByTask,
       project: searchType === 'project' ? searchTasksWith : searchByProject,
@@ -38,14 +46,6 @@ const ResizableLayout = ({ columns }) => {
     })
     setTasks(searchedTasks);
   }
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const allTasks = await task.getTasks({ projectId: 2 });
-      setTasks(allTasks);
-    }
-    fetchTasks();
-  }, [])
 
   return (
     <div className="resizable-layout-container">

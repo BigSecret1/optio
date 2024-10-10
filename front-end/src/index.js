@@ -74,7 +74,7 @@ root.render(
           path="/tasks"
           element={
             <PrivateRoute>
-              <Tasks columns={["Project", "Task", "Status"]} />
+              <Tasks columns={["Task", "Project", "Status"]} />
             </PrivateRoute>
           }
         />

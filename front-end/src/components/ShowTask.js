@@ -8,21 +8,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Task from './task-service';
 
 
 
 export default function ShowTasks({ taskId }) {
-    const [newComment, setNewComment] = useState("");
     const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [editTaskTitle, setEditTaskTitle] = useState(true);
     const taskService = new Task();
 
-    async function handleAddComment() {
-        taskService.updateTask({ id: taskId, comment: newComment });
+    useEffect(() => {
         getTask();
-        setNewComment("");
-    }
+    }, [taskId]);
 
     async function getTask() {
         const currentTask = await taskService.getTask(taskId);
@@ -34,9 +33,13 @@ export default function ShowTasks({ taskId }) {
         setTask(currentTask);
     }
 
-    useEffect(() => {
+    const [newComment, setNewComment] = useState("");
+
+    async function handleAddComment() {
+        taskService.updateTask({ id: taskId, comment: newComment });
         getTask();
-    }, [taskId]);
+        setNewComment("");
+    }
 
     return loading ? <p>Loading Task...</p> : (
         <div style={{ width: '100%' }}>
@@ -63,16 +66,9 @@ export default function ShowTasks({ taskId }) {
                     }),
                 ]}
             >
-                <div className="taskTitle">
-                    {
-                        task.task_status === 'completed' ? (
-                            <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />) :
-                            task.task_status === 'in progress' ? (< FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" />) :
-                                <FontAwesomeIcon icon={farCircle} size="2x" color="blue" />
-                    }
-                    <h3>{task.title}</h3>
-                </div>
+                {editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle task={task} />}
             </Box>
+
             <Box
                 sx={[
                     (theme) => ({
@@ -168,10 +164,10 @@ export default function ShowTasks({ taskId }) {
             >
                 <div className="comments">
                     <h3>Comments</h3>
+
                     <div className="commentBox">
                         <TextField
                             id="filled-textarea"
-                            // label="Add a comment"
                             placeholder='Add a comment...'
                             multiline
                             variant="filled"
@@ -180,10 +176,10 @@ export default function ShowTasks({ taskId }) {
                             InputLabelProps={{
                                 style: { color: 'white' }
                             }}
-
                         />
                         <button type="button" className="btn btn-outline-success" onClick={handleAddComment}>comment</button>
                     </div>
+
                     <div className="commentHeader">
                         <h5>{task.comments.length} Comments</h5>
                     </div>
@@ -200,5 +196,47 @@ export default function ShowTasks({ taskId }) {
                 </div>
             </Box >
         </div >
+    );
+}
+
+
+const ShowTaskTitle = ({ task }) => {
+    return (
+        <div className="taskTitle">
+            {
+                task.task_status === 'completed' ? (
+                    <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />
+                ) : task.task_status === 'in progress' ? (
+                    <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" />
+                ) : (
+                    <FontAwesomeIcon icon={farCircle} size="2x" color="blue" />
+                )
+            }
+            <h3>{task.title}</h3>
+        </div>
+    );
+}
+
+
+const EditTaskTitle = ({ task }) => {
+    const [taskTitle, setTaskTitle] = useState(task.title);
+
+    function handleSave() {
+        console.log("save the new title");
+    }
+
+    function handleCancel() {
+        console.log("cancelling the udpate");
+    }
+
+    return (
+        <>
+            <input
+                type="text" value={taskTitle}
+                onChange={(event) => setTaskTitle(event.target.value)}
+            />
+            <FontAwesomeIcon icon={faCheck} onClick={handleSave} />
+            <FontAwesomeIcon icon={faXmark} color="red" onClick={handleCancel} />
+        </>
     );
 }
