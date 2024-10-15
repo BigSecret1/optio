@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import './ShowTask.css';
@@ -10,39 +10,36 @@ import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Task from './task-service';
+import { StateContext } from './TaskStateProvider';
 
 
 
 export default function ShowTasks({ taskId }) {
-    const [task, setTask] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [editTaskTitle, setEditTaskTitle] = useState(true);
-    const taskService = new Task();
+    const {
+        task,
+        setTask,
+        loading,
+        setLoading,
+        editTaskTitle,
+        setEditTaskTitle,
+        taskService,
+        getTask
+    } = useContext(StateContext);
 
     useEffect(() => {
-        getTask();
+        getTask(taskId);
     }, [taskId]);
-
-    async function getTask() {
-        const currentTask = await taskService.getTask(taskId);
-        console.log("CURRENT TASK ", currentTask);
-        setLoading(false);
-
-        // For latest comment to come on top
-        currentTask.comments.reverse();
-        setTask(currentTask);
-    }
 
     const [newComment, setNewComment] = useState("");
 
     async function handleAddComment() {
-        taskService.updateTask({ id: taskId, comment: newComment });
+        taskService.updateTask({ id: taskId, comments: [newComment] });
         getTask();
         setNewComment("");
     }
 
     return loading ? <p>Loading Task...</p> : (
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%' }}>``
             <Box
                 sx={[
                     (theme) => ({
@@ -66,7 +63,9 @@ export default function ShowTasks({ taskId }) {
                     }),
                 ]}
             >
-                {editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle task={task} />}
+                {
+                    editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle taskId={taskId} />
+                }
             </Box>
 
             <Box
@@ -218,15 +217,22 @@ const ShowTaskTitle = ({ task }) => {
 }
 
 
-const EditTaskTitle = ({ task }) => {
-    const [taskTitle, setTaskTitle] = useState(task.title);
+const EditTaskTitle = ({ taskId }) => {
+    const [taskTitle, setTaskTitle] = useState("");
+    const { editTaskTitle, setEditTaskTitle, taskService, getTask } = useContext(StateContext);
 
-    function handleSave() {
-        console.log("save the new title");
+    if (editTaskTitle == false) return;
+
+    async function handleSave() {
+        console.log(`Saving task with id ${taskId} and title ${taskTitle}`);
+        await taskService.updateTask({ id: taskId, title: taskTitle });
+        getTask(taskId);
+        setEditTaskTitle(false);
     }
 
     function handleCancel() {
-        console.log("cancelling the udpate");
+        setTaskTitle("");
+        setEditTaskTitle(false);
     }
 
     return (

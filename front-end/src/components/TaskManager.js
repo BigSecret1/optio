@@ -3,6 +3,8 @@ import { useParams, useLocation } from "react-router-dom";
 import Task from "./task-service";
 import ShowTask from "./ShowTask";
 import Navbar from "./Navbar";
+import { StateProvider } from "./TaskStateProvider";
+
 
 function TaskManager() {
     const location = useLocation();
@@ -20,8 +22,10 @@ function TaskManager() {
 
     return (
         <>
-            <Navbar />
-            <ShowTask taskId={taskInstace.id} />
+            <StateProvider>
+                <Navbar />
+                <ShowTask taskId={taskInstace.id} />
+            </StateProvider>
         </>
     );
 }
