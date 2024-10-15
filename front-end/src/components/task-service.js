@@ -156,9 +156,36 @@ class Task {
             console.log("founded tasks ", tasks);
             return tasks;
         }
-        catch(error) {
+        catch (error) {
             console.log("An error occured while searching for task ", error);
         }
+    }
+
+}
+
+
+class Sanitize {
+
+    const defaultProperties = {
+        comments: [],                    
+        subtasks: [],                    
+        title: "Untitled",               
+        due_date: null,                  
+        description: "",                 
+        task_status: "Pending",          
+        created_time: new Date().toISOString(), // Default to current time as ISO string
+        project_id: null                 
+    };
+
+    sanitizeTaskData(task) {
+        return Object.keys(task).reduce((sanitizedTask, key) => {
+            sanitizedTask[key] = sanitizeValue(task[key], key);
+            return sanitizedTask;
+        }, {});
+    }
+
+    sanitizeValue(value, key) {
+        return value ?? defaultValues[key] ?? "N/A";  // Fallback to default
     }
 
 }
