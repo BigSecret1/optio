@@ -14,6 +14,7 @@ import time
 
 # logging module configuration for logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+import logging
 
 
 
@@ -146,7 +147,7 @@ class GetTaskById(APIView):
             else:
                 return JsonResponse({"error": "Task not found"}, status=404)
         except Exception as err:
-            return JsonResponse({'ERROR': "Bad Request"}, status=500)
+            return JsonResponse({'ERROR': err}, status=500)
 
 
 class UpdateTask(APIView):
@@ -160,15 +161,18 @@ class UpdateTask(APIView):
             conn, cur = create_connection()
             data = dict(data)
             new_task = {key: to_lowercase(value) for key, value in data.items()}
+            logging.info("NEW TASK IS %s", new_task);
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
-            logging.info("EXITING TASK IS : %s", new_task['comment']);
 
-            if existing_task['comments'] is None:
-                existing_task['comments'] = []
-            if new_task['comment'] is not None:
-                existing_task['comments'].append(new_task['comment'])
+            if 'comments' in new_task and new_task['comments'] is not None:
+                logging.info("New task comments are: %s", new_task['comments'])
+
+                if isinstance(existing_task['comments'], list) and isinstance(new_task['comments'], list):
+                    existing_task['comments'] += new_task['comments']  # Concatenate comments lists
+                else:
+                    logging.error("Comments are not lists, cannot concatenate.")
 
             if existing_task:
                 query = """
@@ -187,6 +191,7 @@ class UpdateTask(APIView):
                     new_task.get('project_id', existing_task['project_id']),
                     task_id
                 ))
+                logging.info("QUERY : %s", query)
                 conn.commit()
 
                 cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
