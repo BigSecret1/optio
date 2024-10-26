@@ -9,8 +9,10 @@ import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import Task from './task-service';
+import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { StateContext } from './TaskStateProvider';
+
+// End of imports
 
 
 
@@ -34,16 +36,18 @@ export default function ShowTasks({ taskId }) {
 
     async function handleAddComment() {
         taskService.updateTask({ id: taskId, comments: [newComment] });
-        getTask();
+        getTask(taskId);
         setNewComment("");
     }
 
     return loading ? <p>Loading Task...</p> : (
-        <div style={{ width: '100%' }}>``
+        <div style={{ width: '100%' }}>
             <Box
                 sx={[
                     (theme) => ({
                         display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
                         m: 1,
                         p: 1,
                         minHeight: '10vh',
@@ -63,10 +67,25 @@ export default function ShowTasks({ taskId }) {
                     }),
                 ]}
             >
+                <div className='taskStatusHeader'>
+                    {
+                        task.task_status === 'completed' ? (
+                            <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />
+                        ) : task.task_status === 'in progress' ? (
+                            <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" />
+                        ) : (
+                            <FontAwesomeIcon icon={farCircle} size="2x" color="blue" />
+                        )
+                    }
+
+                    <h6> something for trial</h6>
+                    <EllipsisWithSpacing containerClass="dotsForTitle" />
+                </div>
                 {
                     editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle taskId={taskId} />
                 }
-            </Box>
+
+            </Box >
 
             <Box
                 sx={[
@@ -201,18 +220,13 @@ export default function ShowTasks({ taskId }) {
 
 const ShowTaskTitle = ({ task }) => {
     return (
+
         <div className="taskTitle">
-            {
-                task.task_status === 'completed' ? (
-                    <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />
-                ) : task.task_status === 'in progress' ? (
-                    <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" />
-                ) : (
-                    <FontAwesomeIcon icon={farCircle} size="2x" color="blue" />
-                )
-            }
             <h3>{task.title}</h3>
+
+            {/* <FontAwesomeIcon icon={faEllipsisH} style={{ letterSpacing: '200px' }} /> */}
         </div>
+
     );
 }
 
@@ -246,3 +260,13 @@ const EditTaskTitle = ({ taskId }) => {
         </>
     );
 }
+
+
+// 3 Dot component used in umultiple child components of this module
+const EllipsisWithSpacing = ({ containerClass }) => (
+    <div className={containerClass}>
+        <FontAwesomeIcon icon={farCircle} style={{ fontSize: '0.2em', marginRight: '0.8em' }} />
+        <FontAwesomeIcon icon={farCircle} style={{ fontSize: '0.2em', marginRight: '0.8em' }} />
+        <FontAwesomeIcon icon={farCircle} style={{ fontSize: '0.2em' }} />
+    </div>
+);

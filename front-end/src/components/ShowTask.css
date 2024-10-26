@@ -1,11 +1,28 @@
+.taskStatusHeader {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .taskTitle {
   display: flex;
   gap: 15px;
   align-items: center;
+  /* background-color: red; */
 }
 
 .taskTitle h3 {
-  margin-top: 8px;
+  /* margin-top: 8px; */
+  margin: 0;
+  font-weight: normal;
+}
+
+.dotsForTitle {
+  /* background-color: yellow;
+  margin-left: 500px;
+  height: 4vh;
+  padding-top: 0px; */
+  margin-right: 8px; /* Adjust spacing to bring it closer to the title */
+  font-size: 1.2em; /* Adjust size as nee
 }
 
 .subTasksContainer {

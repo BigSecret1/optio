@@ -172,7 +172,8 @@ class UpdateTask(APIView):
                 if isinstance(existing_task['comments'], list) and isinstance(new_task['comments'], list):
                     existing_task['comments'] += new_task['comments']  # Concatenate comments lists
                 else:
-                    logging.error("Comments are not lists, cannot concatenate.")
+                    logging.info("Comments are not lists, creating new comment list");
+                    existing_task["comments"] = new_task["comments"]
 
             if existing_task:
                 query = """

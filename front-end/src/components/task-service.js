@@ -1,11 +1,15 @@
+// Import required
+
 import { Class } from '@mui/icons-material';
 import { isAuthenticated } from '../utils/auth';
 
+// End of imports
 
 
 class Task {
 
     baseUrl = "http://localhost:8000/tasks";
+    sanitize = new Sanitize();
 
     constructor(
         title = '',
@@ -38,6 +42,7 @@ class Task {
         const accessToken = localStorage.getItem("access_token");
 
         try {
+
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'GET',
                 headers: {
@@ -45,11 +50,17 @@ class Task {
                     "Authorization": `Bearer ${accessToken}`,
                 },
             })
+
             const tasks = await response.json();
+            console.log("FETCHED TASKS ARE ", tasks);
+            // return this.sanitize.sanitizeTaskData(tasks);  // this needs a fix , throwing error
             return tasks;
+
         }
         catch (err) {
+
             console.log("SOME ERROR OCCURED WHILE FETCHING PROJECT TASKS: ", err);
+
         }
     }
 
@@ -63,7 +74,7 @@ class Task {
         const endpoint = `/get-task-by-id/${taskId}`;
 
         try {
-            console.log("FETCHING TASK WITH ID : ", taskId);
+            console.log(`FETCHING TASK WITH ID ${taskId} request on ${this.baseUrl}${endpoint}`);
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'GET',
                 headers: {
@@ -71,41 +82,53 @@ class Task {
                     "Authorization": `Bearer ${accessToken}`,
                 },
             })
+
             const task = await response.json();
+
             if (response.ok) {
-                console.log("SUCCESSFULLY FETCHED TASK ", task);
-                return task;
+                console.log(`Suceessfully fetched task with ${taskId}`);
+                return this.sanitize.sanitizeTaskData(task);
             }
             else {
                 console.log("COULDN'T FETCH TASK");
             }
         }
         catch (error) {
+
             console.log("AN ERROR OCCURED WHILE FETCHING THE TASK WITH ID : ", error);
+
         }
 
     }
 
     async updateTask(params = {}) {
         const loggedIn = isAuthenticated();
+
+        // Check if user is autherized
         if (!loggedIn) {
             return;
         }
+
         const accessToken = localStorage.getItem("access_token");
 
+        // Filter out undefined values from params
         const requestBody = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value != undefined)
         );
+        
         console.log("UPDATES IN TASK ARE :", requestBody);
 
+        //Ensure task ID is resent before proceeding
         if (!requestBody['id']) {
             console.log("TASK ID IS MISSING CANNOT UPDATE THE TASK");
             return;
         }
+
         const updateEndpoint = `/update-task/${requestBody['id']}/`
 
 
         try {
+            // Send update request
             const response = await fetch(`${this.baseUrl}${updateEndpoint}`, {
                 method: "PUT",
                 headers: {
@@ -114,11 +137,14 @@ class Task {
                 },
                 body: JSON.stringify(requestBody),
             });
+
             const updatedTask = await response.json();
+
+            // Handle sucessful response
             if (response.ok) {
                 console.log("TASK WAS UPDATED SUCCESSFULLY");
                 console.log("new comments ", updatedTask["comments"]);
-                return updatedTask;
+                return this.sanitize.sanitizeTaskData(updatedTask);
             }
             else {
                 console.log("FAILED TO UPDATE THE TASK:", response.statusText);
@@ -166,7 +192,7 @@ class Task {
 
 class Sanitize {
 
-    const defaultProperties = {
+    defaultProperties = {
         comments: [],                    
         subtasks: [],                    
         title: "Untitled",               
@@ -177,15 +203,16 @@ class Sanitize {
         project_id: null                 
     };
 
+    // Data santization is required to ensure task data is in required model
     sanitizeTaskData(task) {
         return Object.keys(task).reduce((sanitizedTask, key) => {
-            sanitizedTask[key] = sanitizeValue(task[key], key);
+            sanitizedTask[key] = this.sanitizeValue(task[key], key);
             return sanitizedTask;
         }, {});
     }
 
     sanitizeValue(value, key) {
-        return value ?? defaultValues[key] ?? "N/A";  // Fallback to default
+        return value ?? this.defaultProperties[key] ?? "N/A";  // Fallback to default
     }
 
 }
