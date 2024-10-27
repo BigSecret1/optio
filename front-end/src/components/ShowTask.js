@@ -9,8 +9,11 @@ import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { StateContext } from './TaskStateProvider';
+import { Link } from 'react-router-dom';
+
+
 
 // End of imports
 
@@ -78,7 +81,9 @@ export default function ShowTasks({ taskId }) {
                         )
                     }
 
-                    <h6> something for trial</h6>
+                    <Link>
+                        <h6>GSMI/1248</h6>
+                    </Link>
                     <EllipsisWithSpacing containerClass="dotsForTitle" />
                 </div>
                 {
@@ -265,8 +270,8 @@ const EditTaskTitle = ({ taskId }) => {
 // 3 Dot component used in umultiple child components of this module
 const EllipsisWithSpacing = ({ containerClass }) => (
     <div className={containerClass}>
-        <FontAwesomeIcon icon={farCircle} style={{ fontSize: '0.2em', marginRight: '0.8em' }} />
-        <FontAwesomeIcon icon={farCircle} style={{ fontSize: '0.2em', marginRight: '0.8em' }} />
-        <FontAwesomeIcon icon={farCircle} style={{ fontSize: '0.2em' }} />
+        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
+        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em'}} />
+        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
     </div>
-);
+);  

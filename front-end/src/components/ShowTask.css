@@ -1,6 +1,7 @@
 .taskStatusHeader {
   display: flex;
   justify-content: flex-start;
+  /* background-color: yellow; */
 }
 
 .taskTitle {
@@ -21,8 +22,15 @@
   margin-left: 500px;
   height: 4vh;
   padding-top: 0px; */
-  margin-right: 8px; /* Adjust spacing to bring it closer to the title */
-  font-size: 1.2em; /* Adjust size as nee
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  justify-content: center;
+  width: 20vh;
+  margin-left: auto; /* Adjust spacing to bring it closer to the title */
+  font-size: 1.2em; /* Adjust size as nee */
+  /* background-color: red; */
 }
 
 .subTasksContainer {
