@@ -13,8 +13,6 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { StateContext } from './TaskStateProvider';
 import { Link } from 'react-router-dom';
 
-
-
 // End of imports
 
 
@@ -70,21 +68,21 @@ export default function ShowTasks({ taskId }) {
                     }),
                 ]}
             >
-                <div className='taskStatusHeader'>
+                <div className='taskTitleHeader'>
                     {
                         task.task_status === 'completed' ? (
-                            <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" />
+                            <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" className="statusIcon" />
                         ) : task.task_status === 'in progress' ? (
-                            <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" />
+                            <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" className="statusIcon" />
                         ) : (
-                            <FontAwesomeIcon icon={farCircle} size="2x" color="blue" />
+                            <FontAwesomeIcon icon={farCircle} size="2x" color="blue" className="statusIcon" />
                         )
                     }
 
                     <Link>
-                        <h6>GSMI/1248</h6>
+                        <h5>GSMI/1248</h5>
                     </Link>
-                    <EllipsisWithSpacing containerClass="dotsForTitle" />
+                    <EllipsisWithSpacing containerClass="optionDots" />
                 </div>
                 {
                     editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle taskId={taskId} />
@@ -96,6 +94,7 @@ export default function ShowTasks({ taskId }) {
                 sx={[
                     (theme) => ({
                         display: 'flex',
+                        flexDirection: 'column',
                         m: 1,
                         p: 1,
                         minHeight: '30vh',
@@ -115,10 +114,11 @@ export default function ShowTasks({ taskId }) {
                     }),
                 ]}
             >
-                <div>
+                <div className="descriptionHeader">
                     <h3>Description</h3>
-                    <p>{task.description}</p>
+                    <EllipsisWithSpacing containerClass="optionDots" />
                 </div>
+                <p>{task.description}</p>
 
             </Box>
 
@@ -126,6 +126,7 @@ export default function ShowTasks({ taskId }) {
                 sx={[
                     (theme) => ({
                         display: 'flex',
+                        flexDirection: 'column',
                         m: 1,
                         p: 1,
                         // minHeight: '40vh',
@@ -146,8 +147,12 @@ export default function ShowTasks({ taskId }) {
                     }),
                 ]}
             >
-                <div className="subTasksContainer">
+                <div className="subTaskHeader">
                     <h3>SubTasks</h3>
+                    <EllipsisWithSpacing containerClass="optionDots" />
+                </div>
+
+                <div className="subTasksContainer">
                     <div className='subTasks'>
                         {task.subtasks.map((subtask, index) => {
                             return (
@@ -271,7 +276,7 @@ const EditTaskTitle = ({ taskId }) => {
 const EllipsisWithSpacing = ({ containerClass }) => (
     <div className={containerClass}>
         <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
-        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em'}} />
+        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
         <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
     </div>
 );  

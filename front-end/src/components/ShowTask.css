@@ -1,14 +1,24 @@
-.taskStatusHeader {
+.taskTitleHeader {
   display: flex;
   justify-content: flex-start;
-  /* background-color: yellow; */
+  align-items: flex-start;
+}
+
+.statusIcon {
+  width: 15px;
+  height: 15px;
+  margin-top: 4px;
+}
+
+.taskTitleHeader h5 {
+  margin-left: 10px;
+  margin-top: 0px;
 }
 
 .taskTitle {
   display: flex;
   gap: 15px;
   align-items: center;
-  /* background-color: red; */
 }
 
 .taskTitle h3 {
@@ -17,36 +27,38 @@
   font-weight: normal;
 }
 
-.dotsForTitle {
-  /* background-color: yellow;
-  margin-left: 500px;
-  height: 4vh;
-  padding-top: 0px; */
+.optionDots {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
   justify-content: center;
-  width: 20vh;
-  margin-left: auto; /* Adjust spacing to bring it closer to the title */
-  font-size: 1.2em; /* Adjust size as nee */
-  /* background-color: red; */
+  margin-left: auto;
+  font-size: 1.2em;
+  background-color: red;
+}
+
+.descriptionHeader {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.subTaskHeader {
+  display: flex;
+  align-items: flex-start;
 }
 
 .subTasksContainer {
-  /* background-color: yellow; */
   padding-top: 0px;
-  /* background-color: red; */
 }
 
 .subTasks {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* position: absolute; */
   padding-left: 2px;
   gap: 10px;
-  /* background-color: red; */
   margin-top: 20px;
 }
 
@@ -118,6 +130,4 @@
   margin-top: 10px;
   min-height: 13vh;
   height: auto;
-  /* border: 1px solid; */
-  /* border-radius: 3px; */
 }
