@@ -1,18 +1,26 @@
 import * as React from 'react';
 import { useEffect, useState, createContext, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import './ShowTask.css';
+
+// matrical UI
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import './ShowTask.css';
 import TextField from '@mui/material/TextField';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import { deepOrange } from '@mui/material/colors';
+
+// Font awesome icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
-import { StateContext } from './TaskStateProvider';
-import { Link } from 'react-router-dom';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
+import { StateContext } from './TaskStateProvider';
 // End of imports
 
 
@@ -215,8 +223,12 @@ export default function ShowTasks({ taskId }) {
                         task.comments.map((comment, index) => {
                             return (
                                 <div className="comment" key={index}>
+                                    <FallbackAvatars />
                                     <h6>Added on Sep 15 2024: 11:40 IST</h6>
                                     <p>{comment}</p>
+                                    <FontAwesomeIcon icon={faEdit} /> Edit
+                                    <FontAwesomeIcon icon={faTrash} /> Delete
+                                    <hr />
                                 </div>
                             )
                         })
@@ -279,4 +291,17 @@ const EllipsisWithSpacing = ({ containerClass }) => (
         <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
         <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
     </div>
-);  
+);
+
+
+function FallbackAvatars() {
+    return (
+        <Stack direction="row" spacing={2}>
+            <Avatar
+                sx={{ bgcolor: deepOrange[500] }}
+                alt="Demmy lovato"
+                src="/broken-image.jpg"
+            />
+        </Stack>
+    );
+}
