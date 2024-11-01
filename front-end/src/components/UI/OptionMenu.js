@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import "./OptionMenu.css"; // Import the CSS file
 
-export default function OptionMenu({ children }){
+export default function OptionMenu({ children }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     function handleClose() {
@@ -47,6 +47,36 @@ export default function OptionMenu({ children }){
                 </MenuItem>
                 <MenuItem onClick={handleClose} className="menu-item">
                     Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem><MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem><MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem><MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose} className="menu-item">
+                    Logout some of the bigges options
                 </MenuItem>
             </Menu>
         </div>

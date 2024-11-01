@@ -1,7 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { useEffect, useState, createContext, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import './ShowTask.css';
 
 // matrical UI
 import Box from '@mui/material/Box';
@@ -20,9 +19,10 @@ import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
+// Internal modules
 import { StateContext } from './TaskStateProvider';
+import './ShowTask.css';
 import OptionMenu from './UI/OptionMenu';
-// End of imports
 
 
 
@@ -37,6 +37,12 @@ export default function ShowTasks({ taskId }) {
         taskService,
         getTask
     } = useContext(StateContext);
+
+    // Tasks title option menu can have
+    // 1. Edit task title
+    // 2. Change task status
+    // 3. Task assignee
+    const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
 
     useEffect(() => {
         getTask(taskId);
@@ -97,7 +103,7 @@ export default function ShowTasks({ taskId }) {
                         <h5>GSMI/1248</h5>
                     </Link>
                     <div className="optionMenuEllipsContainer">
-                        <OptionMenu>
+                        <OptionMenu >
                             <EllipsisWithSpacing containerClass="optionDots" />
                         </OptionMenu>
                     </div>
