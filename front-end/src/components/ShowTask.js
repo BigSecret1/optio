@@ -21,6 +21,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { StateContext } from './TaskStateProvider';
+import OptionMenu from './UI/OptionMenu';
 // End of imports
 
 
@@ -48,6 +49,11 @@ export default function ShowTasks({ taskId }) {
         getTask(taskId);
         setNewComment("");
     }
+
+    function handleTaskTitleOptions() {
+        console.log("clicked on option button");
+    }
+
 
     return loading ? <p>Loading Task...</p> : (
         <div style={{ width: '100%' }}>
@@ -90,7 +96,11 @@ export default function ShowTasks({ taskId }) {
                     <Link>
                         <h5>GSMI/1248</h5>
                     </Link>
-                    <EllipsisWithSpacing containerClass="optionDots" />
+                    <div className="optionMenuEllipsContainer">
+                        <OptionMenu>
+                            <EllipsisWithSpacing containerClass="optionDots" />
+                        </OptionMenu>
+                    </div>
                 </div>
                 {
                     editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle taskId={taskId} />
@@ -124,7 +134,11 @@ export default function ShowTasks({ taskId }) {
             >
                 <div className="descriptionHeader">
                     <h3>Description</h3>
-                    <EllipsisWithSpacing containerClass="optionDots" />
+                    <div className="optionMenuEllipsContainer">
+                        <OptionMenu>
+                            <EllipsisWithSpacing containerClass="optionDots" />
+                        </OptionMenu>
+                    </div>
                 </div>
                 <p>{task.description}</p>
 
@@ -285,8 +299,8 @@ const EditTaskTitle = ({ taskId }) => {
 
 
 // 3 Dot component used in umultiple child components of this module
-const EllipsisWithSpacing = ({ containerClass }) => (
-    <div className={containerClass}>
+const EllipsisWithSpacing = ({ containerClass, invokeFunctionOnClick }) => (
+    <div className={containerClass} onClick={invokeFunctionOnClick}>
         <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
         <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
         <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
@@ -294,6 +308,7 @@ const EllipsisWithSpacing = ({ containerClass }) => (
 );
 
 
+// Avatar for user uses image or alternative name
 function FallbackAvatars() {
     return (
         <Stack direction="row" spacing={2}>
@@ -305,3 +320,5 @@ function FallbackAvatars() {
         </Stack>
     );
 }
+
+

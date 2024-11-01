@@ -41,7 +41,10 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/login" element={<Auth />} />
+        <Route
+          path="/login"
+          element={<Auth />}
+        />
 
         <Route
           path="/test"
@@ -79,9 +82,15 @@ root.render(
           }
         />
 
-        <Route path="/task-manager/:task_id" element={<TaskManager />} />
+        <Route
+          path="/task-manager/:task_id"
+          element={<TaskManager />}
+        />
 
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route
+          path="*"
+          element={<Navigate to="/login" />}
+        />
       </Routes>
     </Router>
   </React.StrictMode>

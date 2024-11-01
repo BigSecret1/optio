@@ -4,6 +4,12 @@ import Task from './task-service';
 
 export const StateContext = createContext();
 
+
+/*
+    * TaskStateContext provides the necessary states and functions for managing tasks.
+    * It enables reuse of stateful logic across all components within `ShowTask.js`,
+    ensuring consistent data and actions throughout the task-related components.
+ */
 export function StateProvider({ children }) {
     const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -11,18 +17,20 @@ export function StateProvider({ children }) {
 
     const taskService = new Task();
 
-    // Function to fetch task
+
     async function getTask(taskId) {
         const currentTask = await taskService.getTask(taskId);
         console.log("CURRENT TASK ", currentTask);
 
-        // For latest comment to come on top
+        // latest comment should be on the top
         if (currentTask.comments == null) {
             currentTask.comments = [];
         }
         else {
             currentTask.comments.reverse();
         }
+
+        // Finish task page loading and make task appear
         setTask(currentTask);
         setLoading(false);
     }
