@@ -6,7 +6,9 @@ import "./OptionMenu.css"; // Import the CSS file
 
 export default function OptionMenu({ children }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const options = ['Upload tasks', 'Change status', 'Edit title']
 
+    // Closes option menu upon click on option icon or out of option menu 
     function handleClose() {
         setAnchorEl(null);
     };
@@ -36,48 +38,16 @@ export default function OptionMenu({ children }) {
                 onClose={handleClose}
                 open={Boolean(anchorEl)}
             >
-                <MenuItem onClick={handleClose} className="menu-item">
-                    My Account
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Settings
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Profile
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem><MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem><MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem><MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="menu-item">
-                    Logout some of the bigges options
-                </MenuItem>
+                {
+                    options.map((option) => {
+                        return (
+                            <MenuItem onClick={handleClose} className="menu-item">
+                                {option}
+                            </MenuItem>
+                        )
+                    })
+                }
+
             </Menu>
         </div>
     );
