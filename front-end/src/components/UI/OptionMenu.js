@@ -4,9 +4,8 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import "./OptionMenu.css"; // Import the CSS file
 
-export default function OptionMenu({ children }) {
+export default function OptionMenu({ options = [], children }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const options = ['Upload tasks', 'Change status', 'Edit title']
 
     // Closes option menu upon click on option icon or out of option menu 
     function handleClose() {
@@ -16,6 +15,10 @@ export default function OptionMenu({ children }) {
     function handleClick(event) {
         setAnchorEl(event.currentTarget);
     };
+
+    function handleMenuItemSelection(option) {
+        console.log("You selected ", option);
+    }
 
     return (
         <div className="menu-container">
@@ -31,7 +34,7 @@ export default function OptionMenu({ children }) {
             </div>
             <Menu
                 PaperProps={{
-                    className: "menu-paper", // Apply CSS class for Paper styling
+                    className: "menu-paper",
                 }}
                 keepMounted
                 anchorEl={anchorEl}
@@ -39,9 +42,16 @@ export default function OptionMenu({ children }) {
                 open={Boolean(anchorEl)}
             >
                 {
-                    options.map((option) => {
+                    options.map((option, index) => {
                         return (
-                            <MenuItem onClick={handleClose} className="menu-item">
+                            <MenuItem
+                                onClick={() => {
+                                    handleMenuItemSelection(option);
+                                    handleClose();
+                                }}
+                                className="menu-item"
+                                key={index}
+                            >
                                 {option}
                             </MenuItem>
                         )

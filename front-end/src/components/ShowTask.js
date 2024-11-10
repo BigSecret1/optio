@@ -38,11 +38,8 @@ export default function ShowTasks({ taskId }) {
         getTask
     } = useContext(StateContext);
 
-    // Tasks title option menu can have
-    // 1. Edit task title
-    // 2. Change task status
-    // 3. Task assignee
     const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
+    const menuOptionsForDescription = ["Edit description"]
 
     useEffect(() => {
         getTask(taskId);
@@ -59,7 +56,6 @@ export default function ShowTasks({ taskId }) {
     function handleTaskTitleOptions() {
         console.log("clicked on option button");
     }
-
 
     return loading ? <p>Loading Task...</p> : (
         <div style={{ width: '100%' }}>
@@ -103,7 +99,7 @@ export default function ShowTasks({ taskId }) {
                         <h5>GSMI/1248</h5>
                     </Link>
                     <div className="optionMenuEllipsContainer">
-                        <OptionMenu >
+                        <OptionMenu options={menuOptionsForTitleBox}>
                             <EllipsisWithSpacing containerClass="optionDots" />
                         </OptionMenu>
                     </div>
@@ -111,8 +107,7 @@ export default function ShowTasks({ taskId }) {
                 {
                     editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle taskId={taskId} />
                 }
-
-            </Box >
+            </Box > 
 
             <Box
                 sx={[
@@ -141,7 +136,7 @@ export default function ShowTasks({ taskId }) {
                 <div className="descriptionHeader">
                     <h3>Description</h3>
                     <div className="optionMenuEllipsContainer">
-                        <OptionMenu>
+                        <OptionMenu options={menuOptionsForDescription}>
                             <EllipsisWithSpacing containerClass="optionDots" />
                         </OptionMenu>
                     </div>
