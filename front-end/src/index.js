@@ -35,7 +35,7 @@ const PrivateRoute = ({ children }) => {
   );
 };
 
-document.title = "ToDOler";
+document.title = "OpTio";
 
 root.render(
   <React.StrictMode>

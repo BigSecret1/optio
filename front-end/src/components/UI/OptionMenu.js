@@ -1,11 +1,27 @@
 import React from "react";
+import { useEffect, useState, createContext, useContext } from 'react';
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
+
 import "./OptionMenu.css"; // Import the CSS file
+import { StateContext } from '../TaskStateProvider';
+
+
 
 export default function OptionMenu({ options = [], children }) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const {
+        task,
+        setTask,
+        loading,
+        setLoading,
+        editTaskTitle,
+        setEditTaskTitle,
+        taskService,
+        getUpdatedTask,
+        open, setOpen,
+    } = useContext(StateContext);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     // Closes option menu upon click on option icon or out of option menu 
     function handleClose() {
@@ -18,6 +34,8 @@ export default function OptionMenu({ options = [], children }) {
 
     function handleMenuItemSelection(option) {
         console.log("You selected ", option);
+        setEditTaskTitle(true);
+        setOpen(true);
     }
 
     return (

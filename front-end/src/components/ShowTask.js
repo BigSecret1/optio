@@ -19,6 +19,20 @@ import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
+// For Dialogue box which comes after menu option selection
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Switch from '@mui/material/Switch';
+
 // Internal modules
 import { StateContext } from './TaskStateProvider';
 import './ShowTask.css';
@@ -35,21 +49,21 @@ export default function ShowTasks({ taskId }) {
         editTaskTitle,
         setEditTaskTitle,
         taskService,
-        getTask
+        getUpdatedTask
     } = useContext(StateContext);
 
     const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
     const menuOptionsForDescription = ["Edit description"]
 
     useEffect(() => {
-        getTask(taskId);
+        getUpdatedTask(taskId);
     }, [taskId]);
 
     const [newComment, setNewComment] = useState("");
 
     async function handleAddComment() {
         taskService.updateTask({ id: taskId, comments: [newComment] });
-        getTask(taskId);
+        getUpdatedTask(taskId);
         setNewComment("");
     }
 
@@ -107,7 +121,7 @@ export default function ShowTasks({ taskId }) {
                 {
                     editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle taskId={taskId} />
                 }
-            </Box > 
+            </Box >
 
             <Box
                 sx={[
@@ -255,58 +269,195 @@ export default function ShowTasks({ taskId }) {
 }
 
 
-const ShowTaskTitle = ({ task }) => {
+function ShowTaskTitle({ task }) {
     return (
-
         <div className="taskTitle">
             <h3>{task.title}</h3>
-
-            {/* <FontAwesomeIcon icon={faEllipsisH} style={{ letterSpacing: '200px' }} /> */}
         </div>
-
     );
 }
 
 
-const EditTaskTitle = ({ taskId }) => {
-    const [taskTitle, setTaskTitle] = useState("");
-    const { editTaskTitle, setEditTaskTitle, taskService, getTask } = useContext(StateContext);
+/* 
+Three Dot component which open option Menu on Click.
+Used in multiple child components of this module.
+*/
+function EllipsisWithSpacing({ containerClass }) {
+    return (
+        <div className={containerClass}>
+            <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
+            <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
+            <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
+        </div>
+    );
+}
 
-    if (editTaskTitle == false) return;
 
-    async function handleSave() {
-        console.log(`Saving task with id ${taskId} and title ${taskTitle}`);
-        await taskService.updateTask({ id: taskId, title: taskTitle });
-        getTask(taskId);
-        setEditTaskTitle(false);
+/*
+A Dialogue box which popups when choose to edit task title
+*/
+function EditTaskTitle({ taskId }) {
+    const {
+        task,
+        setTask,
+        loading,
+        setLoading,
+        editTaskTitle,
+        setEditTaskTitle,
+        taskService,
+        getUpdatedTask,
+        open, setOpen,
+    } = useContext(StateContext);
+
+    const [fullWidth, setFullWidth] = useState(true);
+    const [maxWidth, setMaxWidth] = useState('sm');
+
+    const [taskTitle, setTaskTitle] = useState(task.title);
+
+    const change = "Task title";
+    const changeInfo = "Feel free to update your task title."
+
+    function handleEditTitle(event) {
+        setTaskTitle(event.target.value);
     }
 
-    function handleCancel() {
-        setTaskTitle("");
+    // function handleClickOpen() {
+    //     setOpen(true);
+    // };
+
+    function handleClose() {
+        setOpen(false);
+    };
+
+    function handleSave() {
+        console.log("Saving task with new title", taskTitle);
+        taskService.updateTask({ id: taskId, title: taskTitle });
+        getUpdatedTask(taskId);
+        setOpen(false);
         setEditTaskTitle(false);
     }
 
     return (
         <>
-            <input
-                type="text" value={taskTitle}
-                onChange={(event) => setTaskTitle(event.target.value)}
-            />
-            <FontAwesomeIcon icon={faCheck} onClick={handleSave} />
-            <FontAwesomeIcon icon={faXmark} color="red" onClick={handleCancel} />
+            {/* <Button variant="outlined" onClick={handleClickOpen}>
+                Open max-width dialog
+            </Button> */}
+            <Dialog
+                fullWidth={fullWidth}
+                maxWidth={maxWidth}
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogTitle>{change}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {changeInfo}
+                    </DialogContentText>
+                    <Box
+                        noValidate
+                        component="form"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            m: 'auto',
+                            width: 'fit-content',
+                        }}
+                    >
+                        <FormControl sx={{ mt: 2, minWidth: 120 }}>
+                            <input name="taskTitle" onChange={handleEditTitle} value={taskTitle} />
+                        </FormControl>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleSave}>Save</Button>
+                    <Button onClick={handleClose}>Cancel</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
 
 
-// 3 Dot component used in umultiple child components of this module
-const EllipsisWithSpacing = ({ containerClass, invokeFunctionOnClick }) => (
-    <div className={containerClass} onClick={invokeFunctionOnClick}>
-        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
-        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
-        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
-    </div>
-);
+function ChangeTaskStatus({ taskId }) {
+    const {
+        task,
+        setTask,
+        loading,
+        setLoading,
+        editTaskTitle,
+        setEditTaskTitle,
+        taskService,
+        getUpdatedTask,
+        open, setOpen,
+    } = useContext(StateContext);
+
+    const [fullWidth, setFullWidth] = useState(true);
+    const [maxWidth, setMaxWidth] = useState('sm');
+
+    const [taskTitle, setTaskTitle] = useState(task.title);
+
+    const change = "Task title";
+    const changeInfo = "Feel free to update your task title."
+
+    function handleEditTitle(event) {
+        setTaskTitle(event.target.value);
+    }
+
+    // function handleClickOpen() {
+    //     setOpen(true);
+    // };
+
+    function handleClose() {
+        setOpen(false);
+    };
+
+    function handleSave() {
+        console.log("Saving task with new title", taskTitle);
+        taskService.updateTask({ id: taskId, title: taskTitle });
+        getUpdatedTask(taskId);
+        setOpen(false);
+        setEditTaskTitle(false);
+    }
+
+    return (
+        <>
+            {/* <Button variant="outlined" onClick={handleClickOpen}>
+                Open max-width dialog
+            </Button> */}
+            <Dialog
+                fullWidth={fullWidth}
+                maxWidth={maxWidth}
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogTitle>{change}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {changeInfo}
+                    </DialogContentText>
+                    <Box
+                        noValidate
+                        component="form"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            m: 'auto',
+                            width: 'fit-content',
+                        }}
+                    >
+                        <FormControl sx={{ mt: 2, minWidth: 120 }}>
+                            <h1>some random heading</h1>
+                        </FormControl>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleSave}>Save</Button>
+                    <Button onClick={handleClose}>Cancel</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+}
 
 
 // Avatar for user uses image or alternative name
@@ -321,5 +472,3 @@ function FallbackAvatars() {
         </Stack>
     );
 }
-
-

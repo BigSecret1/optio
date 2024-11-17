@@ -13,12 +13,14 @@ export const StateContext = createContext();
 export function StateProvider({ children }) {
     const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [editTaskTitle, setEditTaskTitle] = useState(true);
+    const [editTaskTitle, setEditTaskTitle] = useState(false);
+    const [open, setOpen] = useState(false);
+
 
     const taskService = new Task();
 
 
-    async function getTask(taskId) {
+    async function getUpdatedTask(taskId) {
         const currentTask = await taskService.getTask(taskId);
         console.log("CURRENT TASK ", currentTask);
 
@@ -40,8 +42,9 @@ export function StateProvider({ children }) {
             task, setTask,
             loading, setLoading,
             editTaskTitle, setEditTaskTitle,
+            open, setOpen,
             taskService,
-            getTask
+            getUpdatedTask
         }}>
             {children}
         </StateContext.Provider>
