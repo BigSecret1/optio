@@ -2,8 +2,8 @@ import React, { createContext, useState } from 'react';
 import Task from './task-service';
 
 
-export const StateContext = createContext();
 
+export const StateContext = createContext();
 
 /*
     * TaskStateContext provides the necessary states and functions for managing tasks.
@@ -15,11 +15,15 @@ export function StateProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [editTaskTitle, setEditTaskTitle] = useState(false);
     const [open, setOpen] = useState(false);
-
+    const [openChangeStatus, setOpenChangeStatus] = useState(false);
+    const [changeStatus, setChangeStatus] = useState(false);
 
     const taskService = new Task();
 
-
+    /*
+        This function is used to get task with latest changees.
+        This is helper functino specially in those cases when there is any change made for a task 
+    */
     async function getUpdatedTask(taskId) {
         const currentTask = await taskService.getTask(taskId);
         console.log("CURRENT TASK ", currentTask);
@@ -43,6 +47,8 @@ export function StateProvider({ children }) {
             loading, setLoading,
             editTaskTitle, setEditTaskTitle,
             open, setOpen,
+            openChangeStatus, setOpenChangeStatus,
+            changeStatus, setChangeStatus,
             taskService,
             getUpdatedTask
         }}>

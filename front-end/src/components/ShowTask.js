@@ -42,12 +42,10 @@ import OptionMenu from './UI/OptionMenu';
 
 export default function ShowTasks({ taskId }) {
     const {
-        task,
-        setTask,
-        loading,
-        setLoading,
-        editTaskTitle,
-        setEditTaskTitle,
+        task, setTask,
+        loading, setLoading,
+        editTaskTitle, setEditTaskTitle,
+        openChangeStatus, setOpenChangeStatus,
         taskService,
         getUpdatedTask
     } = useContext(StateContext);
@@ -100,15 +98,18 @@ export default function ShowTasks({ taskId }) {
             >
                 <div className='taskTitleHeader'>
                     {
-                        task.task_status === 'completed' ? (
-                            <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" className="statusIcon" />
-                        ) : task.task_status === 'in progress' ? (
-                            <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" className="statusIcon" />
+                        openChangeStatus === true ? (
+                            <ChangeTaskStatus taskId={taskId} />
                         ) : (
-                            <FontAwesomeIcon icon={farCircle} size="2x" color="blue" className="statusIcon" />
+                            task.task_status === 'completed' ? (
+                                <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" className="statusIcon" />
+                            ) : task.task_status === 'in progress' ? (
+                                <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" className="statusIcon" />
+                            ) : (
+                                <FontAwesomeIcon icon={farCircle} size="2x" color="blue" className="statusIcon" />
+                            )
                         )
                     }
-
                     <Link>
                         <h5>GSMI/1248</h5>
                     </Link>
@@ -118,8 +119,9 @@ export default function ShowTasks({ taskId }) {
                         </OptionMenu>
                     </div>
                 </div>
+                <ShowTaskTitle task={task} />
                 {
-                    editTaskTitle === false ? <ShowTaskTitle task={task} /> : <EditTaskTitle taskId={taskId} />
+                    editTaskTitle === true ? <EditTaskTitle taskId={taskId} /> : null
                 }
             </Box >
 
@@ -278,9 +280,10 @@ function ShowTaskTitle({ task }) {
 }
 
 
-/* 
-Three Dot component which open option Menu on Click.
-Used in multiple child components of this module.
+/*
+    # Three Dot component which open option Menu on Click, used in multiple child components of this module.
+    # The containerClass argument is to assign class name to div container dynamically as EllipsisWithSpacing 
+    is used by other components also
 */
 function EllipsisWithSpacing({ containerClass }) {
     return (
@@ -294,7 +297,7 @@ function EllipsisWithSpacing({ containerClass }) {
 
 
 /*
-A Dialogue box which popups when choose to edit task title
+    # A Dialogue box which popsup when edit task option is choosen from task option menu.
 */
 function EditTaskTitle({ taskId }) {
     const {
@@ -321,12 +324,9 @@ function EditTaskTitle({ taskId }) {
         setTaskTitle(event.target.value);
     }
 
-    // function handleClickOpen() {
-    //     setOpen(true);
-    // };
-
     function handleClose() {
         setOpen(false);
+        setEditTaskTitle(false);
     };
 
     function handleSave() {
@@ -339,9 +339,6 @@ function EditTaskTitle({ taskId }) {
 
     return (
         <>
-            {/* <Button variant="outlined" onClick={handleClickOpen}>
-                Open max-width dialog
-            </Button> */}
             <Dialog
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
@@ -378,6 +375,7 @@ function EditTaskTitle({ taskId }) {
 }
 
 
+// Component is to render when in option menu Change status option is selected
 function ChangeTaskStatus({ taskId }) {
     const {
         task,
@@ -389,6 +387,7 @@ function ChangeTaskStatus({ taskId }) {
         taskService,
         getUpdatedTask,
         open, setOpen,
+        openChangeStatus, setOpenChangeStatus,
     } = useContext(StateContext);
 
     const [fullWidth, setFullWidth] = useState(true);
@@ -403,12 +402,8 @@ function ChangeTaskStatus({ taskId }) {
         setTaskTitle(event.target.value);
     }
 
-    // function handleClickOpen() {
-    //     setOpen(true);
-    // };
-
     function handleClose() {
-        setOpen(false);
+        setOpenChangeStatus(false);
     };
 
     function handleSave() {
@@ -421,13 +416,10 @@ function ChangeTaskStatus({ taskId }) {
 
     return (
         <>
-            {/* <Button variant="outlined" onClick={handleClickOpen}>
-                Open max-width dialog
-            </Button> */}
             <Dialog
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
-                open={open}
+                open={openChangeStatus}
                 onClose={handleClose}
             >
                 <DialogTitle>{change}</DialogTitle>
