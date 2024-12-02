@@ -8,7 +8,7 @@ const logout_url = `${base_url}/user/logout/`;
 
 export function isAuthenticated() {
     let loggedIn = localStorage.getItem("access_token");
-    if(loggedIn) {
+    if (loggedIn) {
         return true;
     }
     else {
@@ -22,8 +22,6 @@ export async function login(email, password) {
         email: email,
         password: password
     };
-    
-    console.log("CREDENTIALS ", credentials);
 
     try {
         const response = await fetch(login_url, {
@@ -39,6 +37,7 @@ export async function login(email, password) {
         if (response.status === 200) {
             const data = await response.json();
             console.log('Login successful!');
+            
             const access_token = data.access;
             const refresh_token = data.refresh;
             return { access_token, refresh_token };

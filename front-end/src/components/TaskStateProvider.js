@@ -22,23 +22,32 @@ export function StateProvider({ children }) {
 
     /*
         This function is used to get task with latest changees.
-        This is helper functino specially in those cases when there is any change made for a task 
+        This is helper functino specially in those cases when there is any change made for a task and those
+        latest changes should be reflected.
+        The function call ensure to fetch tasks and updated task state with reponse.
+        
+        @param {number} taskId - Id of the task
     */
     async function getUpdatedTask(taskId) {
-        const currentTask = await taskService.getTask(taskId);
-        console.log("CURRENT TASK ", currentTask);
+        try {
+            const currentTask = await taskService.getTask(taskId);
+            console.log("CURRENT TASK ", currentTask);
 
-        // latest comment should be on the top
-        if (currentTask.comments == null) {
-            currentTask.comments = [];
-        }
-        else {
-            currentTask.comments.reverse();
-        }
+            // latest comment should be on the top
+            if (currentTask.comments == null) {
+                currentTask.comments = [];
+            }
+            else {
+                currentTask.comments.reverse();
+            }
 
-        // Finish task page loading and make task appear
-        setTask(currentTask);
-        setLoading(false);
+            // Finish task page loading and make task appear
+            setTask(currentTask);
+            setLoading(false);
+        }
+        catch (error) {
+            console.error("Failed to get updated task, an error occured", error);
+        }
     }
 
     return (

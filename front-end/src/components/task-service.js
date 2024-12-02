@@ -1,14 +1,18 @@
-// Import required
-
 import { Class } from '@mui/icons-material';
 import { isAuthenticated } from '../utils/auth';
 
 // End of imports
 
+/*
+These status values are case sensitive sp Changing them can break the functionality.
+For example in edit task status option to change task status
+*/
+export const ALL_STATUS = ["Completed", "In Progress", "To Do"];
+
+const BASE_URL = "http://localhost:8000/tasks";
 
 class Task {
 
-    baseUrl = "http://localhost:8000/tasks";
     sanitize = new Sanitize();
 
     constructor(
@@ -43,7 +47,7 @@ class Task {
 
         try {
 
-            const response = await fetch(`${this.baseUrl}${endpoint}`, {
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -59,7 +63,7 @@ class Task {
         }
         catch (err) {
 
-            console.log("SOME ERROR OCCURED WHILE FETCHING PROJECT TASKS: ", err);
+            console.error("SOME ERROR OCCURED WHILE FETCHING PROJECT TASKS: ", err);
 
         }
     }
@@ -74,8 +78,8 @@ class Task {
         const endpoint = `/get-task-by-id/${taskId}`;
 
         try {
-            console.log(`FETCHING TASK WITH ID ${taskId} request on ${this.baseUrl}${endpoint}`);
-            const response = await fetch(`${this.baseUrl}${endpoint}`, {
+            console.log(`FETCHING TASK WITH ID ${taskId} REQUEST ON ${BASE_URL}${endpoint}`);
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -95,7 +99,7 @@ class Task {
         }
         catch (error) {
 
-            console.log("AN ERROR OCCURED WHILE FETCHING THE TASK WITH ID : ", error);
+            console.error("AN ERROR OCCURED WHILE FETCHING THE TASK WITH ID : ", error);
 
         }
 
@@ -115,7 +119,7 @@ class Task {
         const requestBody = Object.fromEntries(
             Object.entries(params).filter(([key, value]) => value != undefined)
         );
-        
+
         console.log("UPDATES IN TASK ARE :", requestBody);
 
         //Ensure task ID is resent before proceeding
@@ -129,7 +133,7 @@ class Task {
 
         try {
             // Send update request
-            const response = await fetch(`${this.baseUrl}${updateEndpoint}`, {
+            const response = await fetch(`${BASE_URL}${updateEndpoint}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -166,7 +170,7 @@ class Task {
         const taskStatus = searchTexts["status"];
 
         const endpoint = `/search/?title=${taskTitle}&status=${taskStatus}&project=${projectName}`;
-        const url = `${this.baseUrl}${endpoint}`;
+        const url = `${BASE_URL}${endpoint}`;
 
         try {
             const response = await fetch(url, {
@@ -193,14 +197,14 @@ class Task {
 class Sanitize {
 
     defaultProperties = {
-        comments: [],                    
-        subtasks: [],                    
-        title: "Untitled",               
-        due_date: null,                  
-        description: "",                 
-        task_status: "Pending",          
+        comments: [],
+        subtasks: [],
+        title: "Untitled",
+        due_date: null,
+        description: "",
+        task_status: "Pending",
         created_time: new Date().toISOString(), // Default to current time as ISO string
-        project_id: null                 
+        project_id: null
     };
 
     // Data santization is required to ensure task data is in required model

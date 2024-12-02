@@ -37,6 +37,7 @@ import Switch from '@mui/material/Switch';
 import { StateContext } from './TaskStateProvider';
 import './ShowTask.css';
 import OptionMenu from './UI/OptionMenu';
+import { ALL_STATUS } from './task-service';
 
 
 
@@ -101,9 +102,9 @@ export default function ShowTasks({ taskId }) {
                         openChangeStatus === true ? (
                             <ChangeTaskStatus taskId={taskId} />
                         ) : (
-                            task.task_status === 'completed' ? (
+                            task.task_status.toLowerCase() === 'completed' ? (
                                 <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" className="statusIcon" />
-                            ) : task.task_status === 'in progress' ? (
+                            ) : task.task_status.toLowerCase() === 'in progress' ? (
                                 <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" className="statusIcon" />
                             ) : (
                                 <FontAwesomeIcon icon={farCircle} size="2x" color="blue" className="statusIcon" />
@@ -378,12 +379,9 @@ function EditTaskTitle({ taskId }) {
 // Component is to render when in option menu Change status option is selected
 function ChangeTaskStatus({ taskId }) {
     const {
-        task,
-        setTask,
-        loading,
-        setLoading,
-        editTaskTitle,
-        setEditTaskTitle,
+        task, setTask,
+        loading, setLoading,
+        editTaskTitle, setEditTaskTitle,
         taskService,
         getUpdatedTask,
         open, setOpen,
@@ -395,23 +393,30 @@ function ChangeTaskStatus({ taskId }) {
 
     const [taskTitle, setTaskTitle] = useState(task.title);
 
-    const change = "Task title";
-    const changeInfo = "Feel free to update your task title."
+    const change = "Task Staus";
+    const changeInfo = "Feel free to update your task status."
+    let allStatus = ALL_STATUS;
+    const currentTaskStatus = task.task_status;
+    allStatus = PlaceCurrentTaskStatusAtFirst(allStatus, currentTaskStatus)
+
+    function handleFullWidthChange(event) {
+        setFullWidth(event.target.checked);
+    };
 
     function handleEditTitle(event) {
         setTaskTitle(event.target.value);
+    }
+
+    function handleSave() {
+
     }
 
     function handleClose() {
         setOpenChangeStatus(false);
     };
 
-    function handleSave() {
-        console.log("Saving task with new title", taskTitle);
-        taskService.updateTask({ id: taskId, title: taskTitle });
-        getUpdatedTask(taskId);
-        setOpen(false);
-        setEditTaskTitle(false);
+    function handleTaskStatusChange(event) {
+        console.log("You are changing task status to ", event.target.value);
     }
 
     return (
@@ -438,7 +443,24 @@ function ChangeTaskStatus({ taskId }) {
                         }}
                     >
                         <FormControl sx={{ mt: 2, minWidth: 120 }}>
-                            <h1>some random heading</h1>
+                            <InputLabel htmlFor="max-width">Status</InputLabel>
+                            <Select
+                                autoFocus
+                                value={currentTaskStatus}
+                                onChange={handleTaskStatusChange}
+                                label="maxWidth"
+                                inputProps={{
+                                    name: 'max-width',
+                                    id: 'max-width',
+                                }}
+                            >
+                                {
+                                    allStatus.map(status => {
+                                        return (
+                                            <MenuItem key={status} value={status}>{status}</MenuItem>);
+                                    })
+                                }
+                            </Select>
                         </FormControl>
                     </Box>
                 </DialogContent>
@@ -449,6 +471,17 @@ function ChangeTaskStatus({ taskId }) {
             </Dialog>
         </>
     );
+}
+
+function PlaceCurrentTaskStatusAtFirst(allStatus, currentStatus) {
+    for(let i = 0; i < allStatus.length; ++i) {
+        console.log(allStatus[i], " ", currentStatus);
+        if(allStatus[i].toLowerCase() === currentStatus.toLowerCase()) {
+            [allStatus[i], allStatus[0]] = [allStatus[0], allStatus[i]];
+            break;
+        }
+    }
+    return allStatus;
 }
 
 
