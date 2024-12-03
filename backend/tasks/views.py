@@ -1,18 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.response import Response
-from rest_framework import status
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 import json
 import logging
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 
-# logging module configuration for logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 import logging
 
@@ -34,12 +29,10 @@ def create_connection():
             print("Error when trying to connect to PostgreSQL DB -> ", err)
             time.sleep(2)
 
-
 def close_connection(conn, cur):
     cur.close()
     conn.close()
     print("Database connection closed")
-
 
 def to_lowercase(value):
     converted_value = value 
@@ -161,7 +154,7 @@ class UpdateTask(APIView):
             conn, cur = create_connection()
             data = dict(data)
             new_task = {key: to_lowercase(value) for key, value in data.items()}
-            logging.info("NEW TASK IS %s", new_task);
+            logging.info("NEW TASK IS %s", new_task)
 
             cur.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
             existing_task = cur.fetchone()
@@ -172,7 +165,7 @@ class UpdateTask(APIView):
                 if isinstance(existing_task['comments'], list) and isinstance(new_task['comments'], list):
                     existing_task['comments'] += new_task['comments']  # Concatenate comments lists
                 else:
-                    logging.info("Comments are not lists, creating new comment list");
+                    logging.info("Comments are not lists, creating new comment list")
                     existing_task["comments"] = new_task["comments"]
 
             if existing_task:
@@ -254,7 +247,6 @@ class Searcher(APIView):
 
         tasks = self.__search(title=title, status=status, project=project)
         return JsonResponse(tasks, safe=False)
-
     # To filter the tasks
     def __search(self, **kwargs):
         conn, cur = create_connection()
