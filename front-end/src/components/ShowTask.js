@@ -6,38 +6,28 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import { deepOrange } from '@mui/material/colors';
+
 
 // Font awesome icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
 import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
-import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
-// For Dialogue box which comes after menu option selection
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Switch from '@mui/material/Switch';
+
 
 // Internal modules
 import { StateContext } from './TaskStateProvider';
 import './ShowTask.css';
 import OptionMenu from './UI/OptionMenu';
 import { ALL_STATUS } from './task-service';
+
+// Child components
+import UpdateTaskStatus from './task/UpdateTaskStatus';
+import FallbackAvatars from './UI/Avatar.js';
+import EllipsisWithSpacing from './task/ThreeDots.js';
+import UpdateTaskTitle from './task/UpdateTaskTitle.js';
 
 
 
@@ -100,7 +90,7 @@ export default function ShowTasks({ taskId }) {
                 <div className='taskTitleHeader'>
                     {
                         openChangeStatus === true ? (
-                            <ChangeTaskStatus taskId={taskId} />
+                            <UpdateTaskStatus taskId={taskId} />
                         ) : (
                             task.task_status.toLowerCase() === 'completed' ? (
                                 <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" className="statusIcon" />
@@ -122,7 +112,7 @@ export default function ShowTasks({ taskId }) {
                 </div>
                 <ShowTaskTitle task={task} />
                 {
-                    editTaskTitle === true ? <EditTaskTitle taskId={taskId} /> : null
+                    editTaskTitle === true ? <UpdateTaskTitle taskId={taskId} /> : null
                 }
             </Box >
 
@@ -281,219 +271,5 @@ function ShowTaskTitle({ task }) {
 }
 
 
-/*
-    # Three Dot component which open option Menu on Click, used in multiple child components of this module.
-    # The containerClass argument is to assign class name to div container dynamically as EllipsisWithSpacing 
-    is used by other components also
-*/
-function EllipsisWithSpacing({ containerClass }) {
-    return (
-        <div className={containerClass}>
-            <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
-            <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
-            <FontAwesomeIcon icon={faCircle} style={{ fontSize: '0.2em' }} />
-        </div>
-    );
-}
 
 
-/*
-    # A Dialogue box which popsup when edit task option is choosen from task option menu.
-*/
-function EditTaskTitle({ taskId }) {
-    const {
-        task,
-        setTask,
-        loading,
-        setLoading,
-        editTaskTitle,
-        setEditTaskTitle,
-        taskService,
-        getUpdatedTask,
-        open, setOpen,
-    } = useContext(StateContext);
-
-    const [fullWidth, setFullWidth] = useState(true);
-    const [maxWidth, setMaxWidth] = useState('sm');
-
-    const [taskTitle, setTaskTitle] = useState(task.title);
-
-    const change = "Task title";
-    const changeInfo = "Feel free to update your task title."
-
-    function handleEditTitle(event) {
-        setTaskTitle(event.target.value);
-    }
-
-    function handleClose() {
-        setOpen(false);
-        setEditTaskTitle(false);
-    };
-
-    function handleSave() {
-        console.log("Saving task with new title", taskTitle);
-        taskService.updateTask({ id: taskId, title: taskTitle });
-        getUpdatedTask(taskId);
-        setOpen(false);
-        setEditTaskTitle(false);
-    }
-
-    return (
-        <>
-            <Dialog
-                fullWidth={fullWidth}
-                maxWidth={maxWidth}
-                open={open}
-                onClose={handleClose}
-            >
-                <DialogTitle>{change}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {changeInfo}
-                    </DialogContentText>
-                    <Box
-                        noValidate
-                        component="form"
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            m: 'auto',
-                            width: 'fit-content',
-                        }}
-                    >
-                        <FormControl sx={{ mt: 2, minWidth: 120 }}>
-                            <input name="taskTitle" onChange={handleEditTitle} value={taskTitle} />
-                        </FormControl>
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleSave}>Save</Button>
-                    <Button onClick={handleClose}>Cancel</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
-}
-
-
-// Component is to render when in option menu Change status option is selected
-function ChangeTaskStatus({ taskId }) {
-    const {
-        task, setTask,
-        loading, setLoading,
-        editTaskTitle, setEditTaskTitle,
-        taskService,
-        getUpdatedTask,
-        open, setOpen,
-        openChangeStatus, setOpenChangeStatus,
-    } = useContext(StateContext);
-
-    const [fullWidth, setFullWidth] = useState(true);
-    const [maxWidth, setMaxWidth] = useState('sm');
-
-    const [taskTitle, setTaskTitle] = useState(task.title);
-
-    const change = "Task Staus";
-    const changeInfo = "Feel free to update your task status."
-    let allStatus = ALL_STATUS;
-    const currentTaskStatus = task.task_status;
-    allStatus = PlaceCurrentTaskStatusAtFirst(allStatus, currentTaskStatus)
-
-    function handleFullWidthChange(event) {
-        setFullWidth(event.target.checked);
-    };
-
-    function handleEditTitle(event) {
-        setTaskTitle(event.target.value);
-    }
-
-    function handleSave() {
-
-    }
-
-    function handleClose() {
-        setOpenChangeStatus(false);
-    };
-
-    function handleTaskStatusChange(event) {
-        console.log("You are changing task status to ", event.target.value);
-    }
-
-    return (
-        <>
-            <Dialog
-                fullWidth={fullWidth}
-                maxWidth={maxWidth}
-                open={openChangeStatus}
-                onClose={handleClose}
-            >
-                <DialogTitle>{change}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {changeInfo}
-                    </DialogContentText>
-                    <Box
-                        noValidate
-                        component="form"
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            m: 'auto',
-                            width: 'fit-content',
-                        }}
-                    >
-                        <FormControl sx={{ mt: 2, minWidth: 120 }}>
-                            <InputLabel htmlFor="max-width">Status</InputLabel>
-                            <Select
-                                autoFocus
-                                value={currentTaskStatus}
-                                onChange={handleTaskStatusChange}
-                                label="maxWidth"
-                                inputProps={{
-                                    name: 'max-width',
-                                    id: 'max-width',
-                                }}
-                            >
-                                {
-                                    allStatus.map(status => {
-                                        return (
-                                            <MenuItem key={status} value={status}>{status}</MenuItem>);
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleSave}>Save</Button>
-                    <Button onClick={handleClose}>Cancel</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
-}
-
-function PlaceCurrentTaskStatusAtFirst(allStatus, currentStatus) {
-    for(let i = 0; i < allStatus.length; ++i) {
-        console.log(allStatus[i], " ", currentStatus);
-        if(allStatus[i].toLowerCase() === currentStatus.toLowerCase()) {
-            [allStatus[i], allStatus[0]] = [allStatus[0], allStatus[i]];
-            break;
-        }
-    }
-    return allStatus;
-}
-
-
-// Avatar for user uses image or alternative name
-function FallbackAvatars() {
-    return (
-        <Stack direction="row" spacing={2}>
-            <Avatar
-                sx={{ bgcolor: deepOrange[500] }}
-                alt="Demmy lovato"
-                src="/broken-image.jpg"
-            />
-        </Stack>
-    );
-}

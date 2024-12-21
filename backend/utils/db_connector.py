@@ -1,7 +1,7 @@
-from django.db import connection
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import logging
+
 
 
 # logging module configuration for loggin 
