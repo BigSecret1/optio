@@ -8,9 +8,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 import logging
-
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def create_connection():
@@ -46,7 +45,6 @@ def to_lowercase(value):
 
 
 class CreateTask(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -88,7 +86,6 @@ class CreateTask(APIView):
 
 
 class GetTasks(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -114,7 +111,6 @@ class GetTasks(APIView):
 
 
 class GetTaskById(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -144,7 +140,6 @@ class GetTaskById(APIView):
 
 
 class UpdateTask(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -213,7 +208,6 @@ class UpdateTask(APIView):
 
 
 class DeleteTask(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -236,7 +230,6 @@ class DeleteTask(APIView):
 
 
 class Searcher(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
