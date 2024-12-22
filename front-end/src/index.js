@@ -17,7 +17,7 @@ import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Auth from "./components/Auth";
 import Projects from "./components/Projects";
-import Tasks from "./components/Tasks";
+import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

@@ -12,7 +12,7 @@ import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons
 import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 
 // Internal modules
-import { StateContext } from '../../TaskStateProvider.js';
+import { TaskContext } from '../../../contexts/TaskContext.js';
 import OptionMenu from '../../UI/OptionMenu.js';
 
 // Child components
@@ -35,7 +35,7 @@ export default function Header({ taskId }) {
         getUpdatedTask,
         open, setOpen,
         openChangeStatus, setOpenChangeStatus,
-    } = useContext(StateContext);
+    } = useContext(TaskContext);
 
     const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
 

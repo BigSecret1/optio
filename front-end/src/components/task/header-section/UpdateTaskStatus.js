@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState, createContext, useContext } from 'react';
-import { StateContext } from '../../TaskStateProvider';
-import { ALL_STATUS } from '../../task-service';
+import { TaskContext } from '../../../contexts/TaskContext';
+import { ALL_STATUS } from '../../../services/task/task-service';
 
 // For Dialogue box which comes after menu option selection
 import Button from '@mui/material/Button';
@@ -28,7 +28,7 @@ export default function UpdateTaskStatus({ taskId }) {
     const {
         task, setTask,
         openChangeStatus, setOpenChangeStatus,
-    } = useContext(StateContext);
+    } = useContext(TaskContext);
 
     const [fullWidth, setFullWidth] = useState(true);
     const [maxWidth, setMaxWidth] = useState('sm');

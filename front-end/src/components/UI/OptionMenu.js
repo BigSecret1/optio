@@ -3,8 +3,8 @@ import { useEffect, useState, createContext, useContext } from 'react';
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 
-import "./OptionMenu.css";
-import { StateContext } from '../TaskStateProvider';
+import "../../styles/OptionMenu.css";
+import { TaskContext } from '../../contexts/TaskContext';
 
 
 
@@ -22,7 +22,7 @@ export default function OptionMenu({ options = [], children }) {
         open, setOpen,
         openChangeStatus, setOpenChangeStatus
 
-    } = useContext(StateContext);
+    } = useContext(TaskContext);
 
     const [anchorEl, setAnchorEl] = useState(null);
 

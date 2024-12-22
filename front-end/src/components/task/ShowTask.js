@@ -10,14 +10,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 // Internal modules
-import { StateContext } from './TaskStateProvider';
-import './ShowTask.css';
-import OptionMenu from './UI/OptionMenu';
+import { TaskContext } from '../../contexts/TaskContext.js';
+import '../../styles/ShowTask.css';
+import OptionMenu from '../UI/OptionMenu.js';
 
 // Child components
-import FallbackAvatars from './UI/Avatar.js';
-import EllipsisWithSpacing from './UI/ThreeDots.js';
-import Header from './task/header-section/Header.js'
+import FallbackAvatars from '../UI/Avatar.js';
+import EllipsisWithSpacing from '../UI/ThreeDots.js';
+import Header from './header-section/Header.js'
 
 
 
@@ -32,7 +32,7 @@ export default function ShowTasks({ taskId }) {
         loading, setLoading,
         taskService,
         getUpdatedTask
-    } = useContext(StateContext);
+    } = useContext(TaskContext);
 
     const menuOptionsForDescription = ["Edit description"]
 

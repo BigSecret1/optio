@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
-import Task from "./task-service";
-import ShowTask from "./ShowTask";
+import Task from "../services/task/task-service";
+import ShowTask from "./task/ShowTask";
 import Navbar from "./Navbar";
-import { StateProvider } from "./TaskStateProvider";
+import { TaskProvider } from "../contexts/TaskContext";
 
 
 
@@ -23,10 +23,10 @@ function TaskManager() {
 
     return (
         <>
-            <StateProvider>
+            <TaskProvider>
                 <Navbar />
                 <ShowTask taskId={taskInstace.id} />
-            </StateProvider>
+            </TaskProvider>
         </>
     );
 }

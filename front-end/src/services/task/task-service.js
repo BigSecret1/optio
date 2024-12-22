@@ -1,5 +1,5 @@
 import { Class } from '@mui/icons-material';
-import { isAuthenticated } from '../utils/auth';
+import { isAuthenticated } from '../../utils/auth';
 
 // End of imports
 

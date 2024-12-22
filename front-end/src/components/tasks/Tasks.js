@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import "./Tasks.css";
+import "../../styles/Tasks.css";
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Task from "./task-service";
+import Task from "../../services/task/task-service";
 
 
 

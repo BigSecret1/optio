@@ -1,16 +1,17 @@
 import React, { createContext, useState } from 'react';
-import Task from './task-service';
+import Task from '../services/task/task-service';
 
 
 
-export const StateContext = createContext();
-
-/*
-    * TaskStateContext provides the necessary states and functions for managing tasks.
+/* 
+    * TaskTaskContext provides the necessary states and functions for managing tasks.
     * It enables reuse of stateful logic across all components within `ShowTask.js`,
-    ensuring consistent data and actions throughout the task-related components.
+    * ensuring consistent data and actions throughout the task-related components.
  */
-export function StateProvider({ children }) {
+
+export const TaskContext = createContext();
+
+export function TaskProvider({ children }) {
     const [task, setTask] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editTaskTitle, setEditTaskTitle] = useState(false);
@@ -51,7 +52,7 @@ export function StateProvider({ children }) {
     }
 
     return (
-        <StateContext.Provider value={{
+        <TaskContext.Provider value={{
             task, setTask,
             loading, setLoading,
             editTaskTitle, setEditTaskTitle,
@@ -62,6 +63,6 @@ export function StateProvider({ children }) {
             getUpdatedTask
         }}>
             {children}
-        </StateContext.Provider>
+        </TaskContext.Provider>
     );
 }
