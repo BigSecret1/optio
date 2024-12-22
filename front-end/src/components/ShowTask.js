@@ -4,30 +4,21 @@ import { Link } from 'react-router-dom';
 
 // matrical UI
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
-
 
 // Font awesome icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle as farCircle } from '@fortawesome/free-regular-svg-icons';
-import { faDotCircle as farDotCircle } from '@fortawesome/free-regular-svg-icons';
-import { faCheckCircle as farCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
-
-
 
 // Internal modules
 import { StateContext } from './TaskStateProvider';
 import './ShowTask.css';
 import OptionMenu from './UI/OptionMenu';
-import { ALL_STATUS } from './task-service';
 
 // Child components
-import UpdateTaskStatus from './task/UpdateTaskStatus';
 import FallbackAvatars from './UI/Avatar.js';
-import EllipsisWithSpacing from './task/ThreeDots.js';
-import UpdateTaskTitle from './task/UpdateTaskTitle.js';
+import EllipsisWithSpacing from './UI/ThreeDots.js';
+import Header from './task/header-section/Header.js'
 
 
 
@@ -35,13 +26,10 @@ export default function ShowTasks({ taskId }) {
     const {
         task, setTask,
         loading, setLoading,
-        editTaskTitle, setEditTaskTitle,
-        openChangeStatus, setOpenChangeStatus,
         taskService,
         getUpdatedTask
     } = useContext(StateContext);
 
-    const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
     const menuOptionsForDescription = ["Edit description"]
 
     useEffect(() => {
@@ -62,59 +50,7 @@ export default function ShowTasks({ taskId }) {
 
     return loading ? <p>Loading Task...</p> : (
         <div style={{ width: '100%' }}>
-            <Box
-                sx={[
-                    (theme) => ({
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        m: 1,
-                        p: 1,
-                        minHeight: '10vh',
-                        height: 'auto',
-                        bgcolor: '#304971',
-                        color: 'white',
-                        border: '0.5px solid',
-                        borderColor: '#3F5880',
-                        borderRadius: 2,
-                        fontSize: '0.875rem',
-                        fontWeight: '700',
-                        ...theme.applyStyles('dark', {
-                            // bgcolor: '#101010',
-                            color: 'white',
-                            // borderColor: 'grey.800',
-                        }),
-                    }),
-                ]}
-            >
-                <div className='taskTitleHeader'>
-                    {
-                        openChangeStatus === true ? (
-                            <UpdateTaskStatus taskId={taskId} />
-                        ) : (
-                            task.task_status.toLowerCase() === 'completed' ? (
-                                <FontAwesomeIcon icon={farCheckCircle} size="2x" color="green" className="statusIcon" />
-                            ) : task.task_status.toLowerCase() === 'in progress' ? (
-                                <FontAwesomeIcon icon={farDotCircle} size="2x" color="yellow" className="statusIcon" />
-                            ) : (
-                                <FontAwesomeIcon icon={farCircle} size="2x" color="blue" className="statusIcon" />
-                            )
-                        )
-                    }
-                    <Link>
-                        <h5>GSMI/1248</h5>
-                    </Link>
-                    <div className="optionMenuEllipsContainer">
-                        <OptionMenu options={menuOptionsForTitleBox}>
-                            <EllipsisWithSpacing containerClass="optionDots" />
-                        </OptionMenu>
-                    </div>
-                </div>
-                <ShowTaskTitle task={task} />
-                {
-                    editTaskTitle === true ? <UpdateTaskTitle taskId={taskId} /> : null
-                }
-            </Box >
+            <Header taskId={taskId} />
 
             <Box
                 sx={[
@@ -260,16 +196,3 @@ export default function ShowTasks({ taskId }) {
         </div >
     );
 }
-
-
-function ShowTaskTitle({ task }) {
-    return (
-        <div className="taskTitle">
-            <h3>{task.title}</h3>
-        </div>
-    );
-}
-
-
-
-

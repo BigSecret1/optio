@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState, createContext, useContext } from 'react';
 
-import { StateContext } from '../TaskStateProvider';
+import { StateContext } from '../../TaskStateProvider';
 
 // For Dialogue box which comes after menu option selection
 import Box from '@mui/material/Box';
@@ -12,11 +12,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Switch from '@mui/material/Switch';
 
 
 
@@ -26,10 +21,6 @@ import Switch from '@mui/material/Switch';
 export default function UpdateTaskTitle({ taskId }) {
     const {
         task,
-        setTask,
-        loading,
-        setLoading,
-        editTaskTitle,
         setEditTaskTitle,
         taskService,
         getUpdatedTask,

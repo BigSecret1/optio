@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState, createContext, useContext } from 'react';
-import { StateContext } from '../TaskStateProvider';
-import { ALL_STATUS } from '../task-service';
+import { StateContext } from '../../TaskStateProvider';
+import { ALL_STATUS } from '../../task-service';
 
 // For Dialogue box which comes after menu option selection
 import Button from '@mui/material/Button';
@@ -24,11 +24,6 @@ import Box from '@mui/material/Box';
 export default function UpdateTaskStatus({ taskId }) {
     const {
         task, setTask,
-        loading, setLoading,
-        editTaskTitle, setEditTaskTitle,
-        taskService,
-        getUpdatedTask,
-        open, setOpen,
         openChangeStatus, setOpenChangeStatus,
     } = useContext(StateContext);
 
@@ -42,14 +37,6 @@ export default function UpdateTaskStatus({ taskId }) {
     let allStatus = ALL_STATUS;
     const currentTaskStatus = task.task_status;
     allStatus = PlaceCurrentTaskStatusAtFirst(allStatus, currentTaskStatus)
-
-    function handleFullWidthChange(event) {
-        setFullWidth(event.target.checked);
-    };
-
-    function handleEditTitle(event) {
-        setTaskTitle(event.target.value);
-    }
 
     function handleSave() {
 
@@ -118,9 +105,9 @@ export default function UpdateTaskStatus({ taskId }) {
 }
 
 function PlaceCurrentTaskStatusAtFirst(allStatus, currentStatus) {
-    for(let i = 0; i < allStatus.length; ++i) {
+    for (let i = 0; i < allStatus.length; ++i) {
         console.log(allStatus[i], " ", currentStatus);
-        if(allStatus[i].toLowerCase() === currentStatus.toLowerCase()) {
+        if (allStatus[i].toLowerCase() === currentStatus.toLowerCase()) {
             [allStatus[i], allStatus[0]] = [allStatus[0], allStatus[i]];
             break;
         }
