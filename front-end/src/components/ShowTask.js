@@ -1,6 +1,5 @@
 import React from 'react';
 import { useEffect, useState, createContext, useContext } from 'react';
-import { Link } from 'react-router-dom';
 
 // matrical UI
 import Box from '@mui/material/Box';
@@ -22,6 +21,11 @@ import Header from './task/header-section/Header.js'
 
 
 
+/*
+    * The primary component which is responsible to show an opened task.
+    * All the child components are divded into different section for e.g.
+    * header-section, descriptio-sectioin etc.
+*/
 export default function ShowTasks({ taskId }) {
     const {
         task, setTask,

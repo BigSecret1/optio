@@ -1,7 +1,6 @@
 import React from "react";
 import { useEffect, useState, createContext, useContext } from 'react';
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 
 import "./OptionMenu.css";
@@ -9,6 +8,10 @@ import { StateContext } from '../TaskStateProvider';
 
 
 
+/*
+    * When 3 dots in header section is clicked this component is responsbile, to pop
+    * up the option menu which contains.
+ */
 export default function OptionMenu({ options = [], children }) {
     const {
         task, setTask,

@@ -20,7 +20,10 @@ import Box from '@mui/material/Box';
 
 
 
-// Component is to render when in option menu Change status option is selected
+/*
+ * Component is to render when in option menu Change status option is selected
+ * in header section.
+*/
 export default function UpdateTaskStatus({ taskId }) {
     const {
         task, setTask,
@@ -30,13 +33,22 @@ export default function UpdateTaskStatus({ taskId }) {
     const [fullWidth, setFullWidth] = useState(true);
     const [maxWidth, setMaxWidth] = useState('sm');
 
-    const [taskTitle, setTaskTitle] = useState(task.title);
-
     const change = "Task Staus";
     const changeInfo = "Feel free to update your task status."
     let allStatus = ALL_STATUS;
     const currentTaskStatus = task.task_status;
     allStatus = PlaceCurrentTaskStatusAtFirst(allStatus, currentTaskStatus)
+
+    function PlaceCurrentTaskStatusAtFirst(allStatus, currentStatus) {
+        for (let i = 0; i < allStatus.length; ++i) {
+            console.log(allStatus[i], " ", currentStatus);
+            if (allStatus[i].toLowerCase() === currentStatus.toLowerCase()) {
+                [allStatus[i], allStatus[0]] = [allStatus[0], allStatus[i]];
+                break;
+            }
+        }
+        return allStatus;
+    }
 
     function handleSave() {
 
@@ -102,15 +114,4 @@ export default function UpdateTaskStatus({ taskId }) {
             </Dialog>
         </>
     );
-}
-
-function PlaceCurrentTaskStatusAtFirst(allStatus, currentStatus) {
-    for (let i = 0; i < allStatus.length; ++i) {
-        console.log(allStatus[i], " ", currentStatus);
-        if (allStatus[i].toLowerCase() === currentStatus.toLowerCase()) {
-            [allStatus[i], allStatus[0]] = [allStatus[0], allStatus[i]];
-            break;
-        }
-    }
-    return allStatus;
 }

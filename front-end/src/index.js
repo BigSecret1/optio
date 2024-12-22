@@ -18,7 +18,6 @@ import Dashboard from "./components/Dashboard";
 import Auth from "./components/Auth";
 import Projects from "./components/Projects";
 import Tasks from "./components/Tasks";
-import FormDialog from "./components/EditTask";
 import TaskManager from "./components/TaskManager";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -44,15 +43,6 @@ root.render(
         <Route
           path="/login"
           element={<Auth />}
-        />
-
-        <Route
-          path="/test"
-          element={
-            <PrivateRoute>
-              <FormDialog />
-            </PrivateRoute>
-          }
         />
 
         <Route

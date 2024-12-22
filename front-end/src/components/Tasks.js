@@ -7,7 +7,7 @@ import Task from "./task-service";
 
 
 
-const ResizableLayout = ({ columns }) => {
+export default function ResizableLayout ({ columns }) {
   const task = new Task();
 
   useEffect(() => {
@@ -91,5 +91,3 @@ const ResizableLayout = ({ columns }) => {
     </div>
   );
 };
-
-export default ResizableLayout;
