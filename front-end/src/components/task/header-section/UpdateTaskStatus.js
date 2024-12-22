@@ -21,8 +21,8 @@ import Box from '@mui/material/Box';
 
 
 /*
- * Component is to render when in option menu Change status option is selected
- * in header section.
+    * Component is to render when in option menu Change status option is selected
+    in header section.
 */
 export default function UpdateTaskStatus({ taskId }) {
     const {

@@ -21,6 +21,7 @@ import Tasks from "./components/Tasks";
 import TaskManager from "./components/TaskManager";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 const PrivateRoute = ({ children }) => {
   // Authentication check before component is rendered
   const isAuthenticated = localStorage.getItem("access_token");

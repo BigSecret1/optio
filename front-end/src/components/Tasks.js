@@ -7,7 +7,7 @@ import Task from "./task-service";
 
 
 
-export default function ResizableLayout ({ columns }) {
+export default function ResizableLayout({ columns }) {
   const task = new Task();
 
   useEffect(() => {
@@ -74,7 +74,6 @@ export default function ResizableLayout ({ columns }) {
         })}
       </PanelGroup>
 
-      {/* List all tasks  */}
       <div className="dialogue-box">
         {tasks.map((task, index) => (
           <div
@@ -88,6 +87,7 @@ export default function ResizableLayout ({ columns }) {
           </div>
         ))}
       </div>
+
     </div>
   );
 };

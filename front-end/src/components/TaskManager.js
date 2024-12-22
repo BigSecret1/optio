@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import { StateProvider } from "./TaskStateProvider";
 
 
+
 function TaskManager() {
     const location = useLocation();
     const { task } = location.state;
