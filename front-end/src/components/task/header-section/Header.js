@@ -22,18 +22,14 @@ import UpdateTaskTitle from './UpdateTaskTitle.js';
 
 
 
-/*
+/**
     * This component contains(parent component of)  all the child components which helps to build header
-    of an opened task.
+    * of an opened task.
 */
 export default function Header({ taskId }) {
     const {
         task, setTask,
-        loading, setLoading,
         editTaskTitle, setEditTaskTitle,
-        taskService,
-        getUpdatedTask,
-        open, setOpen,
         openChangeStatus, setOpenChangeStatus,
     } = useContext(TaskContext);
 

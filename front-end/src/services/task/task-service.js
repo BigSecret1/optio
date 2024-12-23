@@ -1,7 +1,7 @@
 import { Class } from '@mui/icons-material';
 import { isAuthenticated } from '../../utils/auth';
 
-// End of imports
+
 
 /*
 These status values are case sensitive sp Changing them can break the functionality.
@@ -12,7 +12,6 @@ export const ALL_STATUS = ["Completed", "In Progress", "To Do"];
 const BASE_URL = "http://localhost:8000/tasks";
 
 class Task {
-
     sanitize = new Sanitize();
 
     constructor(
@@ -130,7 +129,6 @@ class Task {
 
         const updateEndpoint = `/update-task/${requestBody['id']}/`
 
-
         try {
             // Send update request
             const response = await fetch(`${BASE_URL}${updateEndpoint}`, {
@@ -144,14 +142,12 @@ class Task {
 
             const updatedTask = await response.json();
 
-            // Handle sucessful response
             if (response.ok) {
-                console.log("TASK WAS UPDATED SUCCESSFULLY");
-                console.log("new comments ", updatedTask["comments"]);
+                console.info("Task was updated successfully");
                 return this.sanitize.sanitizeTaskData(updatedTask);
             }
             else {
-                console.log("FAILED TO UPDATE THE TASK:", response.statusText);
+                console.error("FAILED TO UPDATE THE TASK:", response.statusText);
             }
         } catch (error) {
             console.log("ERROR DURING THE TASK UPDATE :", error);
@@ -195,7 +191,6 @@ class Task {
 
 
 class Sanitize {
-
     defaultProperties = {
         comments: [],
         subtasks: [],

@@ -21,7 +21,7 @@ import Header from './header-section/Header.js'
 
 
 
-/*
+/**
     * The primary component which is responsible to show an opened task.
     * All the child components are divded into different section for e.g.
     * header-section, descriptio-sectioin etc.
@@ -36,6 +36,12 @@ export default function ShowTasks({ taskId }) {
 
     const menuOptionsForDescription = ["Edit description"]
 
+    /**
+        * Good way handling the task state as it is dependant on taskId change,
+        * Otherwise direct invoking of getUpdatedTask function will lead to infinite
+        * loop. 
+        * Also it's pulling task and updating task state during component mouting
+     */
     useEffect(() => {
         getUpdatedTask(taskId);
     }, [taskId]);

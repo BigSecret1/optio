@@ -21,18 +21,17 @@ export function TaskProvider({ children }) {
 
     const taskService = new Task();
 
-    /*
-        This function is used to get task with latest changees.
-        This is helper functino specially in those cases when there is any change made for a task and those
-        latest changes should be reflected.
-        The function call ensure to fetch tasks and updated task state with reponse.
-        
-        @param {number} taskId - Id of the task
+    /**
+        * This function is used to get task with latest changees.
+        * This is helper functino specially in those cases when there is any 
+        * change made for a task and those
+        * latest changes should be reflected.
+        * The function call ensure to fetch tasks and updated task state (setTask) with reponse.        
     */
     async function getUpdatedTask(taskId) {
         try {
             const currentTask = await taskService.getTask(taskId);
-            console.log("CURRENT TASK ", currentTask);
+            console.log("task with latest details ", currentTask);
 
             // latest comment should be on the top
             if (currentTask.comments == null) {

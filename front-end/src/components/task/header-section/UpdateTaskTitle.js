@@ -15,9 +15,9 @@ import FormControl from '@mui/material/FormControl';
 
 
 
-/*
-    # A Dialogue box which pops up when edit task option is choosen from task option
-    menu.
+/**
+    * A Dialogue box which pops up when edit task option is choosen from 
+    * task header option menu
 */
 export default function UpdateTaskTitle({ taskId }) {
     const {

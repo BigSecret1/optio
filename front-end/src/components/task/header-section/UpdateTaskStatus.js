@@ -28,7 +28,11 @@ export default function UpdateTaskStatus({ taskId }) {
     const {
         task, setTask,
         openChangeStatus, setOpenChangeStatus,
+        getUpdatedTask,
+        taskService,
     } = useContext(TaskContext);
+
+    const [status, setStatus] = useState(task.task_status);
 
     const [fullWidth, setFullWidth] = useState(true);
     const [maxWidth, setMaxWidth] = useState('sm');
@@ -50,8 +54,12 @@ export default function UpdateTaskStatus({ taskId }) {
         return allStatus;
     }
 
-    function handleSave() {
-
+    function handleSave(event) {
+        console.log("Status has been saved!!!");
+        console.log("received even to save is ", event);
+        taskService.updateTask({ id: taskId, task_status: status });
+        getUpdatedTask(taskId);
+        setOpenChangeStatus(false);
     }
 
     function handleClose() {
@@ -59,7 +67,7 @@ export default function UpdateTaskStatus({ taskId }) {
     };
 
     function handleTaskStatusChange(event) {
-        console.log("You are changing task status to ", event.target.value);
+        setStatus(event.target.value);
     }
 
     return (
