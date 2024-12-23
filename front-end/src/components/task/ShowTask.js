@@ -18,6 +18,7 @@ import OptionMenu from '../UI/OptionMenu.js';
 import FallbackAvatars from '../UI/Avatar.js';
 import EllipsisWithSpacing from '../UI/ThreeDots.js';
 import Header from './header-section/Header.js'
+import Description from './description-section/Description.js';
 
 
 
@@ -33,8 +34,6 @@ export default function ShowTasks({ taskId }) {
         taskService,
         getUpdatedTask
     } = useContext(TaskContext);
-
-    const menuOptionsForDescription = ["Edit description"]
 
     /**
         * Good way handling the task state as it is dependant on taskId change,
@@ -61,42 +60,7 @@ export default function ShowTasks({ taskId }) {
     return loading ? <p>Loading Task...</p> : (
         <div style={{ width: '100%' }}>
             <Header taskId={taskId} />
-
-            <Box
-                sx={[
-                    (theme) => ({
-                        display: 'flex',
-                        flexDirection: 'column',
-                        m: 1,
-                        p: 1,
-                        minHeight: '30vh',
-                        height: 'auto',
-                        bgcolor: '#304971',
-                        color: 'white',
-                        border: '0.5px solid',
-                        borderColor: '#3F5880',
-                        borderRadius: 2,
-                        fontSize: '0.875rem',
-                        fontWeight: '700',
-                        ...theme.applyStyles('dark', {
-                            bgcolor: '#101010',
-                            color: 'white',
-                            // borderColor: 'grey.800',
-                        }),
-                    }),
-                ]}
-            >
-                <div className="descriptionHeader">
-                    <h3>Description</h3>
-                    <div className="optionMenuEllipsContainer">
-                        <OptionMenu options={menuOptionsForDescription}>
-                            <EllipsisWithSpacing containerClass="optionDots" />
-                        </OptionMenu>
-                    </div>
-                </div>
-                <p>{task.description}</p>
-
-            </Box>
+            <Description />
 
             <Box
                 sx={[

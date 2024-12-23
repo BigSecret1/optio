@@ -90,7 +90,7 @@ class Task {
 
             if (response.ok) {
                 console.log(`Suceessfully fetched task with ${taskId}`);
-                return this.sanitize.sanitizeTaskData(task);
+                return task;
             }
             else {
                 console.log("COULDN'T FETCH TASK");
