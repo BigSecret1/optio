@@ -36,7 +36,7 @@ export default function Header({ taskId }) {
 
     const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
 
-    // optionToState.set("Edit title", setOpen);
+    optionToState.set("Edit title", setIsEditingTaskTitle);
     optionToState.set("Change status", setIsEditingTaskStatus);
 
     return (

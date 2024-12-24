@@ -1,5 +1,6 @@
 import React from "react";
-import { useEffect, useState, createContext, useContext } from 'react';
+import { useState, useContext } from 'react';
+
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 
@@ -19,16 +20,7 @@ import { TaskContext } from '../../contexts/TaskContext';
  */
 export default function OptionMenu({ options = [], children }) {
     const {
-        task, setTask,
-        loading, setLoading,
-        isEditingTaskTitle, setIsEditingTaskTitle,
-        taskService,
-        getUpdatedTask,
-        open, setOpen,
-        openChangeStatus, setOpenChangeStatus,
-        isEditingTaskStatus, setIsEditingTaskStatus,
         optionToState
-
     } = useContext(TaskContext);
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -42,26 +34,18 @@ export default function OptionMenu({ options = [], children }) {
         setAnchorEl(event.currentTarget);
     };
 
-    console.log("option to state mapping ", optionToState);
-
+    /**
+        * This function change the state of selected option. 
+        * Each option has respective mapping with the state it is mapped with in 
+        * optionToState map.
+     */
     function handleMenuItemSelection(option) {
-        console.log("You selected ", option);
-
-        // const stateSetter = optionToState.get(option);
-        // if (stateSetter) {
-        //     console.log("state setter ", stateSetter);
-        //     stateSetter((prev) => console.log(!prev));
-        //     stateSetter((prev) => !prev);
-        // }
-        // else {
-        //     console.warn(`No state found for the option: "${option}"`);
-        // }
-        if (option === "Change status") {
-            setIsEditingTaskStatus(true);
+        const stateSetter = optionToState.get(option);
+        if (stateSetter) {
+            stateSetter((prev) => !prev);
         }
         else {
-            setIsEditingTaskTitle(true);
-            // setOpen(true);
+            console.warn(`No state found for the option: "${option}"`);
         }
     }
 
