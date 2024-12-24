@@ -22,10 +22,9 @@ import FormControl from '@mui/material/FormControl';
 export default function UpdateTaskTitle({ taskId }) {
     const {
         task,
-        setEditTaskTitle,
+        setIsEditingTaskTitle,
         taskService,
         getUpdatedTask,
-        open, setOpen,
     } = useContext(TaskContext);
 
     const [fullWidth, setFullWidth] = useState(true);
@@ -41,16 +40,13 @@ export default function UpdateTaskTitle({ taskId }) {
     }
 
     function handleClose() {
-        setOpen(false);
-        setEditTaskTitle(false);
+        setIsEditingTaskTitle(false);
     };
 
     function handleSave() {
-        console.log("Saving task with new title", taskTitle);
         taskService.updateTask({ id: taskId, title: taskTitle });
         getUpdatedTask(taskId);
-        setOpen(false);
-        setEditTaskTitle(false);
+        setIsEditingTaskTitle(false);
     }
 
     return (
@@ -58,7 +54,7 @@ export default function UpdateTaskTitle({ taskId }) {
             <Dialog
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
-                open={open}
+                open={true}
                 onClose={handleClose}
             >
                 <DialogTitle>{change}</DialogTitle>

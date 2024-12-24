@@ -28,12 +28,16 @@ import UpdateTaskTitle from './UpdateTaskTitle.js';
 */
 export default function Header({ taskId }) {
     const {
-        task, setTask,
-        editTaskTitle, setEditTaskTitle,
-        openChangeStatus, setOpenChangeStatus,
+        task,
+        isEditingTaskTitle, setIsEditingTaskTitle,
+        isEditingTaskStatus, setIsEditingTaskStatus,
+        optionToState
     } = useContext(TaskContext);
 
     const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
+
+    // optionToState.set("Edit title", setOpen);
+    optionToState.set("Change status", setIsEditingTaskStatus);
 
     return (
         <Box
@@ -63,7 +67,7 @@ export default function Header({ taskId }) {
         >
             <div className='taskTitleHeader'>
                 {
-                    openChangeStatus === true ? (
+                    isEditingTaskStatus === true ? (
                         <UpdateTaskStatus taskId={taskId} />
                     ) : (
                         task.task_status.toLowerCase() === 'completed' ? (
@@ -88,7 +92,7 @@ export default function Header({ taskId }) {
                 <h3>{task.title}</h3>
             </div>
             {
-                editTaskTitle === true ? <UpdateTaskTitle taskId={taskId} /> : null
+                isEditingTaskTitle === true ? <UpdateTaskTitle taskId={taskId} /> : null
             }
         </Box >
     );

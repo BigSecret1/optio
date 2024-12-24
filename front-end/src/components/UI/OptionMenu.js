@@ -8,19 +8,26 @@ import { TaskContext } from '../../contexts/TaskContext';
 
 
 
-/*
-    * When 3 dots in header section is clicked this component is responsbile, to pop
-    * up the option menu which contains.
+/** 
+    * This component renders 2 components, when optionMenu component has a rendering call
+    * it first render the ThreeDotComponent(shows 3 dots) and if those dots are clikec it 
+    * popus a menu to select option.
+    * Based on selected option the child component is being rendered because each selected
+    * option changes a state.
+    * for e.g. 
+    * click on 3 dots in task header section >> choose edit task title option >> the edit task title dialogue will pop up
  */
 export default function OptionMenu({ options = [], children }) {
     const {
         task, setTask,
         loading, setLoading,
-        editTaskTitle, setEditTaskTitle,
+        isEditingTaskTitle, setIsEditingTaskTitle,
         taskService,
         getUpdatedTask,
         open, setOpen,
-        openChangeStatus, setOpenChangeStatus
+        openChangeStatus, setOpenChangeStatus,
+        isEditingTaskStatus, setIsEditingTaskStatus,
+        optionToState
 
     } = useContext(TaskContext);
 
@@ -35,14 +42,26 @@ export default function OptionMenu({ options = [], children }) {
         setAnchorEl(event.currentTarget);
     };
 
+    console.log("option to state mapping ", optionToState);
+
     function handleMenuItemSelection(option) {
         console.log("You selected ", option);
+
+        // const stateSetter = optionToState.get(option);
+        // if (stateSetter) {
+        //     console.log("state setter ", stateSetter);
+        //     stateSetter((prev) => console.log(!prev));
+        //     stateSetter((prev) => !prev);
+        // }
+        // else {
+        //     console.warn(`No state found for the option: "${option}"`);
+        // }
         if (option === "Change status") {
-            setOpenChangeStatus(true);
+            setIsEditingTaskStatus(true);
         }
         else {
-            setEditTaskTitle(true);
-            setOpen(true);
+            setIsEditingTaskTitle(true);
+            // setOpen(true);
         }
     }
 
@@ -52,8 +71,8 @@ export default function OptionMenu({ options = [], children }) {
                 onClick={handleClick}
                 aria-controls="simple-menu"
                 aria-haspopup="true"
-                role="button" // Adds a button-like role for accessibility
-                tabIndex={0} // Makes the div focusable
+                role="button"
+                tabIndex={0}
                 className="childContainer"
             >
                 {children}

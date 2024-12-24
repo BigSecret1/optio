@@ -26,10 +26,10 @@ import Box from '@mui/material/Box';
 */
 export default function UpdateTaskStatus({ taskId }) {
     const {
-        task, setTask,
-        openChangeStatus, setOpenChangeStatus,
+        task,
         getUpdatedTask,
         taskService,
+        setIsEditingTaskStatus
     } = useContext(TaskContext);
 
     const [status, setStatus] = useState(task.task_status);
@@ -55,15 +55,13 @@ export default function UpdateTaskStatus({ taskId }) {
     }
 
     function handleSave(event) {
-        console.log("Status has been saved!!!");
-        console.log("received even to save is ", event);
         taskService.updateTask({ id: taskId, task_status: status });
         getUpdatedTask(taskId);
-        setOpenChangeStatus(false);
+        setIsEditingTaskStatus(false);
     }
 
     function handleClose() {
-        setOpenChangeStatus(false);
+        setIsEditingTaskStatus(false);
     };
 
     function handleTaskStatusChange(event) {
@@ -75,7 +73,7 @@ export default function UpdateTaskStatus({ taskId }) {
             <Dialog
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
-                open={openChangeStatus}
+                open={true}
                 onClose={handleClose}
             >
                 <DialogTitle>{change}</DialogTitle>

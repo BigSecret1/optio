@@ -3,12 +3,11 @@ import Task from '../services/task/task-service';
 
 
 
-/* 
-    * TaskTaskContext provides the necessary states and functions for managing tasks.
+/** 
+    * TaskContext provides the necessary states and functions for managing tasks.
     * It enables reuse of stateful logic across all components within `ShowTask.js`,
     * ensuring consistent data and actions throughout the task-related components.
  */
-
 export const TaskContext = createContext();
 
 export function TaskProvider({ children }) {
@@ -16,10 +15,13 @@ export function TaskProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [editTaskTitle, setEditTaskTitle] = useState(false);
     const [open, setOpen] = useState(false);
-    const [openChangeStatus, setOpenChangeStatus] = useState(false);
     const [changeStatus, setChangeStatus] = useState(false);
+    const [isEditingTaskStatus, setIsEditingTaskStatus] = useState(false);
+    const [isEditingTaskTitle, setIsEditingTaskTitle] = useState(false);
 
     const taskService = new Task();
+
+    const optionToState = new Map()
 
     /**
         * This function is used to get task with latest changees.
@@ -54,11 +56,12 @@ export function TaskProvider({ children }) {
         <TaskContext.Provider value={{
             task, setTask,
             loading, setLoading,
-            editTaskTitle, setEditTaskTitle,
+            isEditingTaskTitle, setIsEditingTaskTitle,
             open, setOpen,
-            openChangeStatus, setOpenChangeStatus,
             changeStatus, setChangeStatus,
+            isEditingTaskStatus, setIsEditingTaskStatus,
             taskService,
+            optionToState,
             getUpdatedTask
         }}>
             {children}
