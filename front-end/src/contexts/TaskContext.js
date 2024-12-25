@@ -11,8 +11,10 @@ export const TaskContext = createContext();
 export function TaskProvider({ children }) {
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isEditingTaskStatus, setIsEditingTaskStatus] = useState(false);
   const [isEditingTaskTitle, setIsEditingTaskTitle] = useState(false);
+  const [isEditingTaskStatus, setIsEditingTaskStatus] = useState(false);
+  const [isEditingTaskDescription, setIsEditingTaskDescription] =
+    useState(false);
 
   const taskService = new Task();
 
@@ -20,7 +22,7 @@ export function TaskProvider({ children }) {
    * For each selected option in option menu of different sections(header, description etc.)
    * a mapping is needed with there respective state which is responsible for rednering
    * editing components.
-   * for e.g. "Edit title" : setIsEditingTaskTitle
+   * for e.g. ("Edit title" : setIsEditingTaskTitle)
    */
   const optionToState = new Map();
 
@@ -43,7 +45,6 @@ export function TaskProvider({ children }) {
         currentTask.comments.reverse();
       }
 
-      // Finish task page loading and make task appear
       setTask(currentTask);
     } catch (error) {
       console.error("Failed to get updated task, an error occured", error);
@@ -63,6 +64,8 @@ export function TaskProvider({ children }) {
         setIsEditingTaskTitle,
         isEditingTaskStatus,
         setIsEditingTaskStatus,
+        isEditingTaskDescription,
+        setIsEditingTaskDescription,
         taskService,
         optionToState,
         getUpdatedTask,

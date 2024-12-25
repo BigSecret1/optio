@@ -1,10 +1,10 @@
 import { Class } from "@mui/icons-material";
 import { isAuthenticated } from "../../utils/auth";
 
-/*
-These status values are case sensitive sp Changing them can break the functionality.
-For example in edit task status option to change task status
-*/
+/**
+ * These status values are case sensitive sp Changing them can break the functionality.
+ * For example in edit task status option to change task status
+ */
 export const ALL_STATUS = ["Completed", "In Progress", "To Do"];
 
 const BASE_URL = "http://localhost:8000/tasks";
@@ -84,18 +84,15 @@ class Task {
       const task = await response.json();
 
       if (response.ok) {
-        console.log(`Suceessfully fetched task with ${taskId}`);
+        console.log(`Suceessfully fetched task with id ${taskId}`);
         return task;
       } else {
         console.log("COULDN'T FETCH TASK");
       }
     } catch (error) {
-      console.error(
-        "An error occured while fetching the task : ",
-        error
-      );
+      console.error("An error occured while fetching the task : ", error);
     }
-  } 
+  }
 
   async updateTask(params = {}) {
     const loggedIn = isAuthenticated();

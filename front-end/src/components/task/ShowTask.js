@@ -12,7 +12,6 @@ import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 // Internal modules
 import { TaskContext } from "../../contexts/TaskContext.js";
 import "../../styles/ShowTask.css";
-import OptionMenu from "../UI/OptionMenu.js";
 
 // Child components
 import FallbackAvatars from "../UI/Avatar.js";
@@ -47,16 +46,12 @@ export default function ShowTasks({ taskId }) {
     setNewComment("");
   }
 
-  function handleTaskTitleOptions() {
-    console.log("clicked on option button");
-  }
-
   return loading ? (
     <p>Loading Task...</p>
   ) : (
     <div style={{ width: "100%" }}>
       <Header taskId={taskId} />
-      <Description />
+      <Description taskId={taskId} />
 
       <Box
         sx={[

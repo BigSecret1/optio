@@ -1,8 +1,32 @@
 import * as React from "react";
+import { useState, useContext } from "react";
+
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
-export default function MultilineTextFields() {
+import { TaskContext } from "../../../contexts/TaskContext";
+
+export default function EditTaskDescription({ taskId }) {
+  const { task, getUpdatedTask, taskService, setIsEditingTaskDescription } =
+    useContext(TaskContext);
+
+  const [description, setDescription] = useState(task.description);
+
+  function handleEditing(event) {
+    setDescription(event.target.value);
+  }
+
+  function handleSave() {
+    taskService.updateTask({ id: taskId, description: description });
+    getUpdatedTask(taskId);
+    setIsEditingTaskDescription(false);
+  }
+
+  function handleClose() {
+    setIsEditingTaskDescription(false);
+  }
+
   return (
     <Box
       component="form"
@@ -12,24 +36,15 @@ export default function MultilineTextFields() {
     >
       <div>
         <TextField
-          id="outlined-multiline-flexible"
-          label="Multiline"
-          multiline
-          maxRows={4}
-        />
-        <TextField
-          id="outlined-textarea"
-          label="Multiline Placeholder"
-          placeholder="Placeholder"
-          multiline
-        />
-        <TextField
           id="outlined-multiline-static"
-          label="Multiline"
           multiline
-          rows={4}
-          defaultValue="Default Value"
+          rows={5}
+          defaultValue={description}
+          style={{ width: "100%" }}
+          onChange={handleEditing}
         />
+        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={handleClose}>Cancel</Button>
       </div>
     </Box>
   );

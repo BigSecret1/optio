@@ -34,10 +34,10 @@ export default function Header({ taskId }) {
         optionToState
     } = useContext(TaskContext);
 
-    const menuOptionsForTitleBox = ["Edit title", "Change status", "Change assignee"];
+    const menuOptionsForTitleBox = ["Edit Title", "Change Status", "Change Assignee"];
 
-    optionToState.set("Edit title", setIsEditingTaskTitle);
-    optionToState.set("Change status", setIsEditingTaskStatus);
+    optionToState.set("Edit Title", setIsEditingTaskTitle);
+    optionToState.set("Change Status", setIsEditingTaskStatus);
 
     return (
         <Box

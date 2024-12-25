@@ -10,12 +10,19 @@ import OptionMenu from "../../UI/OptionMenu.js";
 
 // Child components
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
+import EditTaskDescription from "./EditTaskDescription.js";
 
-export default function Description() {
-  const { task, setTask, loading, setLoading, taskService, getUpdatedTask } =
-    useContext(TaskContext);
+export default function Description({ taskId }) {
+  const {
+    task,
+    optionToState,
+    isEditingTaskDescription,
+    setIsEditingTaskDescription,
+  } = useContext(TaskContext);
 
-  const menuOptionsForDescription = ["Edit description"];
+  const menuOptionsForDescription = ["Edit Description"];
+
+  optionToState.set("Edit Description", setIsEditingTaskDescription);
 
   return (
     <Box
@@ -50,7 +57,11 @@ export default function Description() {
           </OptionMenu>
         </div>
       </div>
-      <p>{task.description}</p>
+      {isEditingTaskDescription === true ? (
+        <EditTaskDescription taskId={taskId} />
+      ) : (
+        <p>{task.description}</p>
+      )}
     </Box>
   );
 }
