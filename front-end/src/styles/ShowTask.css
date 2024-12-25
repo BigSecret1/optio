@@ -113,11 +113,9 @@
   border: 1px solid red;
 }
 
-
 #filled-textarea {
   color: white;
 }
-
 
 .commentHeader {
   display: flex;

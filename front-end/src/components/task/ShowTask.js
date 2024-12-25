@@ -18,6 +18,7 @@ import FallbackAvatars from "../UI/Avatar.js";
 import EllipsisWithSpacing from "../UI/ThreeDots.js";
 import Header from "./header-section/Header.js";
 import Description from "./description-section/Description.js";
+import SubTasks from "./subtasks-section/SubTasks.js";
 
 /**
  * The primary component which is responsible to show an opened task.
@@ -52,50 +53,7 @@ export default function ShowTasks({ taskId }) {
     <div style={{ width: "100%" }}>
       <Header taskId={taskId} />
       <Description taskId={taskId} />
-
-      <Box
-        sx={[
-          (theme) => ({
-            display: "flex",
-            flexDirection: "column",
-            m: 1,
-            p: 1,
-            // minHeight: '40vh',
-            // height: 'auto',
-            bgcolor: "#304971",
-            position: "relative",
-            color: "white",
-            border: "0.5px solid",
-            borderColor: "#3F5880",
-            borderRadius: 2,
-            fontSize: "0.875rem",
-            fontWeight: "700",
-            ...theme.applyStyles("dark", {
-              bgcolor: "#101010",
-              color: "white",
-              // borderColor: 'grey.800',
-            }),
-          }),
-        ]}
-      >
-        <div className="subTaskHeader">
-          <h3>SubTasks</h3>
-          <EllipsisWithSpacing containerClass="optionDots" />
-        </div>
-
-        <div className="subTasksContainer">
-          <div className="subTasks">
-            {task.subtasks.map((subtask, index) => {
-              return (
-                <div className="taskItem" key={index}>
-                  <input type="checkbox" />
-                  <h5>{subtask}</h5>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </Box>
+      <SubTasks taskId={taskId} />
 
       <Box
         sx={[

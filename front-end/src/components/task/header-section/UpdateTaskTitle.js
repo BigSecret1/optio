@@ -29,17 +29,17 @@ export default function UpdateTaskTitle({ taskId }) {
   const change = "Task title";
   const changeInfo = "Feel free to update your task title.";
 
-  function handleEditTitle(event) {
+  function hadleEditing(event) {
     setTaskTitle(event.target.value);
-  }
-
-  function handleClose() {
-    setIsEditingTaskTitle(false);
   }
 
   function handleSave() {
     taskService.updateTask({ id: taskId, title: taskTitle });
     getUpdatedTask(taskId);
+    setIsEditingTaskTitle(false);
+  }
+
+  function handleClose() {
     setIsEditingTaskTitle(false);
   }
 
@@ -67,7 +67,7 @@ export default function UpdateTaskTitle({ taskId }) {
             <FormControl sx={{ mt: 2, minWidth: 120 }}>
               <input
                 name="taskTitle"
-                onChange={handleEditTitle}
+                onChange={hadleEditing}
                 value={taskTitle}
               />
             </FormControl>
