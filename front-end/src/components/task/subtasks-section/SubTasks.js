@@ -8,6 +8,7 @@ import { TaskContext } from "../../../contexts/TaskContext.js";
 
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import OptionMenu from "../../UI/OptionMenu.js";
+import StatusIcon from "../StatusIcon.js";
 
 export default function SubTasks({ taskId }) {
   const { task } = useContext(TaskContext);
@@ -48,7 +49,7 @@ export default function SubTasks({ taskId }) {
           </OptionMenu>
         </div>
       </div>
-      
+
     </Box>
   );
 }
