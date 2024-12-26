@@ -7,9 +7,12 @@ import Box from "@mui/material/Box";
 import { TaskContext } from "../../../contexts/TaskContext.js";
 
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
+import OptionMenu from "../../UI/OptionMenu.js";
 
 export default function SubTasks({ taskId }) {
   const { task } = useContext(TaskContext);
+
+  const menuOptionsForTitleBox = ["Create Subtask"];
 
   return (
     <Box
@@ -40,22 +43,12 @@ export default function SubTasks({ taskId }) {
       <div className="subTaskHeader">
         <h3>SubTasks</h3>
         <div className="optionMenuEllipsContainer">
-          <EllipsisWithSpacing containerClass="optionDots" />
+          <OptionMenu options={menuOptionsForTitleBox}>
+            <EllipsisWithSpacing containerClass="optionDots" />
+          </OptionMenu>
         </div>
       </div>
-
-      <div className="subTasksContainer">
-        <div className="subTasks">
-          {task.subtasks.map((subtask, index) => {
-            return (
-              <div className="taskItem" key={index}>
-                <input type="checkbox" />
-                <h5>{subtask}</h5>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      
     </Box>
   );
 }

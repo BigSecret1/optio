@@ -14,6 +14,7 @@ import { faCheckCircle as farCheckCircle } from "@fortawesome/free-regular-svg-i
 // Internal modules
 import { TaskContext } from "../../../contexts/TaskContext.js";
 import OptionMenu from "../../UI/OptionMenu.js";
+import StatusIcon from "../StatusIcon.js";
 
 // Child components
 import UpdateTaskStatus from "./UpdateTaskStatus.js";
@@ -72,27 +73,8 @@ export default function Header({ taskId }) {
       <div className="taskTitleHeader">
         {isEditingTaskStatus === true ? (
           <UpdateTaskStatus taskId={taskId} />
-        ) : task.task_status.toLowerCase() === "completed" ? (
-          <FontAwesomeIcon
-            icon={farCheckCircle}
-            size="2x"
-            color="green"
-            className="statusIcon"
-          />
-        ) : task.task_status.toLowerCase() === "in progress" ? (
-          <FontAwesomeIcon
-            icon={farDotCircle}
-            size="2x"
-            color="yellow"
-            className="statusIcon"
-          />
         ) : (
-          <FontAwesomeIcon
-            icon={farCircle}
-            size="2x"
-            color="blue"
-            className="statusIcon"
-          />
+          <StatusIcon status={task.task_status} />
         )}
         <Link>
           <h5>GSMI/1248</h5>
