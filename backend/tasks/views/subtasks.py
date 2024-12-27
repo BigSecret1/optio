@@ -7,7 +7,7 @@ from rest_framework import status
 from datetime import datetime
 
 from tasks.serializers import SubTaskSerializer
-from tasks.services import TaskOperation
+from tasks.services import SubTaskOperations
 
 from utils.db_manager import create_connection, close_connection
 
@@ -15,13 +15,13 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
+conn, cur = create_connection()
+sub_task_operations = SubTaskOperations(cur, conn);
+
+
 class CreateSubTask(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
-    def __init__(self):
-        self.conn, self.cur = create_connection()
-        self.task_operation = TaskOperation(self.cur, self.conn);
 
     def post(self, request):
         try:
@@ -29,7 +29,7 @@ class CreateSubTask(APIView):
             if serializer.is_valid():
                 task_data = serializer.validated_data
 
-                self.task_operation.create_sub_task(task_data)
+                sub_task_operations.create_sub_task(task_data)
 
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
@@ -39,4 +39,12 @@ class CreateSubTask(APIView):
             return Response({"error": "wrong request body"}, status=status.HTTP_400_BAD_REQUEST)
         finally:
             logging.info("Closing database connection")
-            close_connection(self.cur, self.conn)
+            close_connection(cur, conn)
+
+
+class ReadSubTask(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        pass
