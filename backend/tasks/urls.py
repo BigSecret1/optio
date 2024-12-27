@@ -1,12 +1,14 @@
 from django.urls import path
-from .views import (
+from tasks.views import (
     CreateTask,
     GetTaskById,
     UpdateTask,
     DeleteTask,
     GetTasks,
-    Searcher
+    Searcher,
+    CreateSubTask
 )
+
 
 urlpatterns = [
     path('create-task/', CreateTask.as_view(), name='create-task'),
@@ -15,4 +17,5 @@ urlpatterns = [
     path('update-task/<int:task_id>/', UpdateTask.as_view(), name='update-task'),
     path('delete-task/<int:task_id>/', DeleteTask.as_view(), name='delete-task'),
     path('search/', Searcher.as_view(), name='search-tasks'),
+    path('create-subtask', CreateSubTask.as_view(), name='create-subtask')
 ]

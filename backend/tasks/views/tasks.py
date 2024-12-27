@@ -3,7 +3,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import JsonResponse
 import json
-import logging
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
@@ -34,14 +33,14 @@ def close_connection(conn, cur):
     print("Database connection closed")
 
 def to_lowercase(value):
-    converted_value = value 
+    converted_value = value
     logging.info("CONVERTING VALUE %s ", value)
     if isinstance(value, str):
         converted_value = value.lower()
     if isinstance(value, list):
         converted_value = [to_lowercase(item) for item in value]
     logging.info("CONVERTED VALUE : %s", converted_value)
-    return converted_value 
+    return converted_value
 
 
 class CreateTask(APIView):

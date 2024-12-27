@@ -1,13 +1,12 @@
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProjectSerializer
-from utils.db_connector import create_connection, close_connection
+from utils.db_manager import create_connection, close_connection
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 import logging
 
-# logging module configuration for logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
