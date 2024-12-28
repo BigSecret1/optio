@@ -58,18 +58,15 @@ class SubTaskSerializer(serializers.Serializer):
         # Get the default serialized representation
         representation = super().to_representation(instance)
 
-        # Remove description if task_status is 'Completed'
         if representation.get('task_status') == 'Completed':
             representation.pop('description', None)
 
-        # Add is_overdue field if due_date is in the past
         due_date = representation.get('due_date')
         if due_date and date.fromisoformat(due_date) < date.today():
             representation['is_overdue'] = True
         else:
             representation['is_overdue'] = False
 
-        # Example: Exclude comments for tasks without a parent_task_id
         if not representation.get('parent_task_id'):
             representation.pop('comments', None)
 

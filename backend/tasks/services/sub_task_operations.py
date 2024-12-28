@@ -24,7 +24,7 @@ class SubTaskOperations:
 
         return self.__execute_query(query, query_param)
 
-    def get_sub_task(self, task_id : int):
+    def get_sub_task(self, task_id : int)-> Optional[Dict[str, Any]]:
         query = f"SELECT * FROM tasks WHERE parent_task_id = {task_id}"
         return self.__execute_query(query, fetch_all = True)
 
