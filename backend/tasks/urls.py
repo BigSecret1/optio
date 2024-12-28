@@ -6,7 +6,8 @@ from tasks.views import (
     DeleteTask,
     GetTasks,
     Searcher,
-    CreateSubTask
+    CreateSubTask,
+    GetSubTasks
 )
 
 
@@ -17,5 +18,6 @@ urlpatterns = [
     path('update-task/<int:task_id>/', UpdateTask.as_view(), name='update-task'),
     path('delete-task/<int:task_id>/', DeleteTask.as_view(), name='delete-task'),
     path('search/', Searcher.as_view(), name='search-tasks'),
-    path('create-subtask', CreateSubTask.as_view(), name='create-subtask')
+    path('create-subtask/', CreateSubTask.as_view(), name='create-subtask'),
+    path('<int:task_id>/get-subtasks/', GetSubTasks.as_view(), name="get-subtasks")
 ]

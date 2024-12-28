@@ -20,6 +20,19 @@ class SubTaskSerializer(serializers.Serializer):
     project_id = serializers.IntegerField(required = True, allow_null = False)
     parent_task_id = serializers.IntegerField(required = True, allow_null = False)
 
+    """ 
+    Customize the fields what to include and what to exclude while sending the response.
+    If no field is passed then it will keep all by default.    
+    """
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop('fields', None)
+        super().__init__(*args, **kwargs)
+        if fields:
+            allowed = set(fields)
+            existing = set(self.fields.keys())
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
     def validate_due_date(self, value):
         if value and value < date.today():
             raise serializers.ValidationError("Due date cannot be in the past.")

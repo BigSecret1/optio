@@ -8,7 +8,8 @@ from .tasks import (
 )
 
 from .subtasks import (
-    CreateSubTask
+    CreateSubTask,
+    GetSubTasks
 )
 
 __all__ = [

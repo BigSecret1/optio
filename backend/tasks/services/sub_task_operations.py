@@ -24,13 +24,19 @@ class SubTaskOperations:
 
         return self.__execute_query(query, query_param)
 
-    def __execute_query(self, query: str, params: Tuple[Any, ...]) -> Optional[
-        Dict[str, Any]]:
+    def get_sub_task(self, task_id : int):
+        query = f"SELECT * FROM tasks WHERE parent_task_id = {task_id}"
+        return self.__execute_query(query, fetch_all = True)
+
+
+    def __execute_query(self, query: str, params: Tuple[Any, ...] = None, fetch_all : bool = False) -> Optional[Dict[str, Any]]:
         try:
             logging.info("Executing the query on database")
             self.cur.execute(query, params)
             self.conn.commit()
 
+            if fetch_all:
+                return self.cur.fetchall()
             return self.cur.fetchone()
         except Exception as e:
             logging.error("Error while executing query: %s", str(e))
