@@ -8,6 +8,7 @@ from tasks.serializers import SubTaskSerializer
 from tasks.services import SubTaskOperations
 from utils.db_manager import create_connection, close_connection
 
+from typing import List
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -45,8 +46,10 @@ class GetSubTasks(APIView):
     def get(self, request, task_id : int):
         try:
             sub_tasks = sub_task_operations.get_sub_task(task_id)
-            serializer = SubTaskSerializer(instance = sub_tasks, many = True, fields = ["id", "title", "project_id", "parent_task_id"])
-            logging.info(serializer)
+
+            fields_to_send_in_response : List[str] = ["id", "title", "project_id", "parent_task_id"]
+            serializer = SubTaskSerializer(instance = sub_tasks, many = True, fields = fields_to_send_in_response)
+
             return Response(serializer.data, status = status.HTTP_200_OK)
         except Exception as error:
             logging.error("An error occured while fetching all subtask under task with id %d ", task_id)

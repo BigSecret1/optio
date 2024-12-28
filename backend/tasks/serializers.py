@@ -50,6 +50,10 @@ class SubTaskSerializer(serializers.Serializer):
             raise serializers.ValidationError("A task cannot be its own parent.")
         return attrs
 
+    """
+    This method is responsible for further refining the data before returning in the 
+    API resonse
+    """
     def to_representation(self, instance):
         # Get the default serialized representation
         representation = super().to_representation(instance)
