@@ -71,7 +71,7 @@ class Task {
 
     try {
       console.log(
-        `FETCHING TASK WITH ID ${taskId} REQUEST ON ${BASE_URL}${endpoint}`
+        `Fetching task with ${taskId} requesting to ${BASE_URL}${endpoint}`
       );
       const response = await fetch(`${BASE_URL}${endpoint}`, {
         method: "GET",
@@ -82,7 +82,6 @@ class Task {
       });
 
       const task = await response.json();
-
       if (response.ok) {
         console.log(`Suceessfully fetched task with id ${taskId}`);
         return task;

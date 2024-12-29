@@ -1,5 +1,7 @@
 import React, { createContext, useState } from "react";
+
 import Task from "../services/task/task-service";
+import SubTasksOperation from "../services/task/sub-task-operations";
 
 /**
  * TaskContext provides the necessary states and functions for managing tasks.
@@ -10,13 +12,16 @@ export const TaskContext = createContext();
 
 export function TaskProvider({ children }) {
   const [task, setTask] = useState(null);
+  const [subTasks, setSubTasks] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isWaitingForSubTasks, setIsWaitingForSubTasks] = useState(true);
   const [isEditingTaskTitle, setIsEditingTaskTitle] = useState(false);
   const [isEditingTaskStatus, setIsEditingTaskStatus] = useState(false);
   const [isEditingTaskDescription, setIsEditingTaskDescription] =
     useState(false);
 
   const taskService = new Task();
+  const subTasksOperation = new SubTasksOperation();
 
   /**
    * For each selected option in option menu of different sections(header, description etc.)
@@ -36,9 +41,8 @@ export function TaskProvider({ children }) {
   async function getUpdatedTask(taskId) {
     try {
       const currentTask = await taskService.getTask(taskId);
-      console.log("task with latest details ", currentTask);
 
-      // latest comment should be on the top
+      // latest comment should be on the top[shift this logic in backend asap: update query]
       if (currentTask.comments == null) {
         currentTask.comments = [];
       } else {
@@ -53,6 +57,17 @@ export function TaskProvider({ children }) {
     }
   }
 
+  async function refreshSubTasks(taskId) {
+    try {
+      const latestSubTasks = await subTasksOperation.getSubTasks(taskId);
+      setSubTasks(latestSubTasks);
+    } catch (error) {
+      console.error("Failed to fetch subtasks", error);
+    } finally {
+      setIsWaitingForSubTasks(false);
+    }
+  }
+
   return (
     <TaskContext.Provider
       value={{
@@ -60,15 +75,19 @@ export function TaskProvider({ children }) {
         setTask,
         loading,
         setLoading,
+        isWaitingForSubTasks,
         isEditingTaskTitle,
         setIsEditingTaskTitle,
         isEditingTaskStatus,
         setIsEditingTaskStatus,
         isEditingTaskDescription,
         setIsEditingTaskDescription,
+        subTasks,
         taskService,
+        subTasksOperation,
         optionToState,
         getUpdatedTask,
+        refreshSubTasks,
       }}
     >
       {children}

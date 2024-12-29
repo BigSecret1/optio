@@ -48,7 +48,7 @@ class GetSubTasks(APIView):
         try:
             sub_tasks : Optional[List[Dict[str, Any]]] = sub_task_operations.get_sub_task(task_id)
 
-            fields_to_send_in_response : List[str] = ["id", "title", "project_id", "parent_task_id"]
+            fields_to_send_in_response : List[str] = ["id", "title", "project_id", "parent_task_id", "task_status"]
             serializer = SubTaskSerializer(instance = sub_tasks, many = True, fields = fields_to_send_in_response)
 
             return Response(serializer.data, status = status.HTTP_200_OK)

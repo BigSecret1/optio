@@ -5,8 +5,6 @@ import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Task from "../../services/task/task-service";
 
-
-
 export default function ResizableLayout({ columns }) {
   const task = new Task();
 
@@ -14,9 +12,9 @@ export default function ResizableLayout({ columns }) {
     const fetchTasks = async () => {
       const allTasks = await task.getTasks({ projectId: 2 });
       setTasks(allTasks);
-    }
+    };
     fetchTasks();
-  }, [])
+  }, []);
 
   const [tasks, setTasks] = useState([]);
   const [searchByProject, setSearchByProject] = useState("");
@@ -30,7 +28,7 @@ export default function ResizableLayout({ columns }) {
     const searchHandlers = {
       project: setSearchByProject,
       task: setSearchByTask,
-      status: setSearchByStatus
+      status: setSearchByStatus,
     };
 
     const searchHandler = searchHandlers[searchType];
@@ -40,12 +38,12 @@ export default function ResizableLayout({ columns }) {
 
     // Since state updates in React are not immediate, passing event value directly instead of relying on the state
     const searchedTasks = await task.search({
-      task: searchType === 'task' ? searchTasksWith : searchByTask,
-      project: searchType === 'project' ? searchTasksWith : searchByProject,
-      status: searchType === 'status' ? searchTasksWith : searchByStatus
-    })
+      task: searchType === "task" ? searchTasksWith : searchByTask,
+      project: searchType === "project" ? searchTasksWith : searchByProject,
+      status: searchType === "status" ? searchTasksWith : searchByStatus,
+    });
     setTasks(searchedTasks);
-  }
+  };
 
   return (
     <div className="resizable-layout-container">
@@ -64,11 +62,9 @@ export default function ResizableLayout({ columns }) {
                 />
               </Panel>
 
-              {
-                index < columns.length - 1 && (
-                  <PanelResizeHandle className="resize-handle inactive" />
-                )
-              }
+              {index < columns.length - 1 && (
+                <PanelResizeHandle className="resize-handle inactive" />
+              )}
             </React.Fragment>
           );
         })}
@@ -82,12 +78,13 @@ export default function ResizableLayout({ columns }) {
             style={{ backgroundColor: "#304971", marginBottom: "20px" }}
           >
             <p>
-              <Link to={`/task-manager/${task["id"]}`} state={{ task }}>{task["title"]}</Link>
+              <Link to={`/task-manager/${task["id"]}`} state={{ task }}>
+                {task["title"]}
+              </Link>
             </p>
           </div>
         ))}
       </div>
-
     </div>
   );
-};
+}
