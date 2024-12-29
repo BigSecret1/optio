@@ -61,11 +61,13 @@ export default function SubTasks({ taskId }) {
         subTasks.map((subTask) => {
           return (
             <div key={subTask.id}>
-              <h6>
-                <StatusIcon status={subTask.task_status} />{" "}
-                HardcodedProjectName/{subTask.id}
-                {subTask.title}
-              </h6>
+              <Link to="#">
+                <h6>
+                  <StatusIcon status={subTask.task_status} />{" "}
+                  HardcodedProjectName/{subTask.id}
+                  {subTask.title}
+                </h6>
+              </Link>
             </div>
           );
         })
