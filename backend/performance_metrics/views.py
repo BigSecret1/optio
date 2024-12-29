@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from utils.db_connector import create_connection, close_connection
+from utils.db_manager import create_connection, close_connection
 import logging
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse

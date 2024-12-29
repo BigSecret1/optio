@@ -1,0 +1,135 @@
+.taskTitleHeader {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.statusIcon {
+  width: 15px;
+  height: 15px;
+  margin-top: 4px;
+}
+
+.taskTitleHeader h5 {
+  margin-left: 10px;
+  margin-top: 0px;
+}
+
+.taskTitle {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.taskTitle h3 {
+  /* margin-top: 8px; */
+  margin: 0;
+  font-weight: normal;
+}
+
+.optionMenuEllipsContainer {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionDots {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 1.2em;
+  background-color: red;
+}
+
+.descriptionHeader {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.subTaskHeader {
+  display: flex;
+  align-items: flex-start;
+}
+
+.subTasksContainer {
+  padding-top: 0px;
+}
+
+.subTasks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 2px;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.taskItem {
+  display: flex;
+  gap: 5px;
+}
+
+.taskItem h6 {
+  margin-left: 5px;
+}
+
+.taskItem input {
+  width: 20px;
+  height: 20px;
+}
+
+.comments {
+  width: 100%;
+  /* overflow: auto; */
+}
+
+.commentBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 2px;
+  /* overflow: auto; */
+}
+
+.comments button {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 100px;
+  margin-left: auto;
+  /* height: 30px; */
+  border: none;
+  font:white;
+  color: white;
+}
+
+/* .comments h5 {
+  margin-top: 20px;
+} */
+
+.comments hr {
+  border: 1px solid red;
+}
+
+#filled-textarea {
+  color: white;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 20px;
+  height: 7vh;
+  /* background-color: red; */
+
+}
+
+.comment {
+  /* background-color: #3F5880; */
+  margin-top: 10px;
+  min-height: 13vh;
+  height: auto;
+}
