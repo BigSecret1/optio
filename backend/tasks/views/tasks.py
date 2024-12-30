@@ -7,6 +7,9 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 
+from tasks.models import Task
+
+
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -115,28 +118,26 @@ class GetTaskById(APIView):
 
     def get(self, request, task_id):
         try:
-            conn, cur = create_connection()
-            query = "SELECT * FROM tasks WHERE id = %s"
-            cur.execute(query, (task_id,))
-            task = cur.fetchone()
+            task = Task.objects.get(id=task_id)
             if task:
-                task = dict(task)
                 response_task = {
-                    "title": task['title'],
-                    "subtasks": task['subtasks'],
-                    "due_date": task['due_date'],
-                    "comments": task['comments'],
-                    "description": task['description'],
-                    "task_status": task['task_status']
+                    "id": task.id,
+                    "title": task.title,
+                    "subtasks": task.subtasks,
+                    "due_date": task.due_date,
+                    "comments": task.comments,
+                    "description": task.description,
+                    "task_status": task.task_status,
+                    "created_time": task.created_time,
+                    "project": task.project.id if task.project else None,
+                    "parent_task": task.parent_task.id if task.parent_task else None,
                 }
-                close_connection(conn, cur)
-                logging.info("task by id : %s", task)
-                return JsonResponse(response_task)
+                return JsonResponse(response_task, safe=False)
             else:
                 return JsonResponse({"error": "Task not found"}, status=404)
         except Exception as err:
-            return JsonResponse({'ERROR': err}, status=500)
-
+            logging.error("Error fetching task by ID: %s", err)
+            return JsonResponse({"error": str(err)}, status=500)
 
 class UpdateTask(APIView):
     authentication_classes = [JWTAuthentication]
