@@ -23,13 +23,14 @@ class Task(models.Model):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
-        related_name="tasks"
+        related_name="tasks",
+        db_column = "project_id"
     )
     parent_task = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,
         related_name="sub_tasks",
-        blank=True,
+        blank=False,
         null=True,
         db_column="parent_task_id"
     )
