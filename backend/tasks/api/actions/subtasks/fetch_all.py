@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Dict, Optional
 from tasks.models import Task
-from tasks.serializers import SubTaskSerializer
+from tasks.api.serializers import SubTaskSerializer
 from tasks.api.actions.base import APIAction
 
 class FetchTasksAPIActin(APIAction):

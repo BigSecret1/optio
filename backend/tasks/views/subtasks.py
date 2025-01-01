@@ -5,19 +5,14 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 
-from tasks.serializers import SubTaskSerializer
-# from tasks.services import SubTaskOperations
 from utils.db_manager import create_connection, close_connection
 
-from typing import List, Optional
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-
-conn, cur = create_connection()
-# sub_task_operations = SubTaskOperations(cur, conn);
-
 from tasks.api.actions.subtasks import FetchTasksAPIActin, CreateTaskAPIAction
+
+
 fetch_tasks = FetchTasksAPIActin()
 create_task = CreateTaskAPIAction()
 
