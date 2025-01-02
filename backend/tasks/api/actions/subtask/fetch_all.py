@@ -6,9 +6,10 @@ from tasks.api.serializers import SubTaskSerializer
 from tasks.api.actions.base import APIAction
 
 
-class FetchTasksAPIAction(APIAction):
-    def execute(self, parent_task_id : int):
+class FetchSubTasksAPIAction(APIAction):
+    def execute(self, *args, **kwargs):
         try:
+            parent_task_id : int = args[0]
             sub_tasks : Optional[List[Dict[str, Any]]] = Task.objects.filter(parent_task_id=parent_task_id)
             fields_to_send_in_response : List[str] = ["id", "title", "project", "task_status"]
             serializer = SubTaskSerializer(instance = sub_tasks, many = True, fields = fields_to_send_in_response)

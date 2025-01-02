@@ -10,7 +10,7 @@ from tasks.api.actions.base import APIAction
 from tasks.api.serializers import SubTaskSerializer
 
 
-class CreateTaskAPIAction(APIAction):
+class CreateSubTaskAPIAction(APIAction):
     def execute(self, data) -> Optional[Task]:
         try:
             with transaction.atomic():

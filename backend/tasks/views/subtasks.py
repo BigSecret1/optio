@@ -8,11 +8,11 @@ from rest_framework.exceptions import ValidationError
 
 import logging
 
-from tasks.api.actions.subtask import FetchTasksAPIAction, CreateTaskAPIAction
+from tasks.api.actions.subtask import FetchSubTasksAPIAction, CreateSubTaskAPIAction
 
 
-fetch_tasks = FetchTasksAPIAction()
-create_task = CreateTaskAPIAction()
+fetch_tasks = FetchSubTasksAPIAction()
+create_task = CreateSubTaskAPIAction()
 
 
 class CreateSubTask(APIView):

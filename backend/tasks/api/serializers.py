@@ -123,3 +123,8 @@ class SubTaskSerializer(BaseSerializer):
             representation['is_overdue'] = False
 
         return representation
+
+
+class TaskSerializer(BaseSerializer):
+    class Meta(BaseSerializer.Meta):
+        pass

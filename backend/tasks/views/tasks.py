@@ -1,16 +1,22 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.response import Response
+from rest_framework import status
+
 from django.http import JsonResponse
+
 import json
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
+import logging
 
 from tasks.models import Task
+from tasks.api.actions.task import FetchTasksAPIAction
 
 
-import logging
+fetch_tasks = FetchTasksAPIAction()
 
 
 def create_connection():
@@ -92,22 +98,10 @@ class GetTasks(APIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            conn, cur = create_connection()
             project_id = request.GET.get("project_id")
-            # project_id = None
-            logging.info("Project id is %s", project_id)
-
-            if not project_id:
-                query = "SELECT * FROM tasks"
-                param = []
-            else:
-                query = "SELECT * FROM tasks WHERE project_id=%s"
-                param = [project_id]
-
-            cur.execute(query, (param))
-            tasks = cur.fetchall()
-            return JsonResponse(tasks, safe=False)
-        except Exception as err:
+            return Response(fetch_tasks.execute(project_id), status = status.HTTP_200_OK)
+        except Exception as e:
+            logging.error("%s occured while fetching tasks ", str(e))
             return JsonResponse({'ERROR': "Bad Request"}, status=500)
 
 
