@@ -13,10 +13,11 @@ import time
 import logging
 
 from tasks.models import Task
-from tasks.api.actions.task import FetchTasksAPIAction
+from tasks.api.actions.task import FetchTasksAPIAction, FetchTaskAPIAction
 
 
 fetch_tasks = FetchTasksAPIAction()
+fetch_task = FetchTaskAPIAction()
 
 
 def create_connection():
@@ -111,26 +112,10 @@ class GetTaskById(APIView):
 
     def get(self, request, task_id):
         try:
-            task = Task.objects.get(id=task_id)
-            if task:
-                response_task = {
-                    "id": task.id,
-                    "title": task.title,
-                    "subtask": task.subtasks,
-                    "due_date": task.due_date,
-                    "comments": task.comments,
-                    "description": task.description,
-                    "task_status": task.task_status,
-                    "created_time": task.created_time,
-                    "project": task.project.id if task.project else None,
-                    "parent_task": task.parent_task.id if task.parent_task else None,
-                }
-                return JsonResponse(response_task, safe=False)
-            else:
-                return JsonResponse({"error": "Task not found"}, status=404)
-        except Exception as err:
-            logging.error("Error fetching task by ID: %s", err)
-            return JsonResponse({"error": str(err)}, status=500)
+            return Response(fetch_task.execute(task_id), status = status.HTTP_200_OK)
+        except Exception as e:
+            logging.error("%s exception occured while fetching task with id %s", str(e), task_id)
+            return Response({"error": "Internal server error"}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UpdateTask(APIView):
     authentication_classes = [JWTAuthentication]

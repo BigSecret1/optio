@@ -17,7 +17,7 @@ class FetchTasksAPIAction(APIAction):
             else:
                 tasks = Task.objects.all()
 
-            serializer = TaskSerializer(instance = tasks, many = True)
+            serializer : Task = TaskSerializer(instance = tasks, many = True)
             return serializer.data
         except Exception as e:
             logging.error("%s exception occured while fetching all tasks", str(e))
