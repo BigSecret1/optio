@@ -1,12 +1,13 @@
 from rest_framework import serializers
 
 from datetime import date, datetime
+from copy import deepcopy
 
 from projects.models import Project
 from tasks.models import Task
 
 
-class SubTaskSerializer(serializers.ModelSerializer):
+class BaseSerializer(serializers.ModelSerializer):
     comments = serializers.ListField(
         child=serializers.CharField(max_length=1000),
         required=False,
@@ -61,6 +62,20 @@ class SubTaskSerializer(serializers.ModelSerializer):
                 'error_messages': {
                     "invalid": "Parent Task ID must be a valid integer."
                 }
+            }
+        }
+
+
+
+class SubTaskSerializer(BaseSerializer):
+    class Meta(BaseSerializer.Meta):
+        extra_kwargs = deepcopy(getattr(BaseSerializer.Meta, 'extra_kwargs', {}))
+        extra_kwargs['parent_task'] = {
+            'queryset': Task.objects.all(),
+            'required': True,
+            'allow_null': False,
+            'error_messages': {
+                "invalid": "Parent Task ID must be a valid integer."
             }
         }
 

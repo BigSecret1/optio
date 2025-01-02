@@ -30,7 +30,7 @@ class Task(models.Model):
         "self",
         on_delete=models.CASCADE,
         related_name="sub_tasks",
-        blank=False,
+        blank=True,
         null=True,
         db_column="parent_task_id"
     )

@@ -24,7 +24,7 @@ class CreateTaskViewTestCase(TestCase):
         request_body = {
             "title": "something new is here",
             "project_id": 1,
-            "subtasks": [
+            "subtask": [
                 "Subtask1",
                 "Subtask2"
             ],
@@ -47,7 +47,7 @@ class CreateTaskViewTestCase(TestCase):
         }
         request_data = {
         "title": "Request from tests",
-        "subtasks": ["Subtask1", "Subtask2"],
+        "subtask": ["Subtask1", "Subtask2"],
         "due_date": "2024-02-04",
         "comments": ["This is the first test comment", "This is the second comment"],
         "description": "This is test description",
@@ -70,7 +70,7 @@ class CreateTaskViewTestCase(TestCase):
         request_data = {
             "title": "Request from tests",
             "project_id": 1,
-            "subtasks": ["Subtask1", "Subtask2"],
+            "subtask": ["Subtask1", "Subtask2"],
             "due_date": "2024-02-04",
             "comments": ["This is the first test comment", "This is the second comment"],
             "description": "This is test description",
@@ -91,7 +91,7 @@ class CreateTaskViewTestCase(TestCase):
         }
         request_data = {
             "title": "Request from tests",
-            "subtasks": ["Subtask1", "Subtask2"],
+            "subtask": ["Subtask1", "Subtask2"],
             "due_date": "2024-02-04444",
             "comments": ["This is the first test comment", "This is the second comment"],
             "description": "This is test description",
@@ -132,7 +132,7 @@ class CreateTaskViewTestCase(TestCase):
         request_data = {
             "title": "response changed from unit test",
             "project_id": 2,
-            "subtasks": [
+            "subtask": [
             "Subtask1",
             "Subtask2"
             ],

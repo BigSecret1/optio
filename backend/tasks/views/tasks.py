@@ -11,7 +11,6 @@ from tasks.models import Task
 
 
 import logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def create_connection():
@@ -56,7 +55,7 @@ class CreateTask(APIView):
             conn, cur = create_connection()
 
             query = """ 
-                INSERT INTO tasks(title, subtasks, due_date, comments, description, task_status, project_id)
+                INSERT INTO tasks(title, subtask, due_date, comments, description, task_status, project_id)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 RETURNING *;
             """
@@ -69,7 +68,7 @@ class CreateTask(APIView):
             logging.info("executing query :  %s", query)
             cur.execute(query, (
                 new_task.get('title', ''),
-                new_task.get('subtasks', []),
+                new_task.get('subtask', []),
                 new_task.get('due_date', None),
                 new_task.get('comments', ''),
                 new_task.get('description', ''),
@@ -123,7 +122,7 @@ class GetTaskById(APIView):
                 response_task = {
                     "id": task.id,
                     "title": task.title,
-                    "subtasks": task.subtasks,
+                    "subtask": task.subtasks,
                     "due_date": task.due_date,
                     "comments": task.comments,
                     "description": task.description,
@@ -166,13 +165,13 @@ class UpdateTask(APIView):
             if existing_task:
                 query = """
                     UPDATE tasks
-                    SET title = %s, subtasks = %s, due_date = %s, comments = %s,
+                    SET title = %s, subtask = %s, due_date = %s, comments = %s,
                         description = %s, task_status = %s, project_id = %s
                     WHERE id = %s
                 """
                 cur.execute(query, (
                     new_task.get('title', existing_task['title']),
-                    new_task.get('subtasks', existing_task['subtasks']),
+                    new_task.get('subtask', existing_task['subtask']),
                     new_task.get('due_date', existing_task['due_date']),
                     existing_task['comments'],
                     new_task.get('description', existing_task['description']),
@@ -189,7 +188,7 @@ class UpdateTask(APIView):
                     response_task = {
                         "title": updated_task['title'],
                         "project_id": updated_task['project_id'],
-                        "subtasks": updated_task['subtasks'],
+                        "subtask": updated_task['subtask'],
                         "due_date": updated_task['due_date'],
                         "comments": updated_task['comments'],
                         "description": updated_task['description'],

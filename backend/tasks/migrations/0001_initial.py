@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('title', models.CharField(max_length=255)),
-                ('subtasks', models.JSONField(blank=True, null=True)),
+                ('subtask', models.JSONField(blank=True, null=True)),
                 ('due_date', models.DateField(blank=True, null=True)),
                 ('comments', models.JSONField(blank=True, null=True)),
                 ('description', models.TextField(blank=True, null=True)),
