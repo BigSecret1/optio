@@ -1,3 +1,5 @@
+from logging import exception
+
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -5,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import NotFound
+
 
 from django.http import JsonResponse
 
@@ -14,12 +18,21 @@ from psycopg2.extras import RealDictCursor
 import time
 import logging
 
-from tasks.models import Task
-from tasks.api.actions.task import FetchTasksAPIAction, FetchTaskAPIAction, CreateTaskAPIAction
+from tasks.api.actions.task import (
+    FetchTasksAPIAction,
+    FetchTaskAPIAction,
+    CreateTaskAPIAction,
+    DeleteTaskAPIAction
+)
 
+
+"""
+This problem needs to be solved using a appropriate design patterns(Creational can help!!!)
+"""
 fetch_tasks = FetchTasksAPIAction()
 fetch_task = FetchTaskAPIAction()
 create_task = CreateTaskAPIAction()
+delete_task = DeleteTaskAPIAction()
 
 
 def create_connection():
@@ -171,20 +184,21 @@ class DeleteTask(APIView):
 
     def delete(self, request, task_id):
         try:
-            conn, cur = create_connection()
-            cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
-            conn.commit()
-
-            if cur.rowcount == 0:
-                return JsonResponse({"error": "Task not found"}, status=404)
-            else:
-                return JsonResponse({"message": "Task deleted successfully"}, status=200)
-        except psycopg2.Error as e:
+            delete_task.execute(task_id)
+            return Response({"message": "Deleted task successfully!!!"}, status = status.HTTP_200_OK)
+        except NotFound as e:
+            return Response({"error": f"Task with id {task_id} doesn't exist"}, status = status.HTTP_400_BAD_REQUEST)
+            # conn, cur = create_connection()
+            # cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
+            # conn.commit()
+            #
+            # if cur.rowcount == 0:
+            #     return JsonResponse({"error": "Task not found"}, status=404)
+            # else:
+            #     return JsonResponse({"message": "Task deleted successfully"}, status=200)
+        except Exception as e:
             logging.error("Error deleting task: %s", e)
             return JsonResponse({"error": "Failed to delete task"}, status=500)
-        finally:
-            if conn:
-                close_connection(conn, cur)
 
 
 class Searcher(APIView):

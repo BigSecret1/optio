@@ -1,1 +1,1 @@
-from .get_exception import custom_validation_error
+from .exceptions import custom_validation_error
