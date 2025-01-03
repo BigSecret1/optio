@@ -2,7 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 
 from django.http import JsonResponse
 
@@ -13,11 +15,11 @@ import time
 import logging
 
 from tasks.models import Task
-from tasks.api.actions.task import FetchTasksAPIAction, FetchTaskAPIAction
-
+from tasks.api.actions.task import FetchTasksAPIAction, FetchTaskAPIAction, CreateTaskAPIAction
 
 fetch_tasks = FetchTasksAPIAction()
 fetch_task = FetchTaskAPIAction()
+create_task = CreateTaskAPIAction()
 
 
 def create_connection():
@@ -56,41 +58,19 @@ class CreateTask(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request : Request):
         try:
-            data = json.loads(request.body.decode('utf-8'))
-            conn, cur = create_connection()
-
-            query = """ 
-                INSERT INTO tasks(title, subtask, due_date, comments, description, task_status, project_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-                RETURNING *;
-            """
-
-            logging.info("Converting task into lowercase")
-            data = dict(data)
-            new_task = {key: to_lowercase(value) for key, value in data.items()}
-            logging.info("Converted task is %s", new_task)
-
-            logging.info("executing query :  %s", query)
-            cur.execute(query, (
-                new_task.get('title', ''),
-                new_task.get('subtask', []),
-                new_task.get('due_date', None),
-                new_task.get('comments', ''),
-                new_task.get('description', ''),
-                new_task.get('task_status', 'To Do'),
-                new_task.get('project_id', ''),
-            ))
-            task = cur.fetchone()
-            logging.info(task)
-
-            conn.commit()
-            close_connection(conn, cur)
-            return JsonResponse(task, status=200)
-
-        except Exception as err:
-            return JsonResponse({"error": "wrong request body"}, status=500, content_type='application/json')
+            return Response(create_task.execute(request.data), status = status.HTTP_200_OK)
+        except ValidationError as e:
+            context = {
+                "request": request,
+                "view": self,
+            }
+            logging.error("%s exception occured while creating task", str(e))
+            return Response({"error": str(e)}, status = status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logging.error("%s exception occured while creating task", e)
+            return Response({"error": "wrong request body"}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class GetTasks(APIView):

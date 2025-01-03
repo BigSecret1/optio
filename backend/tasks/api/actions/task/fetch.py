@@ -3,7 +3,6 @@ from tasks.api.serializers import TaskSerializer
 from tasks.models import Task
 
 from typing import Optional, List, Any
-import logging
 
 
 class FetchTaskAPIAction(APIAction):

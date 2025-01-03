@@ -65,7 +65,8 @@ class BaseSerializer(serializers.ModelSerializer):
             }
         }
 
-
+    def create(self, validated_data):
+        return Task.objects.create(**validated_data)
 
 class SubTaskSerializer(BaseSerializer):
     class Meta(BaseSerializer.Meta):
@@ -78,9 +79,6 @@ class SubTaskSerializer(BaseSerializer):
                 "invalid": "Parent Task ID must be a valid integer."
             }
         }
-
-    def create(self, validated_data):
-        return Task.objects.create(**validated_data)
 
     def __init__(self, *args, **kwargs):
         """
