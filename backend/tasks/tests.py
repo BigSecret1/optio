@@ -1,13 +1,6 @@
 from django.test import TestCase, Client
-import psycopg2
-from django.db import connection
-from django.http import JsonResponse
-from unittest.mock import patch, ANY, MagicMock
-from unittest import mock
-import json 
-from tasks.views import create_task 
+import json
 import logging
-from psycopg2.extras import RealDictCursor
 
 # logging module configuration for loggin 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')

@@ -1,5 +1,5 @@
 from django.urls import path
-from tasks.views import (
+from tasks.api.views import (
     CreateTask,
     GetTaskById,
     UpdateTask,
