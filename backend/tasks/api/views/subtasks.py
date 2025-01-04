@@ -8,11 +8,11 @@ from rest_framework.exceptions import ValidationError
 
 import logging
 
-from tasks.api.actions.subtask import FetchSubTasksAPIAction, CreateSubTaskAPIAction
+from tasks.api.actions.manager import TaskActionManager
+from tasks.api.actions.subtask import SubTaskAPIAction
 
 
-fetch_tasks = FetchSubTasksAPIAction()
-create_task = CreateSubTaskAPIAction()
+task_action_manager = TaskActionManager(SubTaskAPIAction())
 
 
 class CreateSubTask(APIView):
@@ -21,7 +21,7 @@ class CreateSubTask(APIView):
 
     def post(self, request : Request) -> Response:
         try:
-            return Response(create_task.execute(request.data), status = status.HTTP_200_OK)
+            return Response(task_action_manager.create(request.data), status = status.HTTP_200_OK)
         except ValidationError as e:
             return Response({"error": str(e)}, status = status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -35,7 +35,7 @@ class GetSubTasks(APIView):
 
     def get(self, request : Request, parent_task_id : int) -> Response:
         try:
-            return Response(fetch_tasks.execute(parent_task_id), status = status.HTTP_200_OK)
+            return Response(task_action_manager.fetch_all(parent_task_id), status = status.HTTP_200_OK)
         except Exception as error:
             logging.error("An error occured while fetching all subtask under task with id %d : %s ", parent_task_id, error)
             return Response({"error": "Server error"}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)

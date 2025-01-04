@@ -3,15 +3,15 @@ from rest_framework import serializers
 from django.db import transaction
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
 from tasks.models import Task
-from tasks.api.actions.base import APIAction
 from tasks.api.serializers import SubTaskSerializer
+from tasks.api.actions.base import APIAction
 
 
-class CreateSubTaskAPIAction(APIAction):
-    def execute(self, data) -> Optional[Task]:
+class SubTaskAPIAction(APIAction):
+    def create(self, data):
         try:
             with transaction.atomic():
                 serializer = SubTaskSerializer(data=data)
@@ -26,3 +26,14 @@ class CreateSubTaskAPIAction(APIAction):
         except Exception as e:
             logging.error("%s while creating task", str(e))
             raise
+
+    def fetch_all(self, parent_task_id : int):
+        try:
+            sub_tasks : Optional[List[Dict[str, Any]]] = Task.objects.filter(parent_task_id=parent_task_id)
+            fields_to_send_in_response : List[str] = ["id", "title", "project", "task_status"]
+            serializer = SubTaskSerializer(instance = sub_tasks, many = True, fields = fields_to_send_in_response)
+
+            return serializer.data
+        except Exception as e:
+            logging.error("%s occured while fetching subtask of task with id %s", e, parent_task_id)
+            return None
