@@ -4,7 +4,6 @@ from .tasks import (
     UpdateTask,
     DeleteTask,
     GetTasks,
-    Searcher,
 )
 
 from .subtasks import (
@@ -18,6 +17,5 @@ __all__ = [
     "UpdateTask",
     "DeleteTask",
     "GetTasks",
-    "Searcher",
     "CreateSubTask"
 ]

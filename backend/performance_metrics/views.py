@@ -20,7 +20,6 @@ from rest_framework.views import APIView
 # logging module configuration for logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
-logging.info("PERFORMANCE_METRICS_ACTIVATING..")
 conn, cur = create_connection()
 
 
@@ -33,20 +32,17 @@ class TaskPerformanceMetrics():
         self.__overall_task_status()
 
     def get_total_completed_tasks(self):
-        logging.info("GETTING TOTAL COMPLETED TASK VALUE AS : %s", self._total_completed_task_per_month)
         return self._total_completed_task_per_month
 
     def set_total_completed_task_per_month(self, completed_task_status):
         if not isinstance(completed_task_status, dict) or completed_task_status == None:
             raise ValueError("something is wrong with completed_task_status")
         self._total_completed_task_per_month.append(completed_task_status)
-        logging.info("VALUE SET TO : %s", self._total_completed_task_per_month)
 
     def get_total_pending_tasks_per_month(self):
         return self._total_pending_tasks_per_month
 
     def set_total_pending_tasks_per_month(self, pending_task_status):
-        logging.info("RECEIVING PENDING TASK STAT AS : %s", pending_task_status)
         if not isinstance(pending_task_status, dict) or pending_task_status == None:
             raise ValueError("Something went wrong with pending task status")
         self._total_pending_tasks_per_month.append(pending_task_status)
@@ -68,13 +64,10 @@ class TaskPerformanceMetrics():
         self._total_to_do_tasks_per_month = to_do_task_status
 
     def __execute_query(self, query):
-        logging.info("EXECUTING QUERY FOR PERFORMANCE METRICS %s ", query)
         cur.execute(query)
         result = cur.fetchall()
 
-        logging.info("RAW DATA : %s", result)
         result_list = [dict(row) for row in result]
-        logging.info("RESULT LIST : %s ", result_list)
         df = pd.DataFrame(result_list)
         return df
 
@@ -115,7 +108,6 @@ class TaskPerformanceMetrics():
                 # Extract date from pandas timestamp
                 timestamp = row['month']
                 date = timestamp.date()
-                logging.info("EXTRACTED DATE IS %s", date)
 
                 status = row['new_status']
                 task_count = row['status_count']
@@ -132,16 +124,8 @@ class TaskPerformanceMetrics():
                     self.set_total_in_progress_tasks_per_month(per_status_stat)
                 elif status == 'to do':
                     self.set_total_to_do_tasks_per_month(per_status_stat)
-
                 task_performance_status.append(per_status_stat)
-            logging.info("PER TYPE OF TASK METRICS %s", task_performance_status)
-
-            for object in task_performance_status:
-                for key, value in object.items():
-                    logging.info("key : %s value : %s", key, value)
-
         except Exception as err:
-            logging.info("AN ERROR OCCURED %s", err)
             return JsonResponse({'Error': f"{err} occured"})
 
 
@@ -204,7 +188,6 @@ class TaskPerformanceMetrics():
                 if date not in project_status_record_per_month:
                     project_status_record_per_month[date] = []
                 project_status_record_per_month[date].append(status_stat)
-            logging.info("PER PROJECT MONTH WISE STATUS IS : %s", project_status_record_per_month)
             return project_status_record_per_month
         except Exception as e:
             return f"something wrong {e}" 
