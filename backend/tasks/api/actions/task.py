@@ -14,6 +14,7 @@ from tasks.models import Task
 
 class TaskAPIAction(APIAction):
     def create(self, task_data : Task):
+        logging.info("Creating task")
         try:
             with transaction.atomic():
                 serializer = TaskSerializer(data=task_data)
@@ -31,6 +32,7 @@ class TaskAPIAction(APIAction):
 
     def fetch(self, task_id : int):
         try:
+            logging.info("fetching all")
             task : Optional[Task] = Task.objects.filter(id = task_id)
             serializer : Task = TaskSerializer(instance = task, many = True)
             return serializer.data

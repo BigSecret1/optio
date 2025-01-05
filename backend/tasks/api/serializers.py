@@ -124,5 +124,4 @@ class SubTaskSerializer(BaseSerializer):
 
 
 class TaskSerializer(BaseSerializer):
-    class Meta(BaseSerializer.Meta):
-        pass
+    pass
