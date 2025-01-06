@@ -4,8 +4,6 @@ from psycopg2.extras import RealDictCursor
 import time
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
 
 def create_connection(max_retries : int = 5):
     retries : int = 0
