@@ -2,7 +2,7 @@ from django.db import models
 from tasks.models import Task
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     id = models.AutoField(primary_key = True)
     comment = models.TextField()
     task = models.ForeignObject(
