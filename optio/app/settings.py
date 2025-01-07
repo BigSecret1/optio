@@ -34,6 +34,7 @@ INSTALLED_APPS = [
         'django.contrib.staticfiles',
         'tasks',
         'performance_metrics',
+        'comments',
         'profiles',
         'projects',
         'rest_framework',
