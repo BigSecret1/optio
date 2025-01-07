@@ -6,6 +6,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     #path('admin/', admin.site.urls),
     path('tasks/', include('tasks.api.urls')),
+    path('comments/', include('comments.api.urls')),
     path('performance-metrics/', include('performance_metrics.urls')),
     path('user/',include('profiles.urls')),
     path('projects/', include('projects.urls')),
