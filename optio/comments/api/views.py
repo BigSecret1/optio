@@ -29,3 +29,18 @@ class CreateView(APIView):
             return Response({"error": "Internal server error"}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class EditView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request : Request, comment_id : int) -> Response:
+        try:
+            comment_api_action.update_comment(comment_id, request.data)
+            return Response({"success": "comment was update successfully"}, status = status.HTTP_200_OK)
+        except Exception as e:
+            logging.error("%s exception occured while update the comment", str(e))
+            return Response({"error": "Internal server error"}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class DeleteView(APIView):
+    pass
