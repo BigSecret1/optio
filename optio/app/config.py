@@ -1,5 +1,0 @@
-db_name = 'todoler'
-db_user = 'dinesh'
-db_password = 'neverworry'
-db_host = 'localhost'
-db_port = '5432'
