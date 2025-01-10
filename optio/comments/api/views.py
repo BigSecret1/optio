@@ -6,6 +6,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 
+from django.core.exceptions import ObjectDoesNotExist
+
 import logging
 
 from comments.api.actions import CommentAPIAction
@@ -24,8 +26,8 @@ class CreateView(APIView):
     def post(self, request : Request) -> Response:
         try:
             return Response(comment_api_action.add_comment(request.data), status = status.HTTP_200_OK)
-        except ValidationError:
-            return Response({"error": validation_error_message}, status = status.HTTP_400_BAD_REQUEST)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status = status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logging.error("%s exception occured while adding comment", str(e))
             return Response({"error": error_message}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -47,13 +49,14 @@ class EditView(APIView):
 
 
 class DeleteView(APIView):
-    pass
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes =  = [IsAuthenticated]
-    #
-    # def delete(self, request : Request, comment_id : int) -> Response:
-    #     try:
-    #         pass
-    #     except Exception as e:
-    #         pass
-    #
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request : Request, comment_id : int) -> Response:
+        try:
+            comment_api_action.delete_comment(comment_id)
+            return Response({"success": "Deleted comment successfully"}, status = status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({"error": f"Comment with id {comment_id} doesn't exist"}, status = status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": error_message}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)

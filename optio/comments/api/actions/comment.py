@@ -1,6 +1,7 @@
 from rest_framework.exceptions import ValidationError
 
 from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 
 import logging
 
@@ -19,7 +20,7 @@ class CommentAPIAction(APIAction):
                 return {"success": "Added comment successfully"}
             else:
                 logging.error("%s exception occured, data validation failed", serializer.errors)
-                raise ValidationError
+                raise ValidationError(serializer.errors)
         except ValidationError:
             raise
         except Exception:
@@ -38,6 +39,16 @@ class CommentAPIAction(APIAction):
                 logging.error("Request data validation failed with serializer exception : %s",str(serializer.errors))
                 raise ValidationError(serializer.errors)
         except ValidationError:
+            raise
+        except Exception as e:
+            raise
+
+    def delete_comment(self, comment_id : int):
+        try:
+            comment = Comment.objects.get(id=comment_id)
+            comment.delete()
+        except ObjectDoesNotExist as e:
+            logging.error("No comment exist with id error : %s", str(e))
             raise
         except Exception as e:
             raise
