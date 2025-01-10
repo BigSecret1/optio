@@ -12,7 +12,9 @@ from django.http import JsonResponse
 
 import logging
 
+
 task_action_manager = TaskActionManager(TaskAPIAction())
+
 
 class CreateTask(APIView):
     authentication_classes = [JWTAuthentication]
