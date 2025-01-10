@@ -26,6 +26,16 @@ class CommentAPIAction(APIAction):
         except Exception:
             raise
 
+    def fetch_all_comments(self, task_id : int):
+        try:
+            comments = Comment.objects.filter(task = task_id)
+            serializer = CommentSerializer(instance = comments, many = True)
+            return serializer.data
+            return comments
+        except Exception as e:
+            logging.error("some error occured while fetching the comments %s", str(e))
+            raise
+
     def update_comment(self, comment_id : int, data : Comment):
         try:
             serializer = CommentSerializer(data = data, partial = True)

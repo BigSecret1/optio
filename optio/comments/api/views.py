@@ -33,6 +33,17 @@ class CreateView(APIView):
             return Response({"error": error_message}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class ListView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request : Request, task_id : int) -> Response:
+        try:
+            return Response(comment_api_action.fetch_all_comments(task_id), status = status.HTTP_200_OK)
+        except Exception:
+            return Response({"error": error_message}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class EditView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
