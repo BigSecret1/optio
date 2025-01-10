@@ -1,5 +1,6 @@
-from django.core.exceptions import ValidationError
-from django.db import transaction, IntegrityError
+from rest_framework.exceptions import ValidationError
+
+from django.db import transaction
 
 import logging
 
@@ -15,13 +16,14 @@ class CommentAPIAction(APIAction):
             if serializer.is_valid():
                 with transaction.atomic():
                     serializer.save()
-                return ({"success": "Added comment successfully"})
+                return {"success": "Added comment successfully"}
             else:
-                raise ValidationError(serializer.errors)
-        except IntegrityError as e:
-            raise IntegrityError(f"Adding comment operation failed , issue with db {e}")
-        except Exception as e:
-            raise Exception(f"{str(e)} exception occured while addming comment to db")
+                logging.error("%s exception occured, data validation failed", serializer.errors)
+                raise ValidationError
+        except ValidationError:
+            raise
+        except Exception:
+            raise
 
     def update_comment(self, comment_id : int, data : Comment):
         try:
@@ -29,11 +31,13 @@ class CommentAPIAction(APIAction):
             if serializer.is_valid():
                 validated_data = serializer.validated_data
                 new_comment : str = validated_data.get("comment")
-                logging.info("New comment : %s", new_comment)
 
                 with transaction.atomic():
                     Comment.objects.filter(id = comment_id).update(comment = new_comment)
             else:
+                logging.error("Request data validation failed with serializer exception : %s",str(serializer.errors))
                 raise ValidationError(serializer.errors)
+        except ValidationError:
+            raise
         except Exception as e:
-            raise Exception(f"Couldn't update the comment something went wrong {e}")
+            raise

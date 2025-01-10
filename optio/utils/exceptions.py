@@ -2,6 +2,10 @@ from rest_framework.views import exception_handler
 from rest_framework.exceptions import ValidationError
 
 
+class CommentUpdateException(IndexError):
+    pass
+
+
 def custom_validation_error(e, context = None):
     """
     This function is not giving as expected result, not in use. Issue will be fixed
