@@ -1,4 +1,4 @@
-from .tasks import (
+from optio.tasks.api.views.tasks import (
     CreateTask,
     GetTaskById,
     UpdateTask,
@@ -6,7 +6,7 @@ from .tasks import (
     GetTasks,
 )
 
-from .subtasks import (
+from optio.tasks.api.views.subtasks import (
     CreateSubTask,
     GetSubTasks
 )
