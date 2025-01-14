@@ -33,13 +33,21 @@ INSTALLED_APPS = [
     'optio.tasks',
     # 'performance_metrics',
     'optio.comments',
+    'optio.search',
     'optio.profiles',
     'optio.projects',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'corsheaders',
+    "django_elasticsearch_dsl" # Elastic search client
 ]
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'http://localhost:9200'
+    },
+}
 
 # For jwt token added
 REST_FRAMEWORK = {
