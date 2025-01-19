@@ -6,6 +6,10 @@ from optio.tasks.models import Task
 import logging
 
 
+"""
+Custom analyzer : Generates subsrings and tokenize them for faster search
+Also it has filtering mechanism which makes it case insensitive(filter=lowercase)
+"""
 autocomplete_analyzer = analyzer('autocomplete_analyzer',
                                  tokenizer=tokenizer('trigram', 'ngram', min_gram=1,
                                                      max_gram=6),
@@ -32,7 +36,8 @@ class TaskDocument(Document):
 
     def prepare_title_suggest(self, instance):
         """
-        Generate the data for the `title_suggest` field.
+        Generate the data for the `title_suggest` field, may be need to remove in
+        future. Not needed
         """
         logging.info(f"Generating title suggestions for: {instance.title}")
         return {
@@ -41,5 +46,4 @@ class TaskDocument(Document):
         }
 
     def prepare_title(self, instance):
-        """ This is an optional method to manipulate the data before indexing it """
         return instance.title
