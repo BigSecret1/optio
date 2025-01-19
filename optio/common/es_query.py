@@ -14,9 +14,9 @@ class ESQuery(ABC):
         pass
 
     @abstractmethod
-    def fuzzy_match(self):
+    def prefix_substring_match(self):
         pass
 
     @abstractmethod
-    def prefix_substring_match(self):
+    def fuzzy_match(self):
         pass

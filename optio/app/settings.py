@@ -33,14 +33,14 @@ INSTALLED_APPS = [
     'optio.tasks',
     # 'performance_metrics',
     'optio.comments',
-    'optio.search',
+    "optio.search",
     'optio.profiles',
     'optio.projects',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'corsheaders',
-    "django_elasticsearch_dsl" # Elastic search client
+    "django_elasticsearch_dsl"
 ]
 
 ELASTICSEARCH_DSL = {
@@ -70,7 +70,9 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    "optio.middleware.camel_to_snake_case.CamelCaseToSnakeCaseMiddleware",
 ]
+
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
