@@ -19,12 +19,11 @@ class SearchTaskAPIView(APIView):
 
     def post(self, request: Request) -> Response:
         try:
-            # task_es_query.set_search_text(request.data)
-            # task_es_query.execute()
-            logging.info("Json data transformation check : %s", request.data)
+            task_es_query.execute(request.data)
             return Response({"msg": "Sent request to search task"}, status =
             status.HTTP_200_OK)
         except Exception as e:
+            logging.info("error : %s", str(e))
             return Response({"msg": "Internal server error"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
