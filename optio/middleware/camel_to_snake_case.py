@@ -2,26 +2,26 @@ import re
 from django.utils.deprecation import MiddlewareMixin
 
 import logging
+import json
 
 """
-Before processing request to views , it's better to transform request body (JSON body)
-to camel_case annotation
+Before processing request to views , it's a good practise to transform request body (
+JSON body) to camel_case annotation
 """
-
-
 class CamelCaseToSnakeCaseMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.content_type == "application/json":
             try:
-                import json
                 body = json.loads(request.body)
                 snake_case_body = {
                     self.camel_to_snake(key): value for key, value in body.items()
                 }
-                request._body = json.dumps(snake_case_body)  # Update request body
+
+                """Use ._body to not directly modigy actual request body and used 
+                cached body which is request._body"""
+                request._body = json.dumps(snake_case_body).encode("utf-8")
             except Exception as e:
-                logging.error("Request body transformation failed due to exception "
-                              "%s", str(e))
+                logging.error("Request body transformation failed: %s", str(e))
 
     def camel_to_snake(self, name: str):
         # https://djangosnippets.org/snippets/585/

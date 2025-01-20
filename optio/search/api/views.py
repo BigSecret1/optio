@@ -3,6 +3,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from optio.tasks.api.actions.query import TaskESQuery
 
 import logging
@@ -11,12 +14,15 @@ task_es_query = TaskESQuery()
 
 
 class SearchTaskAPIView(APIView):
-    def get(self, request: Request) -> Response:
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
         try:
             # task_es_query.set_search_text(request.data)
             # task_es_query.execute()
             logging.info("Json data transformation check : %s", request.data)
-            return Response({"msg": "Sent request to search task"}, status=
+            return Response({"msg": "Sent request to search task"}, status =
             status.HTTP_200_OK)
         except Exception as e:
             return Response({"msg": "Internal server error"},
