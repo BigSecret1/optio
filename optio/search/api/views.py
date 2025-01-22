@@ -9,6 +9,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from optio.tasks.api.actions.query import TaskESQuery
 
 import logging
+from typing import Optional, Dict, List
 
 task_es_query = TaskESQuery()
 
@@ -19,9 +20,8 @@ class SearchTaskAPIView(APIView):
 
     def post(self, request: Request) -> Response:
         try:
-            task_es_query.execute(request.data)
-            return Response({"msg": "Sent request to search task"}, status =
-            status.HTTP_200_OK)
+            search_results: Optional[List[Dict]] = task_es_query.execute(request.data)
+            return Response(search_results, status = status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))
             return Response({"msg": "Internal server error"},

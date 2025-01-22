@@ -2,7 +2,7 @@ from optio.common.es_query import ESQuery
 
 from rest_framework.request import Request
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from elasticsearch_dsl import Search, Q
 
@@ -15,13 +15,15 @@ class TaskESQuery(ESQuery):
         self.search_text: str = ""
         self.search_results: List[Dict] = []
 
-    def execute(self, query_data: Request):
+    def execute(self, query_data: Request) -> Optional[List[Dict]]:
         if "title" in query_data:
             self.search_text = query_data["title"]
 
         self.exact_match()
         self.prefix_substring_match()
         self.fuzzy_match()
+
+        return self.search_results
 
     def exact_match(self):
         query = Q(
@@ -34,6 +36,7 @@ class TaskESQuery(ESQuery):
         search dsl docs says
         """
         TaskESQuery.search.extra(track_total_hits=False)
+
         matched_results = TaskESQuery.search.query(query).execute()
         self.__add_to_search_results(matched_results)
 
