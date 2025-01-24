@@ -5,7 +5,7 @@ from rest_framework.request import Request
 from typing import Dict, List, Optional
 import logging
 
-from elasticsearch_dsl import Search, Q, connections
+from elasticsearch_dsl import Search, Q
 
 
 class TaskESQuery(ESQuery):
@@ -22,11 +22,18 @@ class TaskESQuery(ESQuery):
         else:
             return {"error_message": "Field title is required"}
 
-        self.exact_match()
-        self.prefix_match()
-        self.fuzzy_match()
+        try:
+            logging.info("Starting search operation for task title input : '%s' ",
+                         self.search_text)
+            self.exact_match()
+            self.prefix_match()
+            self.substring_match()
+            self.fuzzy_match()
 
-        return self.search_results
+            self.__show_search_results()
+            return self.search_results
+        except Exception as e:
+            logging.error("Exception occured while searching task title : %s", str(e))
 
     def exact_match(self):
         query = Q(
@@ -41,7 +48,7 @@ class TaskESQuery(ESQuery):
         TaskESQuery.search.extra(track_total_hits=False)
 
         matched_results = TaskESQuery.search.query(query).execute()
-        self.__add_to_search_results(matched_results)
+        self.__add_to_search_results(matched_results, "exact_match")
 
     def prefix_match(self):
         search = TaskESQuery.search.suggest('title-suggestion', self.search_text,
@@ -51,29 +58,42 @@ class TaskESQuery(ESQuery):
 
         """Query not returning results in hit field so using custom adding logic"""
         if 'suggest' in matched_result:
-            for suggestion in matched_result['suggest']['title-suggestion']:
-                for option in suggestion['options']:
+            for suggestion in matched_result["suggest"]["title-suggestion"]:
+                for option in suggestion["options"]:
                     record = {}
                     record["title"] = option["_source"]["title"]
                     record["id"] = option["_id"]
+                    record["type"] = "prefix"
                     self.search_results.append(record)
-                    self.show_record(record, "prefix")
         else:
             logging.info("No suggestions found.")
+
+    """
+    Elastic search Wild card search query is a good option to start with for 
+    substring march but increase in performance issue would indicate to introduce a good appraoch
+    """
+    def substring_match(self):
+        query = Q("wildcard", title={"value": "*tting", "case_insensitive": True})
+        search = TaskESQuery.search.query(query)
+
+        matched_results = search.execute()
+        self.__add_to_search_results(matched_results, "substring match")
 
     def fuzzy_match(self):
         pass
 
-    def __add_to_search_results(self, results):
+    def __add_to_search_results(self, results, type):
         for hit in results:
             record = {}
             record["id"] = hit.meta.id
             record["title"] = hit.title
+            record["type"] = type
             self.search_results.append(record)
-            self.show_record(record, exact)
 
-        # print(self.search_results)
+    def __show_search_results(self):
+        for record in self.search_results:
+            print(f"\n type : {record["type"]} | id : {record["id"]} | task title :"
+                  f" {record["title"]}")
 
-    def show_record(self, record, type):
-        print("\n", type)
-        print(f"\n id : {record["id"]} task title : {record["title"]}")
+    def __remove_duplicate_search_results(self):
+        pass

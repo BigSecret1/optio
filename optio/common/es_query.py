@@ -18,5 +18,9 @@ class ESQuery(ABC):
         pass
 
     @abstractmethod
+    def substring_match(self):
+        pass
+
+    @abstractmethod
     def fuzzy_match(self):
         pass
