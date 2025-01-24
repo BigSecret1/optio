@@ -80,7 +80,20 @@ class TaskESQuery(ESQuery):
         self.__add_to_search_results(matched_results, "substring match")
 
     def fuzzy_match(self):
-        pass
+        query = Q(
+            "fuzzy",
+            title={
+                "value": "wh",
+                "fuzziness": "2"
+            }
+        )
+        search = TaskESQuery.search.query(query)
+        response  = search.source(["title"]).execute()
+
+        # response = search.execute()
+
+        for hit in response:
+            print(f"ID: {hit.meta.id}, Title: {hit.title}")
 
     def __add_to_search_results(self, results, type):
         for hit in results:
