@@ -3,8 +3,9 @@ from optio.common.es_query import ESQuery
 from rest_framework.request import Request
 
 from typing import Dict, List, Optional
+import logging
 
-from elasticsearch_dsl import Search, Q
+from elasticsearch_dsl import Search, Q, connections
 
 
 class TaskESQuery(ESQuery):
@@ -18,9 +19,11 @@ class TaskESQuery(ESQuery):
     def execute(self, query_data: Request) -> Optional[List[Dict]]:
         if "title" in query_data:
             self.search_text = query_data["title"]
+        else:
+            return {"error_message": "Field title is required"}
 
         self.exact_match()
-        self.prefix_substring_match()
+        self.prefix_match()
         self.fuzzy_match()
 
         return self.search_results
@@ -40,8 +43,23 @@ class TaskESQuery(ESQuery):
         matched_results = TaskESQuery.search.query(query).execute()
         self.__add_to_search_results(matched_results)
 
-    def prefix_substring_match(self):
-        pass
+    def prefix_match(self):
+        search = TaskESQuery.search.suggest('title-suggestion', self.search_text,
+                                            completion={"field": 'title_suggest'})
+
+        matched_result = search.execute().to_dict()
+
+        """Query not returning results in hit field so using custom adding logic"""
+        if 'suggest' in matched_result:
+            for suggestion in matched_result['suggest']['title-suggestion']:
+                for option in suggestion['options']:
+                    record = {}
+                    record["title"] = option["_source"]["title"]
+                    record["id"] = option["_id"]
+                    self.search_results.append(record)
+                    self.show_record(record, "prefix")
+        else:
+            logging.info("No suggestions found.")
 
     def fuzzy_match(self):
         pass
@@ -52,5 +70,10 @@ class TaskESQuery(ESQuery):
             record["id"] = hit.meta.id
             record["title"] = hit.title
             self.search_results.append(record)
+            self.show_record(record, exact)
 
-        print(self.search_results)
+        # print(self.search_results)
+
+    def show_record(self, record, type):
+        print("\n", type)
+        print(f"\n id : {record["id"]} task title : {record["title"]}")

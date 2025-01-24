@@ -14,7 +14,7 @@ class ESQuery(ABC):
         pass
 
     @abstractmethod
-    def prefix_substring_match(self):
+    def prefix_match(self):
         pass
 
     @abstractmethod
