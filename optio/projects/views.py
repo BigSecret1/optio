@@ -1,17 +1,17 @@
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProjectSerializer
-from utils.db_manager import create_connection, close_connection
+from optio.utils.db_manager import create_connection, close_connection
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class ProjectListView(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -19,9 +19,12 @@ class ProjectListView(APIView):
         conn, cur = create_connection()
         cur.execute("SELECT * FROM projects")
         projects = cur.fetchall()
-        
+
         # Convert list of tuples to list of dictionaries
-        project_list = [{'id': p['id'], 'name': p['name'], 'last_updated': p['project_updated'], 'stars': p['stars'], 'description': p['project_description']} for p in projects]
+        project_list = [
+            {'id': p['id'], 'name': p['name'], 'last_updated': p['project_updated'],
+             'stars': p['stars'], 'description': p['project_description']} for p in
+            projects]
         close_connection(conn, cur)
         logging.info("PROJECT LIST : %s", project_list)
         serializer = ProjectSerializer(project_list, many=True)
@@ -36,12 +39,12 @@ class ProjectListView(APIView):
             project_id = cur.fetchone()['id']
             conn.commit()
             close_connection(conn, cur)
-            return Response({'id': project_id, 'name': name}, status=status.HTTP_201_CREATED)
+            return Response({'id': project_id, 'name': name},
+                            status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProjectDetailView(APIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -69,19 +72,20 @@ class ProjectDetailView(APIView):
     def delete(self, request, pk):
         conn, cur = create_connection()
         delete_table_entities = DeleteTableEntities()
-        
+
         try:
-            #Find the references in all tables and then delete project 
+            # Find the references in all tables and then delete project
             cur.execute("SELECT id FROM tasks WHERE project_id=%s", (pk,))
             tasks_id = cur.fetchall()
             tasks_id = [task_id['id'] for task_id in tasks_id]
             delete_table_entities.delete_task_status_history_references(tasks_id)
             delete_table_entities.delete_tasks(pk)
-            
+
             cur.execute("DELETE FROM projects WHERE id=%s", (pk,))
             conn.commit()
             close_connection(conn, cur)
-            return Response("Deleted the project and it's content successfully", status=status.HTTP_204_NO_CONTENT)
+            return Response("Deleted the project and it's content successfully",
+                            status=status.HTTP_204_NO_CONTENT)
         except Exception as err:
             return Response(f"An error occured while deleting the project {err}")
 
@@ -97,17 +101,15 @@ class DeleteTableEntities:
         except Exception as err:
             return Response(f"An error occured while deleting tasks {err}")
 
-    def delete_task_status_history_references(self, tasks_id): 
+    def delete_task_status_history_references(self, tasks_id):
         try:
             conn, cur = create_connection()
             logging.info("RECIVED IDS ARE : ", tasks_id)
             for task_id in tasks_id:
-                cur.execute("DELETE FROM task_status_history WHERE task_id=%s", (task_id,))
+                cur.execute("DELETE FROM task_status_history WHERE task_id=%s",
+                            (task_id,))
                 conn.commit()
             close_connection(conn, cur)
         except Exception as err:
-            return Response(f"An error occured while deleting task status history {err}")
-
-
-
-
+            return Response(
+                f"An error occured while deleting task status history {err}")

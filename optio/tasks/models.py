@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from projects.models import Project
+from optio.projects.models import Project
 
 
 class Task(models.Model):
@@ -24,7 +24,7 @@ class Task(models.Model):
         Project,
         on_delete=models.CASCADE,
         related_name="tasks",
-        db_column = "project_id"
+        db_column="project_id"
     )
     parent_task = models.ForeignKey(
         "self",

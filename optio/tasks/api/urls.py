@@ -1,5 +1,5 @@
 from django.urls import path
-from tasks.api.views import (
+from optio.tasks.api.views import (
     CreateTask,
     GetTaskById,
     UpdateTask,
@@ -8,7 +8,6 @@ from tasks.api.views import (
     CreateSubTask,
     GetSubTasks
 )
-
 
 urlpatterns = [
     path('create-task/', CreateTask.as_view(), name='create-task'),

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -16,6 +17,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
 
         return self.create_user(email, password, **extra_fields)
+
 
 class CustomUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
@@ -34,6 +36,7 @@ class CustomUser(AbstractBaseUser):
     def __str__(self):
         return self.email
 
+
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
@@ -42,10 +45,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.email
-
-
-
-
-
-
-

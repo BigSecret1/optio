@@ -3,8 +3,8 @@ from rest_framework import serializers
 from datetime import date, datetime
 from copy import deepcopy
 
-from projects.models import Project
-from tasks.models import Task
+from optio.projects.models import Project
+from optio.tasks.models import Task
 
 
 class BaseSerializer(serializers.ModelSerializer):
@@ -67,6 +67,7 @@ class BaseSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
+
 
 class SubTaskSerializer(BaseSerializer):
     class Meta(BaseSerializer.Meta):

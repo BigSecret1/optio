@@ -1,2 +1,2 @@
-from comments.api.actions.comment import CommentAPIAction
-from comments.api.actions.base import APIAction
+from optio.comments.api.actions.comment import CommentAPIAction
+from optio.comments.api.actions.base import APIAction
