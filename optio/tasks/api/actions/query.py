@@ -4,6 +4,7 @@ from rest_framework.request import Request
 
 from typing import Dict, List, Optional
 import logging
+import pandas as pd
 
 from elasticsearch_dsl import Search, Q
 
@@ -30,7 +31,9 @@ class TaskESQuery(ESQuery):
             self.substring_match()
             self.fuzzy_match()
 
+            self.__remove_duplicate_search_results()
             self.__show_search_results()
+
             return self.search_results
         except Exception as e:
             logging.error("Exception occured while searching task title : %s", str(e))
@@ -48,7 +51,7 @@ class TaskESQuery(ESQuery):
         TaskESQuery.search.extra(track_total_hits=False)
 
         matched_results = TaskESQuery.search.query(query).execute()
-        self.__add_to_search_results(matched_results, "exact_match")
+        self.__add_to_search_results(matched_results)
 
     def prefix_match(self):
         search = TaskESQuery.search.suggest('title-suggestion', self.search_text,
@@ -61,9 +64,8 @@ class TaskESQuery(ESQuery):
             for suggestion in matched_result["suggest"]["title-suggestion"]:
                 for option in suggestion["options"]:
                     record = {}
-                    record["title"] = option["_source"]["title"]
                     record["id"] = option["_id"]
-                    record["type"] = "prefix"
+                    record["title"] = option["_source"]["title"]
                     self.search_results.append(record)
         else:
             logging.info("No suggestions found.")
@@ -77,36 +79,31 @@ class TaskESQuery(ESQuery):
         search = TaskESQuery.search.query(query)
 
         matched_results = search.execute()
-        self.__add_to_search_results(matched_results, "substring match")
+        self.__add_to_search_results(matched_results)
 
     def fuzzy_match(self):
         query = Q(
             "fuzzy",
             title={
-                "value": "wh",
+                "value": self.search_text,
                 "fuzziness": "2"
             }
         )
         search = TaskESQuery.search.query(query)
-        response  = search.source(["title"]).execute()
+        matched_results = search.source(["title"]).execute()
+        self.__add_to_search_results(matched_results)
 
-        # response = search.execute()
-
-        for hit in response:
-            print(f"ID: {hit.meta.id}, Title: {hit.title}")
-
-    def __add_to_search_results(self, results, type):
+    def __add_to_search_results(self, results):
         for hit in results:
             record = {}
             record["id"] = hit.meta.id
             record["title"] = hit.title
-            record["type"] = type
             self.search_results.append(record)
 
     def __show_search_results(self):
         for record in self.search_results:
-            print(f"\n type : {record["type"]} | id : {record["id"]} | task title :"
-                  f" {record["title"]}")
+            print(f"\n id : {record["id"]} | task title : {record["title"]}")
 
     def __remove_duplicate_search_results(self):
-        pass
+        df = pd.DataFrame(self.search_results).drop_duplicates()
+        self.search_results = df.to_dict(orient="records")
