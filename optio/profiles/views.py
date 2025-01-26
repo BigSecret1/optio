@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,11 +5,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import authenticate
 
-import logging
 import json
 
-from optio.profiles.models import CustomUser, Profile
-from optio.profiles.serializers import UserSerializer, ProfileSerializer
+from optio.profiles.models import CustomUser
+from optio.profiles.serializers import UserSerializer
 
 
 class RegisterView(APIView):
@@ -40,7 +38,6 @@ class LoginView(APIView):
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
-        logging.info("REACHED TO LOGINVIEW")
 
         user = authenticate(request, email=email, password=password)
 
@@ -67,20 +64,3 @@ class LogoutView(APIView):
                             status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response({"msg": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ProfileView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        profile = Profile.objects.get(user=request.user)
-        return Response(ProfileSerializer(profile).data)
-
-    def put(self, request):
-        profile = Profile.objects.get(user=request.user)
-        data = json.loads(request.body)
-        profile.bio = data.get('bio', profile.bio)
-        profile.location = data.get('location', profile.location)
-        profile.birth_date = data.get('birth_date', profile.birth_date)
-        profile.save()
-        return Response(ProfileSerializer(profile).data)
