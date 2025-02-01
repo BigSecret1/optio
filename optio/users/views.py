@@ -7,8 +7,8 @@ from django.contrib.auth import authenticate
 
 import json
 
-from optio.profiles.models import CustomUser
-from optio.profiles.serializers import UserSerializer
+from optio.users.models import UserProfile
+from optio.users.serializers import UserSerializer
 
 
 class RegisterView(APIView):
@@ -25,7 +25,7 @@ class RegisterView(APIView):
             return Response({'error': 'Email and password are required'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        user = CustomUser.objects.create_user(email=email, password=password,
+        user = UserProfile.objects.create_user(email=email, password=password,
                                               first_name=first_name,
                                               last_name=last_name)
         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)

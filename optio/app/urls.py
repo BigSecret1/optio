@@ -8,7 +8,7 @@ urlpatterns = [
     path('tasks/', include('optio.tasks.api.urls')),
     path('comments/', include('optio.comments.api.urls')),
     path('performance-metrics/', include('performance_metrics.urls')),
-    path('user/', include('profiles.urls')),
+    path('users/', include('users.urls')),
     path('projects/', include('projects.urls')),
     path("search/", include("search.api.urls"))
 ]

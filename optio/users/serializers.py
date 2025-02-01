@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from optio.profiles.models import CustomUser
+from optio.users.models import UserProfile
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
+        model = UserProfile
         fields = ['id', 'email', 'first_name', 'last_name', 'date_joined', 'is_active']

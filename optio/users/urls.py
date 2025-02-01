@@ -1,5 +1,5 @@
 from django.urls import path
-from optio.profiles.views import RegisterView, LoginView, LogoutView
+from optio.users.views import RegisterView, LoginView, LogoutView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),

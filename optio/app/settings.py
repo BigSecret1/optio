@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     # 'performance_metrics',
     'optio.comments',
     "optio.search",
-    'optio.profiles',
+    'optio.users',
     'optio.projects',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
@@ -151,8 +151,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# For profile app
-AUTH_USER_MODEL = 'profiles.CustomUser'
+# For users app
+AUTH_USER_MODEL = 'users.UserProfile'
 
 # For JWT token
 from datetime import timedelta
