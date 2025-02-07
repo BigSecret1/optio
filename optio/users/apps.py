@@ -9,4 +9,4 @@ class ProfilesConfig(AppConfig):
 
     def ready(self):
         from optio.users.signals import create_groups
-        post_migrate.connect(create_groups, sender=self)
+        post_migrate.connect(create_groups, sender=self.name)
