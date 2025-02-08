@@ -12,8 +12,7 @@ from typing import Dict, List, Iterator
 
 @receiver(post_migrate)
 def create_groups(sender, **kwargs):
-    print("Singal from app for group creation ", sender.name)
-    if sender.name == "optio.users":
+    if sender == "optio.users":
         group_names = ["Admin", "Alpha", "Beta", "Gamma"]
 
         for group_name in group_names:
@@ -29,9 +28,9 @@ def assign_permissions_to_groups(sender, **kwargs):
     mapping has to be used for desired RBAC.
     """
 
-    print("Signal triggered for roles assignment, sender.name")
     if sender.name == "optio.users":
         for group_name, apps_permissions in APPS_PERMISSIONS.items():
+            print(group_name, apps_permissions)
             assign_apps_permissions_to_group(group_name, apps_permissions)
 
 
@@ -44,6 +43,7 @@ def assign_apps_permissions_to_group(group_name: str, apps_permissions: Dict):
 
     for app_label, app_permissions in apps_permissions.items():
         try:
+            print(app_label, app_permissions)
             assign_permission_to_app_models(group, app_label, app_permissions)
         except LookupError:
             print(f"App '{app_label}' not found.")
@@ -58,6 +58,7 @@ def assign_permission_to_app_models(
 
     for model in models:
         content_type: ContentType = ContentType.objects.get_for_model(model)
+        print("content_type ", content_type)
 
         for codename in perm_codenames:
             try:
@@ -65,6 +66,7 @@ def assign_permission_to_app_models(
                     codename=codename,
                     content_type
                     =content_type)
+                print("group -> ", group, "permission -> ", permission)
                 group.permissions.add(permission)
             except Permission.DoesNotExist:
                 print(

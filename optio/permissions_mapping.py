@@ -3,19 +3,28 @@ For different model instances for each application this module contains permissi
 mapping for each user group.
 """
 
-TASK_PERMISSIONS = {
+TASKS_PERMISSIONS = {
     "Admin": ["add_task", "change_task", "delete_task", "view_task"],
     "Alpha": ["add_task", "change_task", "delete_task", "view_task"],
     "Beta": ["add_task", "change_task", "view_task"],
     "Gamma": ["view_task"]
 }
 
-PROJECT_PERMISSIONS = TASK_PERMISSIONS
+PROJECTS_PERMISSIONS = {
+    "Admin": ["add_project", "change_project", "delete_project", "view_project"],
+    "Alpha": ["add_project", "change_project", "delete_project", "view_project"],
+    "Beta": ["add_project", "change_project", "view_project"],
+    "Gamma": ["view_project"]
+}
 
 # permission mappings for all user groups on application level
 APPS_PERMISSIONS = {
     "Admin": {
-        "optiotasks": TASK_PERMISSIONS["Admin"],
-        "optioprojects": PROJECT_PERMISSIONS["Admin"]
+        "tasks": TASKS_PERMISSIONS["Admin"],
+        "projects": PROJECTS_PERMISSIONS["Admin"]
+    },
+    "Alpha": {
+        "tasks": TASKS_PERMISSIONS["Alpha"],
+        "projects": PROJECTS_PERMISSIONS["Alpha"]
     }
 }
