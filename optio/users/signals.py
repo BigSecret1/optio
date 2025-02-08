@@ -44,12 +44,12 @@ def assign_apps_permissions_to_group(group_name: str, apps_permissions: Dict):
     for app_label, app_permissions in apps_permissions.items():
         try:
             print(app_label, app_permissions)
-            assign_permission_to_app_models(group, app_label, app_permissions)
+            assign_permissions_to_group_on_models(group, app_label, app_permissions)
         except LookupError:
             print(f"App '{app_label}' not found.")
 
 
-def assign_permission_to_app_models(
+def assign_permissions_to_group_on_models(
     group: Group,
     app_label: str,
     perm_codenames: List[str]
