@@ -5,10 +5,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import authenticate
 
+from django.contrib.auth.models import Group
+
 import json
 
-from optio.users.models import UserProfile
+from optio.users.models import UserProfile, UserGroup
 from optio.users.serializers import UserSerializer
+
+ROLES = ["Admin", "Alpha", "Beta", "Gamma"]
 
 
 class RegisterView(APIView):
@@ -20,14 +24,22 @@ class RegisterView(APIView):
         password = data.get('password')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
+        role = data.get("role", "Gamma")
 
         if not email or not password:
             return Response({'error': 'Email and password are required'},
                             status=status.HTTP_400_BAD_REQUEST)
 
+        if role not in ROLES:
+            return Response({"error": "User role doesn't exist"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         user = UserProfile.objects.create_user(email=email, password=password,
-                                              first_name=first_name,
-                                              last_name=last_name)
+                                               first_name=first_name,
+                                               last_name=last_name)
+        group = Group.objects.get(name=role)
+        UserGroup.objects.create(user=user, group=group)
+
         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
 
 

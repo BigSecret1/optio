@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
-from django.db.models import CASCADE
 
 
 class UserProfileManager(BaseUserManager):
@@ -30,7 +29,8 @@ class UserProfile(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     # Explicitly use custom UserGroup for many-to-many relationship between
-    # auth_group and optio_users table
+    # auth_group and optio_users table, defining this field helps faster ORM queries
+    # for e.g. users.gorups.all()
     groups = models.ManyToManyField(Group, through="UserGroup")
 
     objects = UserProfileManager()
@@ -50,7 +50,7 @@ class UserGroup(models.Model):
     Custom junction model for many to many relation between users and groups
     """
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "optio_user_groups"
