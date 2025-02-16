@@ -5,15 +5,21 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, AuthenticationFailed
 
 from optio.tasks.api.actions import TaskAPIAction, TaskActionManager
+from optio.permissions import check_permission
+from optio.utils.exceptions import auth_failed_error
+from optio.users.models import UserProfile
+from optio.tasks.models import Task
 
 from django.http import JsonResponse
 
 import logging
 
 task_action_manager = TaskActionManager(TaskAPIAction())
+
+app_label = Task._meta.app_label
 
 
 class CreateTask(APIView):
@@ -82,6 +88,10 @@ class DeleteTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request: Request, task_id: int) -> Response:
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "delete"):
+            raise AuthenticationFailed(auth_failed_error)
+
         try:
             task_action_manager.perform_delete(task_id)
             return Response({"message": "Deleted task successfully!!!"},

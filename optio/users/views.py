@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,11 +5,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import authenticate
 
-import logging
+from django.contrib.auth.models import Group
+
 import json
 
-from optio.profiles.models import CustomUser, Profile
-from optio.profiles.serializers import UserSerializer, ProfileSerializer
+from optio.users.models import UserProfile, UserGroup
+from optio.users.serializers import UserSerializer
+
+ROLES = ["Admin", "Alpha", "Beta", "Gamma"]
 
 
 class RegisterView(APIView):
@@ -22,14 +24,22 @@ class RegisterView(APIView):
         password = data.get('password')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
+        role = data.get("role", "Gamma")
 
         if not email or not password:
             return Response({'error': 'Email and password are required'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        user = CustomUser.objects.create_user(email=email, password=password,
-                                              first_name=first_name,
-                                              last_name=last_name)
+        if role not in ROLES:
+            return Response({"error": "User role doesn't exist"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user = UserProfile.objects.create_user(email=email, password=password,
+                                               first_name=first_name,
+                                               last_name=last_name)
+        group = Group.objects.get(name=role)
+        UserGroup.objects.create(user=user, group=group)
+
         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
 
 
@@ -40,7 +50,6 @@ class LoginView(APIView):
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
-        logging.info("REACHED TO LOGINVIEW")
 
         user = authenticate(request, email=email, password=password)
 
@@ -67,20 +76,3 @@ class LogoutView(APIView):
                             status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response({"msg": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ProfileView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        profile = Profile.objects.get(user=request.user)
-        return Response(ProfileSerializer(profile).data)
-
-    def put(self, request):
-        profile = Profile.objects.get(user=request.user)
-        data = json.loads(request.body)
-        profile.bio = data.get('bio', profile.bio)
-        profile.location = data.get('location', profile.location)
-        profile.birth_date = data.get('birth_date', profile.birth_date)
-        profile.save()
-        return Response(ProfileSerializer(profile).data)

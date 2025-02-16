@@ -2,6 +2,8 @@ from rest_framework.views import exception_handler
 from rest_framework.exceptions import ValidationError
 
 
+auth_failed_error : str = "User authentication failed, invalid credentials"
+
 class CommentUpdateException(IndexError):
     pass
 
