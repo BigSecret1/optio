@@ -26,5 +26,9 @@ APPS_PERMISSIONS = {
     "Alpha": {
         "tasks": TASKS_PERMISSIONS["Alpha"],
         "projects": PROJECTS_PERMISSIONS["Alpha"]
+    },
+    "Beta": {
+        "tasks": TASKS_PERMISSIONS["Beta"],
+        "projects": PROJECTS_PERMISSIONS["Beta"]
     }
 }
