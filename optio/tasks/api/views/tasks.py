@@ -11,12 +11,15 @@ from optio.tasks.api.actions import TaskAPIAction, TaskActionManager
 from optio.permissions import check_permission
 from optio.utils.exceptions import auth_failed_error
 from optio.users.models import UserProfile
+from optio.tasks.models import Task
 
 from django.http import JsonResponse
 
 import logging
 
 task_action_manager = TaskActionManager(TaskAPIAction())
+
+app_label = Task._meta.app_label
 
 
 class CreateTask(APIView):

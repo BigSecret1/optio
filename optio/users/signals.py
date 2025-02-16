@@ -30,7 +30,6 @@ def assign_permissions_to_groups(sender, **kwargs):
 
     if sender.name == "optio.users":
         for group_name, apps_permissions in APPS_PERMISSIONS.items():
-            print(group_name, apps_permissions)
             assign_apps_permissions_to_group(group_name, apps_permissions)
 
 
@@ -43,10 +42,9 @@ def assign_apps_permissions_to_group(group_name: str, apps_permissions: Dict):
 
     for app_label, app_permissions in apps_permissions.items():
         try:
-            print(app_label, app_permissions)
             assign_permissions_to_group_on_models(group, app_label, app_permissions)
         except LookupError:
-            print(f"App '{app_label}' not found.")
+            raise LookupError(f"App '{app_label}' not found.")
 
 
 def assign_permissions_to_group_on_models(
@@ -58,7 +56,6 @@ def assign_permissions_to_group_on_models(
 
     for model in models:
         content_type: ContentType = ContentType.objects.get_for_model(model)
-        print("content_type ", content_type)
 
         for codename in perm_codenames:
             try:
@@ -66,8 +63,6 @@ def assign_permissions_to_group_on_models(
                     codename=codename,
                     content_type
                     =content_type)
-                print("group -> ", group, "permission -> ", permission)
                 group.permissions.add(permission)
             except Permission.DoesNotExist:
-                print(
-                    f"Permission '{codename}' not found in app '{app_label}' for model '{model.__name__}'")
+                raise LookupError(f"Permission with codename '{codename}' and content type '{content_type}' not found.")

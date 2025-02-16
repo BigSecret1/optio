@@ -19,10 +19,8 @@ class Permission:
         for group in self.user.groups.all():
             permissions = group.permissions.all()
             for permission in permissions:
-                print(f"Permission code is ,", permission_codename,
-                      "and permission ""is ", permission.codename)
                 if permission == permission_codename:
-                    print(f"Yes {self.user.groups.all()} user has required permission")
+                    return True
 
         return False
 
@@ -32,6 +30,5 @@ class Permission:
 
 def check_permission(user: User, app_label: str, model_instance: str, action: str):
     permission = Permission(user, app_label, model_instance)
-    print(user)
     if action == "delete":
         return permission.has_delete_permission()
