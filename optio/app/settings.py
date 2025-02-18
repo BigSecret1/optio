@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'optio.tasks',
-    # 'performance_metrics',
     'optio.comments',
     "optio.search",
     'optio.users',
