@@ -27,8 +27,10 @@ class CreateTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        logging.info("Received client request to create a new task")
-        logging.info(task_action_manager)
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "add"):
+            raise AuthenticationFailed(auth_failed_error)
+
         try:
             return Response(task_action_manager.perform_create(request.data),
                             status=status.HTTP_200_OK)
@@ -46,6 +48,10 @@ class GetTasks(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "view"):
+            raise AuthenticationFailed(auth_failed_error)
+
         try:
             project_id = request.GET.get("project_id")
             return Response(task_action_manager.perform_fetch_all(project_id),
@@ -60,6 +66,10 @@ class GetTaskById(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, task_id: int) -> Response:
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "view"):
+            raise AuthenticationFailed(auth_failed_error)
+
         try:
             return Response(task_action_manager.perform_fetch(task_id),
                             status=status.HTTP_200_OK)
@@ -75,6 +85,10 @@ class UpdateTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request: Request, task_id: int) -> Response:
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "change"):
+            raise AuthenticationFailed(auth_failed_error)
+
         try:
             return Response(task_action_manager.perform_update(task_id, request.data),
                             status=status.HTTP_200_OK)

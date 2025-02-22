@@ -17,9 +17,9 @@ PROJECTS_PERMISSIONS = {
     "Gamma": ["view_project"]
 }
 
-USERS_PERMISSIONS = {
-    "Admin": ["add_user", "change_user", "delete_user", "view_user"],
-    "Alpha": ["add_user", "view_user"],
+USERSPROFILE_PERMISSIONS = {
+    "Admin": ["add_userprofile", "change_userprofile", "delete_userprofile", "view_userprofile"],
+    "Alpha": ["add_userprofile", "view_userprofile"],
 }
 
 COMMENTS_PERMISSIONS = {
@@ -34,25 +34,23 @@ APPS_PERMISSIONS = {
     "Admin": {
         "tasks": TASKS_PERMISSIONS["Admin"],
         "projects": PROJECTS_PERMISSIONS["Admin"],
-        "users": USERS_PERMISSIONS["Admin"],
+        "users": USERSPROFILE_PERMISSIONS["Admin"],
         "comments": COMMENTS_PERMISSIONS["Admin"]
     },
     "Alpha": {
         "tasks": TASKS_PERMISSIONS["Alpha"],
         "projects": PROJECTS_PERMISSIONS["Alpha"],
-        "users": USERS_PERMISSIONS["Alpha"],
+        "users": USERSPROFILE_PERMISSIONS["Alpha"],
         "comments": COMMENTS_PERMISSIONS["Alpha"]
     },
     "Beta": {
         "tasks": TASKS_PERMISSIONS["Beta"],
         "projects": PROJECTS_PERMISSIONS["Beta"],
-        "users": USERS_PERMISSIONS["Beta"],
         "comments": COMMENTS_PERMISSIONS["Beta"]
     },
     "Gamma": {
         "tasks": TASKS_PERMISSIONS["Gamma"],
         "projects": PROJECTS_PERMISSIONS["Gamma"],
-        "users": USERS_PERMISSIONS["Gamma"],
         "comments": COMMENTS_PERMISSIONS["Gamma"]
     }
 }

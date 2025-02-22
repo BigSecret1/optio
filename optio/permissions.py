@@ -15,13 +15,12 @@ class Permission:
     def has_permission(self, action: str):
         permission_codename: str = f"{action}_{self.model_instance.lower()}"
 
-        # Lookup in groups user part of to see if user has required permission
+        # Lookup in groups, user part of to see if user has required permission
         for group in self.user.groups.all():
             permissions = group.permissions.all()
             for permission in permissions:
                 if permission == permission_codename:
                     return True
-
         return False
 
     def has_delete_permission(self):
