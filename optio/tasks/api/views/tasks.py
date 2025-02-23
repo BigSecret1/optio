@@ -29,7 +29,7 @@ class CreateTask(APIView):
 
     def post(self, request: Request) -> Response:
         user = UserProfile.objects.get(email=request.user)
-        if not check_permission(request.user, "tasks", "Task", "add"):
+        if not check_permission(request.user, "tasks", "Task", "create"):
             raise AuthenticationFailed(perm_required_error)
 
         try:
