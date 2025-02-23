@@ -1,14 +1,16 @@
 from rest_framework.views import exception_handler
 from rest_framework.exceptions import ValidationError
 
+auth_failed_error: str = "User authentication failed, invalid credentials"
+perm_required_error: str = ("User don't have required permission to perform this "
+                            "action")
 
-auth_failed_error : str = "User authentication failed, invalid credentials"
 
 class CommentUpdateException(IndexError):
     pass
 
 
-def custom_validation_error(e, context = None):
+def custom_validation_error(e, context=None):
     """
     This function is not giving as expected result, not in use. Issue will be fixed
     in future.

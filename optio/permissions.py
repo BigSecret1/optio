@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User, Group
 
+import logging
+
 
 class Permission:
     """
@@ -14,14 +16,18 @@ class Permission:
 
     def has_permission(self, action: str):
         permission_codename: str = f"{action}_{self.model_instance.lower()}"
+        print("Calling has permission function")
 
         # Lookup in groups, user part of to see if user has required permission
         for group in self.user.groups.all():
             permissions = group.permissions.all()
             for permission in permissions:
-                if permission == permission_codename:
+                if permission.codename == permission_codename:
                     return True
         return False
+
+    def has_view_permission(self):
+        return self.has_permission("view")
 
     def has_delete_permission(self):
         return self.has_permission("delete")
@@ -31,3 +37,5 @@ def check_permission(user: User, app_label: str, model_instance: str, action: st
     permission = Permission(user, app_label, model_instance)
     if action == "delete":
         return permission.has_delete_permission()
+    elif action == "view":
+        return permission.has_view_permission()

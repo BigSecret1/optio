@@ -18,7 +18,8 @@ PROJECTS_PERMISSIONS = {
 }
 
 USERSPROFILE_PERMISSIONS = {
-    "Admin": ["add_userprofile", "change_userprofile", "delete_userprofile", "view_userprofile"],
+    "Admin": ["add_userprofile", "change_userprofile", "delete_userprofile",
+              "view_userprofile"],
     "Alpha": ["add_userprofile", "view_userprofile"],
 }
 

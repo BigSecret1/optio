@@ -33,6 +33,7 @@ def assign_permissions_to_groups(sender, **kwargs):
     if sender.name == "optio.users":
         for group_name, apps_permissions in APPS_PERMISSIONS.items():
             logging.info(f"Assigning app permission to {group_name} group")
+            logging.info("App Permissions %s", apps_permissions)
             assign_apps_permissions_to_group(group_name, apps_permissions)
 
 
