@@ -4,13 +4,15 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.views import APIView
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, AuthenticationFailed
 
 from django.core.exceptions import ObjectDoesNotExist
 
 import logging
 
 from optio.comments.api.actions import CommentAPIAction
+from optio.utils.exceptions import perm_required_error
+from optio.permissions import check_permission
 
 comment_api_action = CommentAPIAction()
 
@@ -23,6 +25,9 @@ class CreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
+        if not check_permission(request.user, "comments", "Comment", "create"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             return Response(comment_api_action.add_comment(request.data),
                             status=status.HTTP_200_OK)
@@ -39,6 +44,9 @@ class ListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, task_id: int) -> Response:
+        if not check_permission(request.user, "comments", "Comment", "view"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             return Response(comment_api_action.fetch_all_comments(task_id),
                             status=status.HTTP_200_OK)
@@ -52,6 +60,9 @@ class EditView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request: Request, comment_id: int) -> Response:
+        if not check_permission(request.user, "comments", "Comment", "change"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             comment_api_action.update_comment(comment_id, request.data)
             return Response({"success": "comment was update successfully"},
@@ -69,6 +80,9 @@ class DeleteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request: Request, comment_id: int) -> Response:
+        if not check_permission(request.user, "comments", "Comment", "delete"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             comment_api_action.delete_comment(comment_id)
             return Response({"success": "Deleted comment successfully"},
