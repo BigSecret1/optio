@@ -9,11 +9,12 @@ from rest_framework.exceptions import NotFound, AuthenticationFailed
 
 from optio.tasks.api.actions import TaskAPIAction, TaskActionManager
 from optio.permissions import check_permission
-from optio.utils.exceptions import auth_failed_error
-from optio.users.models import UserProfile
+from optio.utils.exceptions import perm_required_error
+from optio.users.models import UserProfile, UserGroup
 from optio.tasks.models import Task
 
 from django.http import JsonResponse
+from django.contrib.auth.models import Group
 
 import logging
 
@@ -27,8 +28,10 @@ class CreateTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        logging.info("Received client request to create a new task")
-        logging.info(task_action_manager)
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "create"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             return Response(task_action_manager.perform_create(request.data),
                             status=status.HTTP_200_OK)
@@ -46,6 +49,10 @@ class GetTasks(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "view"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             project_id = request.GET.get("project_id")
             return Response(task_action_manager.perform_fetch_all(project_id),
@@ -60,6 +67,10 @@ class GetTaskById(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, task_id: int) -> Response:
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "view"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             return Response(task_action_manager.perform_fetch(task_id),
                             status=status.HTTP_200_OK)
@@ -75,6 +86,10 @@ class UpdateTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request: Request, task_id: int) -> Response:
+        user = UserProfile.objects.get(email=request.user)
+        if not check_permission(request.user, "tasks", "Task", "change"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             return Response(task_action_manager.perform_update(task_id, request.data),
                             status=status.HTTP_200_OK)
@@ -89,8 +104,15 @@ class DeleteTask(APIView):
 
     def delete(self, request: Request, task_id: int) -> Response:
         user = UserProfile.objects.get(email=request.user)
+        groups = Group.objects.filter(usergroup__user=user)
+
+        logging.info("User is part of the groups")
+        for group in groups:
+            logging.info(group.name)
+
+
         if not check_permission(request.user, "tasks", "Task", "delete"):
-            raise AuthenticationFailed(auth_failed_error)
+            raise AuthenticationFailed(perm_required_error)
 
         try:
             task_action_manager.perform_delete(task_id)
@@ -101,4 +123,5 @@ class DeleteTask(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logging.error("Error deleting task: %s", e)
-            return JsonResponse({"error": "Failed to delete task"}, status=500)
+            return Response({"error": "Failed to delete the task"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)

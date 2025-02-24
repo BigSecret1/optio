@@ -4,11 +4,13 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, AuthenticationFailed
 
 import logging
 
 from optio.tasks.api.actions import SubTaskAPIAction, TaskActionManager
+from optio.permissions import check_permission
+from optio.utils.exceptions import perm_required_error
 
 task_action_manager = TaskActionManager(SubTaskAPIAction())
 
@@ -18,6 +20,9 @@ class CreateSubTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
+        if not check_permission(request.user, "tasks", "Task", "add"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             return Response(task_action_manager.perform_create(request.data),
                             status=status.HTTP_200_OK)
@@ -34,6 +39,9 @@ class GetSubTasks(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, parent_task_id: int) -> Response:
+        if not check_permission(request.user, "tasks", "Task", "view"):
+            raise AuthenticationFailed(perm_required_error)
+
         try:
             return Response(task_action_manager.perform_fetch_all(parent_task_id),
                             status=status.HTTP_200_OK)
