@@ -4,6 +4,9 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import authenticate
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.contrib.auth.models import Group
 
@@ -11,14 +14,25 @@ import json
 
 from optio.users.models import UserProfile, UserGroup
 from optio.users.serializers import UserSerializer
+from optio.utils.exceptions import perm_required_error
+from optio.permissions import check_permission
 
 ROLES = ["Admin", "Alpha", "Beta", "Gamma"]
 
 
 class RegisterView(APIView):
-    permission_classes = [AllowAny]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        user = request.user
+
+        print(user.groups.all())
+
+        # If user doesn't belongs to Admin or Alpha group then it can't create new user
+        if not (user.is_superuser or user.groups.filter(name="Alpha").exists()):
+            return Response({"error": "Permission denied"}, status=403)
+
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
