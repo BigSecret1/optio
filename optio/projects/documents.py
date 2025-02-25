@@ -2,9 +2,8 @@ from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 from elasticsearch_dsl import analyzer, tokenizer
 
-from optio.tasks.models import Task
+from optio.projects.models import Project
 import logging
-
 
 """
 Custom analyzer : Generates subsrings and tokenize them for faster search
@@ -18,12 +17,12 @@ autocomplete_analyzer = analyzer('autocomplete_analyzer',
 
 
 @registry.register_document
-class TaskDocument(Document):
-    title = fields.TextField(required=True, analyzer=autocomplete_analyzer)
-    title_suggest = fields.CompletionField()
+class ProjectDocument(Document):
+    project_name = fields.TextField(required=True, analyzer=autocomplete_analyzer)
+    project_name_suggest = fields.CompletionField()
 
     class Index:
-        name = "tasks_index"
+        name = "projects_index"
 
         settings = {'number_of_shards': 1,
                     'number_of_replicas': 0,
@@ -31,19 +30,19 @@ class TaskDocument(Document):
                     }
 
     class Django:
-        model = Task
-        fields = ["id", "task_status"]
+        model = Project
+        fields = ["id"]
 
-    def prepare_title_suggest(self, instance):
+    def prepare_project_name_suggest(self, instance):
         """
         Generate the data for the `title_suggest` field, may be need to remove in
         future. Not needed
         """
-        logging.info(f"Generating title suggestions for: {instance.title}")
+        logging.info(f"Generating project name suggestions for: {instance.name}")
         return {
-            "input": instance.title.split() if instance.title else [],
+            "input": instance.name.split() if instance.name else [],
             "weight": 1,
         }
 
-    def prepare_title(self, instance):
-        return instance.title
+    def prepare_project_name(self, instance):
+        return instance.name

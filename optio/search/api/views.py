@@ -21,7 +21,7 @@ class SearchTaskAPIView(APIView):
     def post(self, request: Request) -> Response:
         try:
             search_results: Optional[List[Dict]] = task_es_query.execute(request.data)
-            return Response(search_results, status = status.HTTP_200_OK)
+            return Response(search_results, status=status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))
             return Response({"msg": "Internal server error"},
