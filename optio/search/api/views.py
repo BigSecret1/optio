@@ -7,11 +7,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from optio.tasks.api.actions.query import TaskESQuery
+from optio.projects.query import ProjectESQuery
 
 import logging
 from typing import Optional, Dict, List
 
 task_es_query = TaskESQuery()
+project_es_query = ProjectESQuery()
 
 
 class SearchTaskAPIView(APIView):
@@ -21,7 +23,7 @@ class SearchTaskAPIView(APIView):
     def post(self, request: Request) -> Response:
         try:
             search_results: Optional[List[Dict]] = task_es_query.execute(request.data)
-            return Response(search_results, status = status.HTTP_200_OK)
+            return Response(search_results, status=status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))
             return Response({"msg": "Internal server error"},
@@ -29,7 +31,18 @@ class SearchTaskAPIView(APIView):
 
 
 class SearchProjectAPIView(APIView):
-    pass
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request) -> Response:
+        try:
+            search_results: Optional[List[Dict]] = project_es_query.execute(
+                request.data)
+            return Response(search_results, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.info("error : %s", str(e))
+            return Response({"msg": "Internal server error"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class SearchAssigneeAPIView(APIView):

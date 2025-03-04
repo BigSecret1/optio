@@ -1,3 +1,5 @@
+from django.contrib.admin.templatetags.admin_list import results
+
 from optio.common.es_query import ESQuery
 
 from rest_framework.request import Request
@@ -9,8 +11,8 @@ import pandas as pd
 from elasticsearch_dsl import Search, Q
 
 
-class TaskESQuery(ESQuery):
-    index_to_search: str = "tasks_index"
+class ProjectESQuery(ESQuery):
+    index_to_search: str = "projects_index"
     search = Search(index=index_to_search)
 
     def __init__(self):
@@ -18,13 +20,13 @@ class TaskESQuery(ESQuery):
         self.search_results: List[Dict] = []
 
     def execute(self, query_data: Request) -> Optional[List[Dict]]:
-        if "title" in query_data:
-            self.search_text = query_data["title"]
+        if "project_name" in query_data:
+            self.search_text = query_data["project_name"]
         else:
-            return {"error_message": "Field title is required"}
+            return {"error_message": "Field project name is required"}
 
         try:
-            logging.info("Starting search operation for task title input : '%s' ",
+            logging.info("Starting search operation for project name input : '%s' ",
                          self.search_text)
             self.exact_match()
             self.prefix_match()
@@ -36,36 +38,38 @@ class TaskESQuery(ESQuery):
 
             return self.search_results
         except Exception as e:
-            logging.error("Exception occured while searching task title : %s", str(e))
+            logging.error("Exception occured while searching project name : %s", e)
 
     def exact_match(self):
         query = Q(
             "match_phrase",
-            title=self.search_text
+            project_name=self.search_text
         )
 
         """
         To avoid fetching partial results (for e.g. 1000 or even 10) as the elastic 
         search dsl docs says
         """
-        TaskESQuery.search.extra(track_total_hits=False)
+        ProjectESQuery.search.extra(track_total_hits=False)
 
-        matched_results = TaskESQuery.search.query(query).execute()
+        matched_results = ProjectESQuery.search.query(query).execute()
         self.__add_to_search_results(matched_results)
 
     def prefix_match(self):
-        search = TaskESQuery.search.suggest('title-suggestion', self.search_text,
-                                            completion={"field": 'title_suggest'})
+        search = ProjectESQuery.search.suggest('project-name-suggestion',
+                                               self.search_text,
+                                               completion={
+                                                   "field": 'project_name_suggest'})
 
         matched_result = search.execute().to_dict()
 
         """Query not returning results in hit field so using custom adding logic"""
         if 'suggest' in matched_result:
-            for suggestion in matched_result["suggest"]["title-suggestion"]:
+            for suggestion in matched_result["suggest"]["project-name-suggestion"]:
                 for option in suggestion["options"]:
                     record = {}
                     record["id"] = option["_id"]
-                    record["title"] = option["_source"]["title"]
+                    record["project_name"] = option["_source"]["project_name"]
                     self.search_results.append(record)
         else:
             logging.info("No suggestions found.")
@@ -84,7 +88,7 @@ class TaskESQuery(ESQuery):
 
         for pattern in search_patterns:
             query = Q("wildcard", title={"value": pattern, "case_insensitive": True})
-            search = TaskESQuery.search.query(query)
+            search = ProjectESQuery.search.query(query)
 
             matched_results = search.execute()
             self.__add_to_search_results(matched_results)
@@ -97,20 +101,20 @@ class TaskESQuery(ESQuery):
                 "fuzziness": "2"
             }
         )
-        search = TaskESQuery.search.query(query)
-        matched_results = search.source(["title"]).execute()
+        search = ProjectESQuery.search.query(query)
+        matched_results = search.source(["project_name"]).execute()
         self.__add_to_search_results(matched_results)
 
     def __add_to_search_results(self, results):
         for hit in results:
             record = {}
             record["id"] = hit.meta.id
-            record["title"] = hit.title
+            record["project_name"] = hit.project_name
             self.search_results.append(record)
 
     def __show_search_results(self):
         for record in self.search_results:
-            print(f"\n id : {record["id"]} | task title : {record["title"]}")
+            print(f"\n id : {record["id"]} | project name : {record["project_name"]}")
 
     def __remove_duplicate_search_results(self):
         df = pd.DataFrame(self.search_results).drop_duplicates()

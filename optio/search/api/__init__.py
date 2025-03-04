@@ -1,1 +1,1 @@
-from optio.search.api.views import SearchTaskAPIView
+from optio.search.api.views import SearchTaskAPIView, SearchProjectAPIView
