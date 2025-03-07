@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "optio.search",
     'optio.users',
     'optio.projects',
+    'optio.quicknotes',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
