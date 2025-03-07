@@ -6,7 +6,7 @@ from optio.quicknotes.models import QuickNote
 class QuickNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuickNote
-        fields = ["id", "note"]
+        fields = ["note"]
 
         extra_kwargs = {
             "note": {
