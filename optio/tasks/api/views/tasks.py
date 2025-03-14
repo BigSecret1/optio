@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from rest_framework.exceptions import NotFound, AuthenticationFailed
+from rest_framework.exceptions import NotFound, PermissionDenied
 
 from optio.tasks.api.actions import TaskAPIAction, TaskActionManager
 from optio.permissions import check_permission
@@ -28,9 +28,10 @@ class CreateTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
+        logging.info("Received request to create task")
         user = UserProfile.objects.get(email=request.user)
         if not check_permission(request.user, "tasks", "Task", "create"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             return Response(task_action_manager.perform_create(request.data),
@@ -51,7 +52,7 @@ class GetTasks(APIView):
     def get(self, request: Request) -> Response:
         user = UserProfile.objects.get(email=request.user)
         if not check_permission(request.user, "tasks", "Task", "view"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             project_id = request.GET.get("project_id")
@@ -69,7 +70,7 @@ class GetTaskById(APIView):
     def get(self, request: Request, task_id: int) -> Response:
         user = UserProfile.objects.get(email=request.user)
         if not check_permission(request.user, "tasks", "Task", "view"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             return Response(task_action_manager.perform_fetch(task_id),
@@ -88,7 +89,7 @@ class UpdateTask(APIView):
     def put(self, request: Request, task_id: int) -> Response:
         user = UserProfile.objects.get(email=request.user)
         if not check_permission(request.user, "tasks", "Task", "change"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             return Response(task_action_manager.perform_update(task_id, request.data),
@@ -112,7 +113,7 @@ class DeleteTask(APIView):
 
 
         if not check_permission(request.user, "tasks", "Task", "delete"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             task_action_manager.perform_delete(task_id)
