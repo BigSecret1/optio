@@ -119,3 +119,24 @@ class TestCreateTaskView(BaseAPITestCase):
         self.client.logout()
 
 
+class TestGetTasksView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+        
+        self.get_task_url = reverse("get-tasks")
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_fetch_all")
+    def test_get_tasks_success(self, mock_perform_fetch_all, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_fetch_all.return_value = [{"task": "Task 1"}, {"task": "Task 2"}]
+
+        response = self.client.get(
+            self.get_task_url,
+            {"project_id": "123"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
