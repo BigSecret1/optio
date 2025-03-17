@@ -38,7 +38,11 @@ class CreateTask(APIView):
                             status=status.HTTP_200_OK)
         except ValidationError as e:
             logging.error("%s exception occured while creating task", str(e))
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            print(str(e))
+            return Response(
+                {"error": "Invalid request body"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             logging.error("%s exception occured while creating task", e)
             return Response({"error": "wrong request body"},
@@ -110,7 +114,6 @@ class DeleteTask(APIView):
         logging.info("User is part of the groups")
         for group in groups:
             logging.info(group.name)
-
 
         if not check_permission(request.user, "tasks", "Task", "delete"):
             raise PermissionDenied(perm_required_error)

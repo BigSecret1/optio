@@ -8,6 +8,7 @@ from django.contrib.auth.models import Group
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import ValidationError
 
 from unittest.mock import patch
 
@@ -77,3 +78,44 @@ class TestCreateTaskView(BaseAPITestCase):
             format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_create")
+    def test_validation_error(self, mock_perform_create, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_create.side_effect = ValidationError("Invalid data")
+
+        response = self.client.post(
+            self.create_task_url,
+            {"invalidRequest": "xyz"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("error", response.json())
+        self.assertEqual(response.json()["error"], "Invalid request body")
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_create")
+    def test_internal_server_error(self, mock_perform_create, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_create.side_effect = Exception("Unexpected error")
+
+        response = self.client.post(
+            self.create_task_url,
+            {"title": "New Task"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertIn("error", response.json())
+        self.assertEqual(response.json()["error"], "wrong request body")
+
+    def tearDown(self):
+        self.client.logout()
+
+

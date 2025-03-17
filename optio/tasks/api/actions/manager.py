@@ -4,7 +4,7 @@ from optio.tasks.models import Task
 
 class TaskActionManager:
     """
-    This class a context class which is responsible for performing varios operations
+    This class a context class which is responsible for performing various operations
     based on the strategy it is passed or set.
     """
 
