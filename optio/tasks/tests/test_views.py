@@ -122,7 +122,7 @@ class TestCreateTaskView(BaseAPITestCase):
 class TestGetTasksView(BaseAPITestCase):
     def setUp(self):
         super().setUp()
-        
+
         self.get_task_url = reverse("get-tasks")
 
     @patch("optio.tasks.api.views.tasks.check_permission")
@@ -140,3 +140,46 @@ class TestGetTasksView(BaseAPITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), [{"task": "Task 1"}, {"task": "Task 2"}])
+        mock_perform_fetch_all.assert_called_once_with("123")
+
+    def test_unauthenticate_reqest(self):
+        response = self.client.post(
+            self.get_task_url,
+            {"title": "New Task"},
+            format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    def test_permission_denied(self, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = False
+
+        response = self.client.get(
+            self.get_task_url,
+            {"project_id": "123"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_fetch_all")
+    def test_internal_server_error(self, mock_perform_fetch_all, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_fetch_all.side_effect = Exception("Unexpected error")
+
+        response = self.client.get(
+            self.get_task_url,
+            {"project_id": "123"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def tearDown(self):
+        self.client.logout()
