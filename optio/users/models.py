@@ -36,7 +36,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
 
     class Meta:
         db_table = "optio_users"
