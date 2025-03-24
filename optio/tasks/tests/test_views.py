@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.contrib.auth.models import Group
 
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
@@ -11,7 +10,7 @@ from unittest.mock import patch
 
 from optio.tasks.models import Task
 from optio.projects.models import Project
-from optio.users.models import UserProfile, UserGroup
+from optio.users.models import UserProfile
 from optio.utils.exceptions import perm_required_error
 
 User = get_user_model()
@@ -331,3 +330,100 @@ class TestUpdateTaskView(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.json(), {"error": "Task not found"})
         mock_perform_update.assert_called_once_with(999, {"title": "Updated Task"})
+
+
+class TestDeleteTaskView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        project = Project.objects.create(name="Sample Project")
+        self.task = Task.objects.create(
+            title="Sample Task",
+            status="To Do",
+            project=project
+        )
+
+        self.url = reverse("delete-task", args=[self.task.id])
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_delete")
+    def test_delete_task_success(self, mock_perform_delete, mock_check_permission):
+        self.authenticate()
+
+        response = self.client.delete(self.url)
+
+        mock_check_permission.return_value = True
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {"message": "Deleted task successfully!!!"})
+        mock_perform_delete.assert_called_once_with(self.task.id)
+        mock_check_permission.assert_called_once_with(
+            self.user,
+            "tasks",
+            "Task",
+            "delete"
+        )
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    def test_delete_task_permission_denied(self, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = False
+
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        mock_check_permission.assert_called_once_with(
+            self.user,
+            "tasks",
+            "Task",
+            "delete"
+        )
+
+    def test_delete_task_unauthenticated(self):
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_delete")
+    def test_delete_task_server_error(self, mock_perform_delete, mock_check_permission):
+        self.client.force_authenticate(user=self.user)
+
+        mock_check_permission.return_value = True
+        mock_perform_delete.side_effect = Exception("Unexpected error")
+
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, {"error": "Failed to delete the task"})
+        mock_perform_delete.assert_called_once_with(self.task.id)
+        mock_check_permission.assert_called_once_with(
+            self.user,
+            "tasks",
+            "Task",
+            "delete"
+        )
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_delete")
+    def test_delete_task_not_found(self, mock_perform_delete, mock_check_permission):
+        self.authenticate()
+
+        mock_perform_delete.side_effect = NotFound()
+        mock_check_permission.return_value = True
+
+        non_existing_url = reverse("delete-task", args=[9999])
+
+        response = self.client.delete(non_existing_url)
+
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {"error": "Task with id 9999 doesn't exist"})
+        mock_perform_delete.assert_called_once_with(9999)
+        mock_check_permission.assert_called_once_with(
+            self.user,
+            "tasks",
+            "Task",
+            "delete"
+        )
