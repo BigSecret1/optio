@@ -1,6 +1,3 @@
-from http.client import responses
-
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.contrib.auth.models import Group
@@ -8,12 +5,14 @@ from django.contrib.auth.models import Group
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound
 
 from unittest.mock import patch
 
 from optio.tasks.models import Task
+from optio.projects.models import Project
 from optio.users.models import UserProfile, UserGroup
+from optio.utils.exceptions import perm_required_error
 
 User = get_user_model()
 
@@ -123,7 +122,7 @@ class TestGetTasksView(BaseAPITestCase):
     def setUp(self):
         super().setUp()
 
-        self.get_task_url = reverse("get-tasks")
+        self.get_tasks_url = reverse("get-tasks")
 
     @patch("optio.tasks.api.views.tasks.check_permission")
     @patch("optio.tasks.api.views.tasks.task_action_manager.perform_fetch_all")
@@ -131,21 +130,21 @@ class TestGetTasksView(BaseAPITestCase):
         self.authenticate()
 
         mock_check_permission.return_value = True
-        mock_perform_fetch_all.return_value = [{"task": "Task 1"}, {"task": "Task 2"}]
+        mock_perform_fetch_all.return_value = [{"title": "Task 1"}, {"title": "Task 2"}]
 
         response = self.client.get(
-            self.get_task_url,
+            self.get_tasks_url,
             {"project_id": "123"},
             format="json"
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), [{"task": "Task 1"}, {"task": "Task 2"}])
+        self.assertEqual(response.json(), [{"title": "Task 1"}, {"title": "Task 2"}])
         mock_perform_fetch_all.assert_called_once_with("123")
 
     def test_unauthenticate_reqest(self):
         response = self.client.post(
-            self.get_task_url,
+            self.get_tasks_url,
             {"title": "New Task"},
             format="json"
         )
@@ -158,7 +157,7 @@ class TestGetTasksView(BaseAPITestCase):
         mock_check_permission.return_value = False
 
         response = self.client.get(
-            self.get_task_url,
+            self.get_tasks_url,
             {"project_id": "123"},
             format="json"
         )
@@ -174,7 +173,7 @@ class TestGetTasksView(BaseAPITestCase):
         mock_perform_fetch_all.side_effect = Exception("Unexpected error")
 
         response = self.client.get(
-            self.get_task_url,
+            self.get_tasks_url,
             {"project_id": "123"},
             format="json"
         )
@@ -183,3 +182,152 @@ class TestGetTasksView(BaseAPITestCase):
 
     def tearDown(self):
         self.client.logout()
+
+
+class TestGetTaskById(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.task_id = 1
+        self.task_data = {"id": self.task_id, "title": "Test Task", "status": "Pending"}
+
+        self.get_task_url = reverse("get-task-by-id", args=[self.task_id])
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_fetch")
+    def test_get_task_success(self, mock_perform_fetch, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_fetch.return_value = self.task_data
+
+        response = self.client.get(self.get_task_url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), self.task_data)
+        mock_perform_fetch.assert_called_once_with(self.task_id)
+
+    def test_unauthenticated_request(self):
+        response = self.client.get(self.get_task_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    def test_permission_denied(self, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = False
+
+        response = self.client.get(self.get_task_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_fetch")
+    def test_task_not_found(self, mock_perform_fetch, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_fetch.side_effect = Exception("Task not found")
+
+        response = self.client.get(self.get_task_url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.json(), {"error": "Internal server error"})
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_fetch")
+    def test_internal_server_error(self, mock_perform_fetch, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_fetch.side_effect = Exception("Unexpected error")
+
+        response = self.client.get(self.get_task_url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.json(), {"error": "Internal server error"})
+
+    def tearDown(self):
+        self.client.logout()
+
+
+class TestUpdateTaskView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        project = Project.objects.create(name="Sample Project")
+        self.task = Task.objects.create(
+            title="Old Task",
+            status="To Do",
+            project=project
+        )
+        self.update_task_url = reverse("update-task", args=[self.task.id])
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_update")
+    def test_update_task_success(self, mock_perform_update, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_perform_update.return_value = {"id": self.task.id, "title": "Updated Task"}
+
+        response = self.client.put(
+            self.update_task_url,
+            {"title": "Updated Task"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["title"], "Updated Task")
+        mock_check_permission.assert_called_once_with(
+            self.user,
+            "tasks",
+            "Task",
+            "change"
+        )
+        mock_perform_update.assert_called_once_with(
+            self.task.id,
+            {"title": "Updated Task"}
+        )
+
+    def test_unauthenticated_request(self):
+        response = self.client.put(self.update_task_url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    def test_update_task_permission_denied(self, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = False
+
+        response = self.client.put(
+            self.update_task_url,
+            {"title": "Updated Task"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.json()["detail"], perm_required_error)
+        mock_check_permission.assert_called_once_with(
+            self.user,
+            "tasks",
+            "Task",
+            "change"
+        )
+
+    @patch("optio.tasks.api.views.tasks.check_permission")
+    @patch("optio.tasks.api.views.tasks.task_action_manager.perform_update")
+    def test_update_task_not_found(self, mock_perform_update, mock_check_permission):
+        self.authenticate()
+
+        mock_perform_update.side_effect = NotFound()
+        mock_check_permission.return_value = True
+
+        response = self.client.put(reverse(
+            "update-task", args=[999]),
+            {"title": "Updated Task"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.json(), {"error": "Task not found"})
+        mock_perform_update.assert_called_once_with(999, {"title": "Updated Task"})

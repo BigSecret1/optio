@@ -28,9 +28,10 @@ class RegisterView(APIView):
         user = request.user
 
         print(user.groups.all())
+        print(user.groups.filter(name=["Admin"]).exists())
 
         # If user doesn't belongs to Admin or Alpha group then it can't create new user
-        if not (user.is_superuser or user.groups.filter(name="Alpha").exists()):
+        if not (user.is_superuser and user.groups.filter(name=["Admin"]).exists()):
             return Response({"error": "Permission denied"}, status=403)
 
         data = json.loads(request.body)

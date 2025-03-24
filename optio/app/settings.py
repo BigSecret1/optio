@@ -17,7 +17,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -68,7 +67,6 @@ MIDDLEWARE = [
     "optio.middleware.camel_to_snake_case.CamelCaseToSnakeCaseMiddleware",
 ]
 
-
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
@@ -111,7 +109,7 @@ DATABASES = {
 if 'test' in sys.argv:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',  # Use in-memory SQLite DB
+        'NAME': ':memory:',
     }
 
 # Password validation
