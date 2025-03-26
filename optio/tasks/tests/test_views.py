@@ -424,7 +424,7 @@ class TestDeleteTaskView(BaseAPITestCase):
         )
 
 
-class CreateSubTaskViewTest(BaseAPITestCase):
+class TestCreateSubTaskView(BaseAPITestCase):
 
     def setUp(self):
         super().setUp()
@@ -492,6 +492,51 @@ class CreateSubTaskViewTest(BaseAPITestCase):
 
         self.authenticate()
         response = self.client.post(self.create_url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data['error'], "Internal Server error")
+
+
+class TestGetSubTasks(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.parent_task_id = 1
+        self.url = reverse("get-subtasks", args=[self.parent_task_id])
+
+    @patch("optio.tasks.api.views.subtasks.check_permission")
+    @patch('optio.tasks.api.actions.TaskActionManager.perform_fetch_all')
+    def test_get_subtasks_success(self, mock_perform_fetch_all, mock_check_permission):
+        mock_check_permission.return_value = True
+        mock_perform_fetch_all.return_value = [{"id": 1, "name": "Subtask 1"}]
+
+        self.authenticate()
+        response = self.client.get(self.url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [{"id": 1, "name": "Subtask 1"}])
+
+    @patch("optio.tasks.api.views.subtasks.check_permission")
+    def test_get_subtasks_permission_denied(self, mock_check_permission):
+        mock_check_permission.return_value = False
+
+        self.authenticate()
+        response = self.client.get(self.url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], perm_required_error)
+
+    @patch("optio.tasks.api.views.subtasks.check_permission")
+    @patch('optio.tasks.api.actions.TaskActionManager.perform_fetch_all')
+    def test_get_subtasks_internal_server_error(
+        self, mock_perform_fetch_all,
+        mock_check_permission
+    ):
+        mock_check_permission.return_value = True
+        mock_perform_fetch_all.side_effect = Exception("Server error")
+
+        self.authenticate()
+        response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         self.assertEqual(response.data['error'], "Internal Server error")
