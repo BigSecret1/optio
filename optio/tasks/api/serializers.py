@@ -14,7 +14,7 @@ class BaseSerializer(serializers.ModelSerializer):
         allow_empty=True,
         error_messages={"max_length": "Each comment must not exceed 1000 characters."},
     )
-    task_status = serializers.ChoiceField(
+    status = serializers.ChoiceField(
         choices=["To Do", "In Progress", "Completed"],
         required=False,
         default="To Do",

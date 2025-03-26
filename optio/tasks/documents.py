@@ -32,7 +32,7 @@ class TaskDocument(Document):
 
     class Django:
         model = Task
-        fields = ["id", "task_status"]
+        fields = ["id", "status"]
 
     def prepare_title_suggest(self, instance):
         """
