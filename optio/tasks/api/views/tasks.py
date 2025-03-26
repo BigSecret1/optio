@@ -34,8 +34,10 @@ class CreateTask(APIView):
             raise PermissionDenied(perm_required_error)
 
         try:
-            return Response(task_action_manager.perform_create(request.data),
-                            status=status.HTTP_200_OK)
+            return Response(
+                task_action_manager.perform_create(request.data),
+                status=status.HTTP_200_OK
+            )
         except ValidationError as e:
             logging.error("%s exception occured while creating task", str(e))
             print(str(e))

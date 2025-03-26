@@ -4,7 +4,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
-from rest_framework.exceptions import ValidationError, AuthenticationFailed
+from rest_framework.exceptions import ValidationError, PermissionDenied
 
 import logging
 
@@ -21,17 +21,25 @@ class CreateSubTask(APIView):
 
     def post(self, request: Request) -> Response:
         if not check_permission(request.user, "tasks", "Task", "add"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
-            return Response(task_action_manager.perform_create(request.data),
-                            status=status.HTTP_200_OK)
+            return Response(
+                task_action_manager.perform_create(request.data),
+                status=status.HTTP_200_OK
+            )
         except ValidationError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            logging.error("%s exception occured while creating subtask", str(e))
+            return Response({
+                "error": "Invalid request body"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             logging.error("An error occured while creating subtask %s", e)
-            return Response({"error": "Internal Server error"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "Internal Server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class GetSubTasks(APIView):
@@ -40,14 +48,18 @@ class GetSubTasks(APIView):
 
     def get(self, request: Request, parent_task_id: int) -> Response:
         if not check_permission(request.user, "tasks", "Task", "view"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
-            return Response(task_action_manager.perform_fetch_all(parent_task_id),
-                            status=status.HTTP_200_OK)
+            return Response(
+                task_action_manager.perform_fetch_all(parent_task_id),
+                status=status.HTTP_200_OK
+            )
         except Exception as error:
             logging.error(
                 "An error occured while fetching all subtask under task with id %d : %s ",
                 parent_task_id, error)
-            return Response({"error": "Server error"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "Internal Server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
