@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.views import APIView
-from rest_framework.exceptions import ValidationError, AuthenticationFailed
+from rest_framework.exceptions import ValidationError, AuthenticationFailed, PermissionDenied
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -26,13 +26,14 @@ class CreateView(APIView):
 
     def post(self, request: Request) -> Response:
         if not check_permission(request.user, "comments", "Comment", "create"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             return Response(comment_api_action.add_comment(request.data),
                             status=status.HTTP_200_OK)
         except ValidationError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            logging.error("Validation error %s", str(e))
+            return Response({"error": "Invalid request body"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logging.error("%s exception occured while adding comment", str(e))
             return Response({"error": error_message},
