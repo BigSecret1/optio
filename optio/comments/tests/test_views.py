@@ -99,3 +99,63 @@ class TestCreateView(BaseAPITestCase):
     def tearDown(self):
         self.client.logout()
 
+
+class TestListView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.fetch_url = reverse("add-comment")
+
+        self.task_id = 1
+        self.comment_data = [
+            {
+                "comment": "This is the first comment.",
+                "task_id": 101,
+                "created_at": "2024-03-29T12:00:00Z"
+            },
+            {
+                "comment": "This is another comment related to the task.",
+                "task_id": 101,
+                "created_at": "2024-03-29T12:05:00Z"
+            }
+        ]
+
+        self.fetch_url = reverse("list-comments", args=[self.task_id])
+
+    @patch("optio.comments.api.views.check_permission")
+    @patch("optio.comments.api.views.comment_api_action.fetch_all_comments")
+    def test_fetch_comments_success(
+        self,
+        mock_fetch_all_comments,
+        mock_check_permission
+    ):
+        self.authenticate()
+
+        print("Request on url ", self.fetch_url)
+        mock_fetch_all_comments.return_value = self.comment_data
+        mock_check_permission.return_value = True
+
+        response = self.client.get(self.fetch_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), self.comment_data)
+
+    @patch("optio.comments.api.views.check_permission")
+    def test_get_comments_permission_denied(self, mock_check_permission):
+        mock_check_permission.return_value = False
+
+        response = self.client.get(self.fetch_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @patch("optio.comments.api.views.check_permission")
+    @patch("optio.comments.api.views.comment_api_action.fetch_all_comments")
+    def test_get_comments_internal_server_error(self, mock_fetch_all_comments,
+                                                mock_check_permission):
+        self.authenticate()
+
+        mock_fetch_all_comments.side_effect = Exception("Some error")
+        mock_check_permission.return_value = True
+
+        response = self.client.get(self.fetch_url)
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.json(), {"error": "Internal server error"})
