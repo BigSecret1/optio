@@ -83,7 +83,7 @@ class DeleteView(APIView):
 
     def delete(self, request: Request, comment_id: int) -> Response:
         if not check_permission(request.user, "comments", "Comment", "delete"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             comment_api_action.delete_comment(comment_id)
