@@ -17,10 +17,11 @@ class CommentAPIAction(APIAction):
             if serializer.is_valid():
                 with transaction.atomic():
                     serializer.save()
-                return {"success": "Added comment successfully"}
+                return {"success": "Comment was added successfully"}
             else:
-                logging.error("%s exception occured, data validation failed",
-                              serializer.errors)
+                logging.error(
+                    "%s exception occured, data validation failed", serializer.errors
+                )
                 raise ValidationError(serializer.errors)
         except ValidationError:
             raise
