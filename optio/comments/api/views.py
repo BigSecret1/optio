@@ -46,7 +46,7 @@ class ListView(APIView):
 
     def get(self, request: Request, task_id: int) -> Response:
         if not check_permission(request.user, "comments", "Comment", "view"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             return Response(comment_api_action.fetch_all_comments(task_id),
@@ -62,14 +62,15 @@ class EditView(APIView):
 
     def put(self, request: Request, comment_id: int) -> Response:
         if not check_permission(request.user, "comments", "Comment", "change"):
-            raise AuthenticationFailed(perm_required_error)
+            raise PermissionDenied(perm_required_error)
 
         try:
             comment_api_action.update_comment(comment_id, request.data)
             return Response({"success": "comment was update successfully"},
                             status=status.HTTP_200_OK)
         except ValidationError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid request body"},
+                            status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logging.error("%s exception occured while updating the comment", str(e))
             return Response({"error": error_message},

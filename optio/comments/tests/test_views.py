@@ -9,6 +9,10 @@ from django.urls import reverse
 
 from optio.users.models import UserProfile
 from optio.utils.exceptions import perm_required_error
+from optio.tasks.models import Task
+from optio.projects.models import Project
+from optio.comments.models import Comment
+from optio.comments.api.views import error_message
 
 
 class BaseAPITestCase(APITestCase):
@@ -159,3 +163,89 @@ class TestListView(BaseAPITestCase):
         response = self.client.get(self.fetch_url)
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         self.assertEqual(response.json(), {"error": "Internal server error"})
+
+
+class TestEditView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        project = Project.objects.create(name="Sample Project")
+        self.task = Task.objects.create(id=1, title="Old Task", project=project)
+        self.comment = Comment.objects.create(
+            comment="Initial Comment",
+            task=self.task
+        )
+
+        self.update_url = reverse("update-comment", args=[self.comment.id])
+
+    @patch("optio.comments.api.views.check_permission")
+    @patch("optio.comments.api.views.comment_api_action.update_comment")
+    def test_update_comment_success(self, mock_update_comment, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_update_comment.return_value = None
+
+        response = self.client.put(
+            self.update_url,
+            {"comment": "Updated Comment"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.json(),
+            {"success": "comment was update successfully"}
+        )
+
+    @patch("optio.comments.api.views.check_permission")
+    def test_permission_denied(self, mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = False
+
+        response = self.client.put(
+            self.update_url,
+            {"comment": "Updated Comment"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @patch("optio.comments.api.views.check_permission")
+    @patch("optio.comments.api.views.comment_api_action.update_comment")
+    def test_validation_error(self, mock_update_comment,
+                                             mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_update_comment.side_effect = ValidationError("Invalid data")
+
+        response = self.client.put(
+            self.update_url,
+            {"comment": "Updated Comment"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json(), {"error": "Invalid request body"})
+
+    @patch("optio.comments.api.views.check_permission")
+    @patch("optio.comments.api.views.comment_api_action.update_comment")
+    def test_server_error(self, mock_update_comment,
+                                         mock_check_permission):
+        self.authenticate()
+
+        mock_check_permission.return_value = True
+        mock_update_comment.side_effect = Exception("Unexpected error")
+
+        response = self.client.put(
+            self.update_url,
+            {"comment": "Updated Comment"},
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.json(), {"error": error_message})
+
+
