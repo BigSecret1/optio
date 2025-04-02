@@ -19,14 +19,22 @@ class AddNoteAPIView(APIView):
 
     def post(self, request: Request) -> Response:
         try:
-            return Response(quick_note_api_action.add_quicknote(request.data),
-                            status=status.HTTP_200_OK)
+            return Response(
+                quick_note_api_action.add_quicknote(request.data),
+                status=status.HTTP_200_OK
+            )
         except ValidationError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            logging.error("Recevied an exception due to invalid payload %s", str(e))
+            return Response(
+                {"error": "Invalid payload"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             logging.error("Error while adding note %s", str(e))
-            return Response({"error": "Server error"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "Internal Server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class ListNoteAPIView(APIView):

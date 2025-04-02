@@ -101,9 +101,6 @@ class TestCreateView(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         self.assertEqual(response.data, {"error": "Internal server error"})
 
-    def tearDown(self):
-        self.client.logout()
-
 
 class TestListView(BaseAPITestCase):
     def setUp(self):

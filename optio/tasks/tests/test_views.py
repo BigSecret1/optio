@@ -425,7 +425,6 @@ class TestDeleteTaskView(BaseAPITestCase):
 
 
 class TestCreateSubTaskView(BaseAPITestCase):
-
     def setUp(self):
         super().setUp()
 
@@ -468,7 +467,8 @@ class TestCreateSubTaskView(BaseAPITestCase):
     @patch("optio.tasks.api.views.subtasks.check_permission")
     @patch('optio.tasks.api.actions.TaskActionManager.perform_create')
     def test_create_subtask_validation_error(
-        self, mock_perform_create,
+        self,
+        mock_perform_create,
         mock_check_permission
     ):
         mock_check_permission.return_value = True
