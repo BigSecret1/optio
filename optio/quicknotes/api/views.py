@@ -43,11 +43,15 @@ class ListNoteAPIView(APIView):
 
     def get(self, request: Request, note_id: int) -> Response:
         try:
-            return Response(quick_note_api_action.fetch_note(note_id),
-                            status=status.HTTP_200_OK)
+            return Response(
+                quick_note_api_action.fetch_note(note_id),
+                status=status.HTTP_200_OK
+            )
         except Exception:
-            return Response({"error": error_message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "Internal server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class UpdateNoteAPIView(APIView):

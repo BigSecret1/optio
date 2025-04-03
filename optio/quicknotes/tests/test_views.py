@@ -74,3 +74,38 @@ class TestAddNote(BaseAPITestCase):
     def test_add_note_unauthenticated(self):
         response = self.client.post(self.create_url, self.valid_payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class TestListNote(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.note_id = 1
+        self.fetch_url = reverse("list-quicknote", args=[self.note_id])
+
+    @patch("optio.quicknotes.api.views.quick_note_api_action.fetch_note")
+    def test_list_note_success(self, mock_fetch_note):
+        self.authenticate()
+
+        mock_fetch_note.return_value = {"id": 1, "note": "Test Note"}
+
+        response = self.client.get(self.fetch_url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {"id": 1, "note": "Test Note"})
+
+    @patch("optio.quicknotes.api.views.quick_note_api_action.fetch_note")
+    def test_list_note_server_error(self, mock_fetch_note):
+        self.authenticate()
+
+        mock_fetch_note.side_effect = Exception("Unexpected error")
+
+        response = self.client.get(self.fetch_url)
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, {"error": "Internal server error"})
+
+    def test_list_note_unauthenticated(self):
+        response = self.client.get(self.fetch_url)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
