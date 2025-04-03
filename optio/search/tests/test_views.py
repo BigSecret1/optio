@@ -47,7 +47,6 @@ class TestSearchTaskAPIView(BaseAPITestCase):
         ]
 
         mock_execute.return_value = task_data
-
         response = self.client.post(self.search_url, data={"test": "test title"},
                                     format="json")
 
@@ -64,7 +63,6 @@ class TestSearchTaskAPIView(BaseAPITestCase):
         self.authenticate()
 
         mock_execute.side_effect = Exception("Elasticsearch connection error")
-
         response = self.client.post(
             self.search_url, data={"title": "test title"},
             format="json"
@@ -72,3 +70,39 @@ class TestSearchTaskAPIView(BaseAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         self.assertEqual(response.json(), {"msg": "Internal server error"})
+
+
+class TestSearchProjectAPIView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.search_url = reverse("search-project")
+
+        self.valid_payload = {"project_name": "test project"}
+        self.mock_response = [{"id": "10", "project_name": "Project Alpha"}]
+        self.invalid_payload = {}
+
+    @patch("optio.search.api.views.project_es_query.execute")
+    def test_search_project_success(self, mock_execute):
+        self.authenticate()
+
+        mock_execute.return_value = [{"id": "10", "project_name": "Project Alpha"}]
+        response = self.client.post(self.search_url, self.valid_payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, self.mock_response)
+
+    def test_unauthenticated(self):
+        response = self.client.post(self.search_url, self.valid_payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @patch("optio.search.api.views.project_es_query.execute")
+    def test_internal_server_error(self, mock_execute):
+        self.authenticate()
+
+        mock_execute.side_effect = Exception("Elasticsearch error")
+        response = self.client.post(self.search_url, self.valid_payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, {"msg": "Internal server error"})
