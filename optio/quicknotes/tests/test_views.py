@@ -95,7 +95,7 @@ class TestListNote(BaseAPITestCase):
         self.assertEqual(response.data, {"id": 1, "note": "Test Note"})
 
     @patch("optio.quicknotes.api.views.quick_note_api_action.fetch_note")
-    def test_list_note_server_error(self, mock_fetch_note):
+    def test_server_error(self, mock_fetch_note):
         self.authenticate()
 
         mock_fetch_note.side_effect = Exception("Unexpected error")
@@ -105,7 +105,57 @@ class TestListNote(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         self.assertEqual(response.data, {"error": "Internal server error"})
 
-    def test_list_note_unauthenticated(self):
+    def test_unauthenticated(self):
         response = self.client.get(self.fetch_url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class TestUpdateNote(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.note_id = 1
+        self.update_url = reverse("update-quicknote", args=[self.note_id])
+
+        self.valid_payload = {"note": "This is an updated test note."}
+        self.invalid_payload = {}
+
+    @patch("optio.quicknotes.api.views.quick_note_api_action.update_quicknote")
+    def test_update_note_success(self, mock_update_quicknote):
+        self.authenticate()
+
+        mock_update_quicknote.return_value = {"message": "Note updated successfully"}
+
+        response = self.client.put(self.update_url, self.valid_payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {"message": "Note updated successfully"})
+
+    @patch("optio.quicknotes.api.views.quick_note_api_action.update_quicknote")
+    def test_validation_error(self, mock_update_quicknote):
+        self.authenticate()
+
+        mock_update_quicknote.side_effect = ValidationError("Validation error")
+
+        response = self.client.put(self.update_url, self.invalid_payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {"error": "Validation error"})
+
+    @patch("optio.quicknotes.api.views.quick_note_api_action.update_quicknote")
+    def test_server_error(self, mock_update_quicknote):
+        self.authenticate()
+
+        mock_update_quicknote.side_effect = Exception("Unexpected error")
+
+        response = self.client.put(self.update_url, self.valid_payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, {"error": "Internal server error"})
+
+    def test_unauthenticated(self):
+        response = self.client.put(self.update_url, self.valid_payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+

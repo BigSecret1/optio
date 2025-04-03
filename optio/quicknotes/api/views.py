@@ -64,8 +64,12 @@ class UpdateNoteAPIView(APIView):
                 quick_note_api_action.update_quicknote(note_id, request.data),
                 status=status.HTTP_200_OK)
         except ValidationError as e:
-            return Response({"error": "Validation error"},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Validation error"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
-            return Response({"error": str(e)},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "Internal server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
