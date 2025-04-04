@@ -40,7 +40,6 @@ class TestAddNote(BaseAPITestCase):
         self.authenticate()
 
         mock_add_quicknote.return_value = {"message": "Note added successfully"}
-
         response = self.client.post(self.create_url, self.valid_payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -65,7 +64,6 @@ class TestAddNote(BaseAPITestCase):
         self.authenticate()
 
         mock_add_quicknote.side_effect = Exception("Unexpected error")
-
         response = self.client.post(self.create_url, self.valid_payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -88,7 +86,6 @@ class TestListNote(BaseAPITestCase):
         self.authenticate()
 
         mock_fetch_note.return_value = {"id": 1, "note": "Test Note"}
-
         response = self.client.get(self.fetch_url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -99,7 +96,6 @@ class TestListNote(BaseAPITestCase):
         self.authenticate()
 
         mock_fetch_note.side_effect = Exception("Unexpected error")
-
         response = self.client.get(self.fetch_url)
 
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -126,7 +122,6 @@ class TestUpdateNote(BaseAPITestCase):
         self.authenticate()
 
         mock_update_quicknote.return_value = {"message": "Note updated successfully"}
-
         response = self.client.put(self.update_url, self.valid_payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -137,7 +132,6 @@ class TestUpdateNote(BaseAPITestCase):
         self.authenticate()
 
         mock_update_quicknote.side_effect = ValidationError("Validation error")
-
         response = self.client.put(self.update_url, self.invalid_payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -148,7 +142,6 @@ class TestUpdateNote(BaseAPITestCase):
         self.authenticate()
 
         mock_update_quicknote.side_effect = Exception("Unexpected error")
-
         response = self.client.put(self.update_url, self.valid_payload, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
