@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from django.urls import reverse
 
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import status
@@ -9,6 +9,22 @@ from rest_framework import status
 from unittest.mock import patch
 
 from optio.users.models import UserProfile, UserGroup
+
+
+class BaseAPITestCase(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.user = UserProfile.objects.create_user(
+            email="optiotestemail@example.com",
+            password="optio@123"
+        )
+
+        self.refresh: RefreshToken = RefreshToken.for_user(self.user)
+        self.token = str(self.refresh.access_token)
+
+    def authenticate(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
 
 class TestRegisterView(APITestCase):
@@ -127,3 +143,89 @@ class TestRegisterView(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data["error"], "User role doesn't exist")
+
+
+class TestLoginView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.login_url = reverse("login")
+
+    def test_login_successful(self):
+        payload = {
+            "email": "optiotestemail@example.com",
+            "password": "optio@123"
+        }
+        response = self.client.post(self.login_url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("access", response.data)
+        self.assertIn("refresh", response.data)
+        self.assertIn("user", response.data)
+
+    def test_invalid_password(self):
+        payload = {
+            "email": "testuser@example.com",
+            "password": "wrongpassword"
+        }
+        response = self.client.post(self.login_url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["error"], "Invalid credentials")
+
+    def test_nonexistent_user(self):
+        payload = {
+            "email": "nonexistent@example.com",
+            "password": "somepassword"
+        }
+        response = self.client.post(self.login_url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["error"], "Invalid credentials")
+
+    def test_missing_email(self):
+        payload = {
+            "password": "somepassword"
+        }
+        response = self.client.post(self.login_url, payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_missing_password(self):
+        payload = {
+            "email": "testuser@example.com"
+        }
+        response = self.client.post(self.login_url, payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class TestLogoutView(BaseAPITestCase):
+    def setUp(self):
+        super().setUp()
+
+        self.logout_url = reverse("logout")
+        self.authenticate()
+
+    def test_logout_successful(self):
+        payload = {
+            "refresh": str(self.refresh)
+        }
+        response = self.client.post(self.logout_url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
+        self.assertEqual(response.data["msg"], "logged out successfully")
+
+    def test_with_invalid_token(self):
+        payload = {
+            "refresh": "invalid.refresh.token"
+        }
+        response = self.client.post(self.logout_url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("msg", response.data)
+
+    def test_with_missing_token(self):
+        payload = {}
+        response = self.client.post(self.logout_url, payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertIn("msg", response.data)

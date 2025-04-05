@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
@@ -99,6 +99,12 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh"]
+            if not refresh_token:
+                return Response(
+                    {"msg": "Refresh token is required"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             token = RefreshToken(refresh_token)
             token.blacklist()
 
@@ -106,5 +112,13 @@ class LogoutView(APIView):
                 {"msg": "logged out successfully"},
                 status=status.HTTP_205_RESET_CONTENT
             )
+        except TokenError:
+            return Response(
+                {"msg": "Invalid token"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
-            return Response({"msg": f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"msg": "Unexpected error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
