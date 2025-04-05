@@ -1,6 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group, \
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    Group,
     PermissionsMixin
+)
 
 
 class UserProfileManager(BaseUserManager):
@@ -42,7 +46,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         db_table = "optio_users"
 
     def __str__(self):
-        return f"{self.email}, {self.is_superuser}"
+        return self.email
 
 
 class UserGroup(models.Model):
