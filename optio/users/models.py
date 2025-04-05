@@ -1,5 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group, PermissionsMixin
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    Group,
+    PermissionsMixin
+)
 
 
 class UserProfileManager(BaseUserManager):
