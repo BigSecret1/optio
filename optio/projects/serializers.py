@@ -1,8 +1,16 @@
 from rest_framework import serializers
+from optio.projects.models import Project
 
-class ProjectSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
-    project_updated = serializers.DateTimeField()
-    stars = serializers.IntegerField(default=0)
-    project_description = serializers.CharField(style={'base_template':
-                                                           'textarea.html'})
+
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'description', 'last_updated']
+        read_only_fields = ['id', 'last_updated']
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        return {
+            "id": rep["id"],
+            "name": rep["name"]
+        }
