@@ -29,7 +29,7 @@ class BaseSerializer(serializers.ModelSerializer):
         model = Task
         fields = [
             'id', 'title', 'due_date', 'comments', 'description',
-            'task_status', 'created_time', 'project', 'parent_task'
+            'status', 'created_time', 'project', 'parent_task'
         ]
         extra_kwargs = {
             'title': {
@@ -99,7 +99,7 @@ class SubTaskSerializer(BaseSerializer):
             raise serializers.ValidationError("Due date cannot be in the past.")
         return value
 
-    def validate_task_status(self, value):
+    def validate_status(self, value):
         allowed_statuses = ['To Do', 'In Progress', 'Completed']
         if value not in allowed_statuses:
             raise serializers.ValidationError(
