@@ -38,7 +38,6 @@ class SnakeCaseToCamelCaseMiddleware(MiddlewareMixin):
             response.get('Content-Type', '').startswith('application/json') and
             hasattr(response, 'content')
         ):
-            print("Not in condition")
             try:
                 data = json.loads(response.content)
 
