@@ -64,7 +64,8 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    "optio.middleware.camel_to_snake_case.CamelCaseToSnakeCaseMiddleware",
+    "optio.middleware.transform_case.CamelCaseToSnakeCaseMiddleware",
+    "optio.middleware.transform_case.SnakeCaseToCamelCaseMiddleware",
 ]
 
 CORS_ALLOWED_ORIGINS = [
