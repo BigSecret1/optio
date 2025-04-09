@@ -1,6 +1,6 @@
 name: Optio CI
 
-on: [push]
+on: [ push ]
 
 jobs:
   test:
@@ -27,30 +27,32 @@ jobs:
           - 9200:9200
         env:
           discovery.type: single-node
+          xpack.security.enabled: false
+          ES_JAVA_OPTS: "-Xms512m -Xmx512m"
         options: >-
-          --health-cmd "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
+          --health-cmd="curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.12.3'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12.3'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Run tests
-      env:
-        DATABASE_URL: sqlite:///db.sqlite3
-        ELASTICSEARCH_URL: http://localhost:9200
-      run: |
-        python manage.py migrate
-        python manage.py test
+      - name: Run tests
+        env:
+          DATABASE_URL: sqlite:///db.sqlite3
+          ELASTICSEARCH_URL: http://localhost:9200
+        run: |
+          python manage.py migrate
+          python manage.py test
 
