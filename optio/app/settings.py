@@ -1,5 +1,5 @@
 from pathlib import Path
-from . import config
+from decouple import config
 import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -98,11 +98,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config.db_name,
-        'USER': config.db_user,
-        'PASSWORD': config.db_password,
-        'HOST': config.db_host,
-        'PORT': config.db_port,
+        'NAME': config('DB_NAME', default='postgres'),
+        'USER': config('DB_USER', default='postgres'),
+        'PASSWORD': config('DB_PASSWORD', default='postgres'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 

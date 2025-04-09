@@ -53,6 +53,10 @@ jobs:
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
 
+      - name: Create .env file from .env.example
+        run: |
+          cp optio/app/.env.example optio/app/.env
+
       - name: Run tests
         env:
           DATABASE_URL: sqlite:///db.sqlite3
