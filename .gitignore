@@ -162,7 +162,7 @@ cython_debug/
 
 # extras
 *.swp
-optio/app/config.py
+
 src-backup
 .idea
 "\033\033:q\033"
