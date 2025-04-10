@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.views import APIView
-from rest_framework.exceptions import ValidationError, AuthenticationFailed, PermissionDenied
+from rest_framework.exceptions import ValidationError, PermissionDenied
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -29,15 +29,22 @@ class CreateView(APIView):
             raise PermissionDenied(perm_required_error)
 
         try:
-            return Response(comment_api_action.add_comment(request.data),
-                            status=status.HTTP_200_OK)
+            return Response(
+                comment_api_action.add_comment(request.data),
+                status=status.HTTP_200_OK
+            )
         except ValidationError as e:
             logging.error("Validation error %s", str(e))
-            return Response({"error": "Invalid request body"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Invalid request body"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             logging.error("%s exception occured while adding comment", str(e))
-            return Response({"error": error_message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class ListView(APIView):
@@ -49,11 +56,15 @@ class ListView(APIView):
             raise PermissionDenied(perm_required_error)
 
         try:
-            return Response(comment_api_action.fetch_all_comments(task_id),
-                            status=status.HTTP_200_OK)
+            return Response(
+                comment_api_action.fetch_all_comments(task_id),
+                status=status.HTTP_200_OK
+            )
         except Exception:
-            return Response({"error": error_message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class EditView(APIView):
@@ -66,15 +77,21 @@ class EditView(APIView):
 
         try:
             comment_api_action.update_comment(comment_id, request.data)
-            return Response({"success": "comment was update successfully"},
-                            status=status.HTTP_200_OK)
+            return Response(
+                {"success": "comment was update successfully"},
+                status=status.HTTP_200_OK
+            )
         except ValidationError as e:
-            return Response({"error": "Invalid request body"},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Invalid request body"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             logging.error("%s exception occured while updating the comment", str(e))
-            return Response({"error": error_message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class DeleteView(APIView):
@@ -87,11 +104,17 @@ class DeleteView(APIView):
 
         try:
             comment_api_action.delete_comment(comment_id)
-            return Response({"success": "Deleted comment successfully"},
-                            status=status.HTTP_200_OK)
+            return Response(
+                {"success": "Deleted comment successfully"},
+                status=status.HTTP_200_OK
+            )
         except ObjectDoesNotExist:
-            return Response({"error": f"Comment with id {comment_id} doesn't exist"},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "error": f"Comment with id {comment_id} doesn't exist"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
-            return Response({"error": error_message},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

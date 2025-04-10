@@ -1,6 +1,8 @@
 from django.utils.deprecation import MiddlewareMixin
 from django.http import JsonResponse
 
+from rest_framework.response import Response
+
 import logging
 import json
 import re
@@ -43,7 +45,7 @@ class SnakeCaseToCamelCaseMiddleware(MiddlewareMixin):
 
                 camel_case_data = self.convert_keys_to_camel_case(data)
 
-                return JsonResponse(
+                return Response(
                     camel_case_data, safe=False,
                     status=response.status_code
                 )
@@ -66,5 +68,3 @@ class SnakeCaseToCamelCaseMiddleware(MiddlewareMixin):
             return [self.convert_keys_to_camel_case(item) for item in data]
         else:
             return data
-
-
