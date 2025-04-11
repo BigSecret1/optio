@@ -10,7 +10,7 @@ class SubTasksOperation {
       return;
     }
 
-    const endpoint = `/${parentTaskId}/get-subtasks/`;
+    const endpoint = `/${parentTaskId}/get-subtask/`;
     const accessToken = localStorage.getItem("access_token");
 
     try {

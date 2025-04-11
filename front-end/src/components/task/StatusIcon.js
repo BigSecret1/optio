@@ -7,6 +7,7 @@ import { faDotCircle as farDotCircle } from "@fortawesome/free-regular-svg-icons
 import { faCheckCircle as farCheckCircle } from "@fortawesome/free-regular-svg-icons";
 
 export default function StatusIcon({ status }) {
+  console.log("Received status for status icon", status);
   return status.toLowerCase() === "completed" ? (
     <FontAwesomeIcon
       icon={farCheckCircle}

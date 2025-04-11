@@ -74,7 +74,7 @@ export default function Header({ taskId }) {
         {isEditingTaskStatus === true ? (
           <UpdateTaskStatus taskId={taskId} />
         ) : (
-          <StatusIcon status={task.task_status} />
+          <StatusIcon status={task.status} />
         )}
         <Link>
           <h5>GSMI/1248</h5>

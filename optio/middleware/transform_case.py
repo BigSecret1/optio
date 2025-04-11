@@ -37,18 +37,29 @@ class CamelCaseToSnakeCaseMiddleware(MiddlewareMixin):
 class SnakeCaseToCamelCaseMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         if (
-            response.get('Content-Type', '').startswith('application/json') and
-            hasattr(response, 'content')
+            hasattr(response, 'data') and
+            response.get('Content-Type', '').startswith('application/json')
         ):
             try:
-                data = json.loads(response.content)
+                # Convert snake_case to camelCase
+                camel_case_data = self.convert_keys_to_camel_case(response.data)
 
-                camel_case_data = self.convert_keys_to_camel_case(data)
-
-                return Response(
-                    camel_case_data, safe=False,
-                    status=response.status_code
+                # Create a new response with the same renderer context
+                new_response = Response(
+                    data=camel_case_data,
+                    status=response.status_code,
+                    headers=response.headers
                 )
+
+                # Copy renderer-related properties
+                new_response.accepted_renderer = response.accepted_renderer
+                new_response.accepted_media_type = response.accepted_media_type
+                new_response.renderer_context = response.renderer_context
+
+                # Render the response before returning it
+                new_response.render()
+
+                return new_response
 
             except Exception as e:
                 logging.error("Response transformation failed: %s", str(e))

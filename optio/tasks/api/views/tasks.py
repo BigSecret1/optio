@@ -40,15 +40,16 @@ class CreateTask(APIView):
             )
         except ValidationError as e:
             logging.error("%s exception occured while creating task", str(e))
-            print(str(e))
             return Response(
                 {"error": "Invalid request body"},
                 status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error("%s exception occured while creating task", e)
-            return Response({"error": "wrong request body"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "wrong request body"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class GetTasks(APIView):
@@ -79,13 +80,18 @@ class GetTaskById(APIView):
             raise PermissionDenied(perm_required_error)
 
         try:
-            return Response(task_action_manager.perform_fetch(task_id),
-                            status=status.HTTP_200_OK)
+            return Response(
+                task_action_manager.perform_fetch(task_id),
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
-            logging.error("%s exception occured while fetching task with id %s", str(e),
-                          task_id)
-            return Response({"error": "Internal server error"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logging.error(
+                "%s exception occured while fetching task with id %s", str(e), task_id
+            )
+            return Response(
+                {"error": "Internal server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class UpdateTask(APIView):

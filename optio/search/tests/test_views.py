@@ -78,8 +78,8 @@ class TestSearchProjectAPIView(BaseAPITestCase):
 
         self.search_url = reverse("search-project")
 
-        self.valid_payload = {"project_name": "test project"}
-        self.mock_response = [{"id": "10", "project_name": "Project Alpha"}]
+        self.valid_payload = {"projectName": "test project"}
+        self.mock_response = [{"id": "10", "projectName": "Project Alpha"}]
         self.invalid_payload = {}
 
     @patch("optio.search.api.views.project_es_query.execute")

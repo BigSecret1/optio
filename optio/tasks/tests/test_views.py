@@ -438,7 +438,7 @@ class TestCreateSubTaskView(BaseAPITestCase):
         self.data = {
             "title": "Subtask",
             "status": "In Progress",
-            "parent_task": self.task.id
+            "parentTask": self.task.id
         }
 
     @patch("optio.tasks.api.views.subtasks.check_permission")

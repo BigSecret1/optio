@@ -112,13 +112,13 @@ class TestListView(BaseAPITestCase):
         self.comment_data = [
             {
                 "comment": "This is the first comment.",
-                "task_id": 101,
-                "created_at": "2024-03-29T12:00:00Z"
+                "taskId": 101,
+                "createdAt": "2024-03-29T12:00:00Z"
             },
             {
                 "comment": "This is another comment related to the task.",
-                "task_id": 101,
-                "created_at": "2024-03-29T12:05:00Z"
+                "taskId": 101,
+                "createdAat": "2024-03-29T12:05:00Z"
             }
         ]
 
