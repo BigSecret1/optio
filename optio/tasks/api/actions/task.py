@@ -33,8 +33,8 @@ class TaskAPIAction(APIAction):
     def fetch(self, task_id: int):
         try:
             logging.info("fetching all")
-            task: Optional[Task] = Task.objects.filter(id=task_id)
-            serializer: Task = TaskSerializer(instance=task, many=True)
+            task = Task.objects.get(id=task_id)
+            serializer = TaskSerializer(instance=task)
             return serializer.data
         except Exception as e:
             raise

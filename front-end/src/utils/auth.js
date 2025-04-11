@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 
 const base_url = "http://localhost:8000";
 
-const login_url = `${base_url}/user/login/`;
-const logout_url = `${base_url}/user/logout/`;
+const login_url = `${base_url}/users/login/`;
+const logout_url = `${base_url}/users/logout/`;
 
 export function isAuthenticated() {
   let loggedIn = localStorage.getItem("access_token");
