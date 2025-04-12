@@ -13,7 +13,7 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // import custom components
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar";
 import Dashboard from "./components/Dashboard";
 import Auth from "./components/Auth";
 import Projects from "./components/Projects";
@@ -41,10 +41,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route
-          path="/login"
-          element={<Auth />}
-        />
+        <Route path="/login" element={<Auth />} />
 
         <Route
           path="/dashboard"
@@ -73,15 +70,9 @@ root.render(
           }
         />
 
-        <Route
-          path="/task-manager/:task_id"
-          element={<TaskManager />}
-        />
+        <Route path="/task-manager/:task_id" element={<TaskManager />} />
 
-        <Route
-          path="*"
-          element={<Navigate to="/login" />}
-        />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   </React.StrictMode>

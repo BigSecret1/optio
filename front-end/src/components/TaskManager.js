@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Task from "../services/task/task-service";
 import ShowTask from "./task/ShowTask";
-import Navbar from "./Navbar";
+import Navbar from "./navbar/Navbar";
 import { TaskProvider } from "../contexts/TaskContext";
 
 function TaskManager() {
