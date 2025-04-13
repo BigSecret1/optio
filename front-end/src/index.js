@@ -19,6 +19,7 @@ import Auth from "./components/Auth";
 import Projects from "./components/Projects";
 import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
+import NewProject from "./components/projects/NewProject";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -66,6 +67,15 @@ root.render(
           element={
             <PrivateRoute>
               <Tasks columns={["Task", "Project", "Status"]} />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/new/project"
+          element={
+            <PrivateRoute>
+              <NewProject />
             </PrivateRoute>
           }
         />
