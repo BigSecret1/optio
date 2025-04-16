@@ -19,8 +19,8 @@ import Auth from "./components/Auth";
 import Projects from "./components/Projects";
 import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
-import NewProject from "./components/project/NewProject";
 import NewTask from "./components/task/NewTask";
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -41,6 +41,8 @@ document.title = "OpTio";
 
 root.render(
   <React.StrictMode>
+    <App />
+
     <Router>
       <Routes>
         <Route path="/login" element={<Auth />} />
@@ -72,14 +74,14 @@ root.render(
           }
         />
 
-        <Route
+        {/* <Route
           path="/new/project"
           element={
             <PrivateRoute>
               <NewProject />
             </PrivateRoute>
           }
-        />
+        /> */}
 
         <Route
           path="/new/task"

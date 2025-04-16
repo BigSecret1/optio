@@ -55,7 +55,7 @@ jobs:
 
       - name: Create .env file from .env.example
         run: |
-          cp optio/app/.env.example optio/app/.env
+          cp optio/optioconf/.env.example optio/optioconf/.env
 
       - name: Run tests
         env:

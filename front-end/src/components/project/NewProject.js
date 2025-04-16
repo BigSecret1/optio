@@ -1,60 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import "./styles/new-project.css";
+import { NewContext } from "../../contexts/NewContext";
 
 export default function NewProject() {
+  const { openCreateProject, setOpenCreateProject } = useContext(NewContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
 
-  const handleCreate = () => {
-    console.log("Form Submitted:", { name, description });
-    setIsOpen(false);
-  };
+  function handleSubmit() {
+    setOpenCreateProject(false);
+  }
 
-  const handleCancel = () => {
-    setIsOpen(false);
-  };
+  function handleClose() {
+    setOpenCreateProject(false);
+  }
 
   return (
     <div>
-      <button onClick={() => setIsOpen(true)}>Open Form</button>
-      {isOpen && (
-        <div className="dialog-overlay">
-          <div className="dialog-box">
-            <h2>Project</h2>
-            <form>
-              <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="description">Description</label>
-                <textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-actions">
-                <button type="button" onClick={handleCreate}>
-                  Create
-                </button>
-                <button type="button" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <Dialog
+        open={openCreateProject}
+        onClose={handleClose}
+        PaperProps={{
+          component: "form",
+          onSubmit: handleSubmit,
+          sx: {
+            width: "1000px",
+            maxWidth: "90vw",
+            backgroundColor: "#3F5880",
+          },
+        }}
+      >
+        <DialogTitle className="new-project-dialog-title">Project</DialogTitle>
+        <DialogContent className="new-project-dialog-content">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </DialogContent>
+
+        <DialogActions className="new-project-dialog-actions">
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit">Save</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

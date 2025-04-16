@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import "../Navbar.css";
-import Create from "../common/Create.js";
 
 const Navbar = () => {
   return (
@@ -55,7 +54,6 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
-      <Create />
     </nav>
   );
 };
