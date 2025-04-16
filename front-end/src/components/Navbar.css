@@ -1,18 +1,18 @@
 .custom-navbar {
-  background-color: #304971; /* Same color as card background */
+  background-color: #304971; 
   color: white;
   position: sticky;
-  z-index: 1000; /* Ensure it's on top of other elements */
+  /* z-index: 1000; Ensure it's on top of other elements */
   top: 0;
 }
 
 .custom-navbar .navbar-brand,
 .custom-navbar .nav-link {
-  color: white; /* Font color for the brand and links */
+  color: white; 
 }
 
 .custom-navbar .navbar-collapse {
-  background-color: #304971; /* Ensure the collapse section matches the navbar */
+  background-color: #304971; 
 }
 
 .custom-navbar .nav-item {
@@ -20,7 +20,7 @@
 }
 
 .custom-navbar .nav-link:hover {
-  color: #ddd; /* Optional: Add hover effect for links */
+  color: #ddd; 
 }
 
 /* Additional styles for collapsed menu */
@@ -33,14 +33,14 @@
 }
 
 .custom-navbar .navbar-collapse.collapse.show {
-  background-color: #304971; /* Background color for the collapsed menu */
+  background-color: #304971; 
 }
 
 .custom-navbar .nav-item .nav-link {
   color: white;
-  background-color: #304971; /* Ensure the collapse menu items have the same background color */
+  background-color: #304971; 
 }
 
 .custom-navbar .nav-item .nav-link:hover {
-  color: #ddd; /* Optional: Add hover effect for collapsed menu links */
+  color: #ddd; 
 }

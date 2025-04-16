@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 
 import "./styles/Create.css";
+import { NewContext } from "../../contexts/NewContext";
 
 export default function Create() {
+  const { setOpenCreateProject, setOpenCreateTask } = useContext(NewContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -17,9 +19,9 @@ export default function Create() {
   }
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -38,12 +40,20 @@ export default function Create() {
         <div className="create-dropdown-options">
           <ul>
             <li>
-              <button onClick={() => console.log("New repository")}>
+              <button
+                onClick={() => {
+                  setOpenCreateProject(true);
+                }}
+              >
                 Project
               </button>
             </li>
             <li>
-              <button onClick={() => console.log("Import repository")}>
+              <button
+                onClick={() => {
+                  setOpenCreateTask(true);
+                }}
+              >
                 Task
               </button>
             </li>
