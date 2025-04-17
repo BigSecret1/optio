@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 
-import "./styles/create.css";
-import { NewContext } from "../../contexts/NewContext";
+import "./styles/Create.css";
 
 export default function Create() {
-  const { setOpenCreateProject, setOpenCreateTask } = useContext(NewContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 

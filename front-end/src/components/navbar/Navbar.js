@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import "../Navbar.css";
+import Avatar from "../profile/Avatar";
+import ProfileMenu from "../profile/ProfileMenu";
 
 const Navbar = () => {
   return (
@@ -53,6 +55,7 @@ const Navbar = () => {
             </a>
           </li>
         </ul>
+        <ProfileMenu />
       </div>
     </nav>
   );

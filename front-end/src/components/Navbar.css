@@ -2,7 +2,6 @@
   background-color: #304971; 
   color: white;
   position: sticky;
-  /* z-index: 1000; Ensure it's on top of other elements */
   top: 0;
 }
 

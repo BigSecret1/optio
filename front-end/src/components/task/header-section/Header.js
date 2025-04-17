@@ -2,21 +2,15 @@ import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
 import { Link } from "react-router-dom";
 
-// matrical UI
 import Box from "@mui/material/Box";
-
-// Font awesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle as farCircle } from "@fortawesome/free-regular-svg-icons";
 import { faDotCircle as farDotCircle } from "@fortawesome/free-regular-svg-icons";
 import { faCheckCircle as farCheckCircle } from "@fortawesome/free-regular-svg-icons";
 
-// Internal modules
 import { TaskContext } from "../../../contexts/TaskContext.js";
 import OptionMenu from "../../UI/OptionMenu.js";
 import StatusIcon from "../StatusIcon.js";
-
-// Child components
 import UpdateTaskStatus from "./UpdateTaskStatus.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import UpdateTaskTitle from "./UpdateTaskTitle.js";
