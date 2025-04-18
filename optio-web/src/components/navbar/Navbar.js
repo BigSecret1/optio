@@ -50,7 +50,7 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Notes
+              Quick notes
             </a>
           </li>
         </ul>

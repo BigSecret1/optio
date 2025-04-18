@@ -1,0 +1,18 @@
+.note-container {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1rem;
+    font-family: monospace;
+    border: none;
+    border-radius: 6px;
+    overflow: auto;
+    white-space: pre-wrap;
+    outline: none;
+    background-color: #3F5880;
+    min-height: 90vh;
+  }
+  
+  .note-container:focus {
+    border: none;
+  }
+  
