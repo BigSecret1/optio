@@ -6,10 +6,11 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import "./index.css";
 import reportWebVitals from "./reportWebVitals";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import "./index.css";
 import Navbar from "./components/navbar/Navbar";
 import Dashboard from "./components/Dashboard";
 import Auth from "./components/Auth";
@@ -17,6 +18,7 @@ import Projects from "./components/Projects";
 import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
 import NewTask from "./components/task/NewTask";
+import Profile from "./components/profile/Profile";
 import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -76,6 +78,15 @@ root.render(
           element={
             <PrivateRoute>
               <NewTask />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />
