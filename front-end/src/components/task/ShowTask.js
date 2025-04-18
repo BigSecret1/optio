@@ -8,7 +8,6 @@ import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import { TaskContext } from "../../contexts/TaskContext.js";
 import "../../styles/ShowTask.css";
-import FallbackAvatars from "../profile/Avatar.js";
 import EllipsisWithSpacing from "../UI/ThreeDots.js";
 import Header from "./header-section/Header.js";
 import Description from "./description-section/Description.js";
@@ -102,7 +101,6 @@ export default function ShowTasks({ taskId }) {
           {task.comments.map((comment, index) => {
             return (
               <div className="comment" key={index}>
-                <FallbackAvatars />
                 <h6>Added on Sep 15 2024: 11:40 IST</h6>
                 <p>{comment}</p>
                 <FontAwesomeIcon icon={faEdit} /> Edit
