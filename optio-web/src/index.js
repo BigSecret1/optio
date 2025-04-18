@@ -19,6 +19,7 @@ import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
 import NewTask from "./components/task/NewTask";
 import Profile from "./components/profile/Profile";
+import Note from "./components/quicknotes/Note";
 import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -87,6 +88,24 @@ root.render(
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/quicknote"
+          element={
+            <PrivateRoute>
+              <Note />
             </PrivateRoute>
           }
         />
