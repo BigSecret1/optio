@@ -1,0 +1,40 @@
+.profile-container {
+min-height: 100vh;
+}
+
+.profile-card {
+padding: 2rem;
+width: 400px;
+text-align: center;
+background-color: #304971 !important;
+}
+
+.profile-avatar {
+width: 80px !important;
+height: 80px !important;
+margin: 0 auto;
+font-size: 32px !important;
+}
+
+.profile-inputs {
+margin-top: 1.5rem;
+color: white;
+}
+
+.profile-inputs .MuiInputBase-root {
+background-color: #3F5880 !important;
+color: white;
+}
+
+.profile-inputs input[type="password"] {
+color: white !important;
+background-color: #3F5880 !important;
+}
+
+.profile-inputs .MuiFormLabel-root {
+color: white !important; 
+}
+
+.profile-button {
+margin-top: 1rem !important;
+}

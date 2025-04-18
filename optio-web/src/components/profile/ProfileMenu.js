@@ -11,11 +11,11 @@ function ProfileMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const handleAvatarClick = (event) => {
-    setAnchorEl(event.currentTarget); // ✅ Set anchor element
+  function handleAvatarClick(event){
+    setAnchorEl(event.currentTarget); 
   };
 
-  const handleClose = () => {
+  function handleClose(){
     setAnchorEl(null);
   };
 
