@@ -1,20 +1,13 @@
 import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
 
-// matrical UI
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-
-// Font awesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 
-// Internal modules
 import { TaskContext } from "../../contexts/TaskContext.js";
 import "../../styles/ShowTask.css";
-
-// Child components
-import FallbackAvatars from "../UI/Avatar.js";
 import EllipsisWithSpacing from "../UI/ThreeDots.js";
 import Header from "./header-section/Header.js";
 import Description from "./description-section/Description.js";
@@ -108,7 +101,6 @@ export default function ShowTasks({ taskId }) {
           {task.comments.map((comment, index) => {
             return (
               <div className="comment" key={index}>
-                <FallbackAvatars />
                 <h6>Added on Sep 15 2024: 11:40 IST</h6>
                 <p>{comment}</p>
                 <FontAwesomeIcon icon={faEdit} /> Edit

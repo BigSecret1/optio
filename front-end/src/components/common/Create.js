@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 
-import "./styles/Create.css";
+import "./styles/create.css";
 import { NewContext } from "../../contexts/NewContext";
 
 export default function Create() {

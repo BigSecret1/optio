@@ -8,11 +8,8 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-
-// import bootstrap for the project
 import "bootstrap/dist/css/bootstrap.min.css";
 
-// import custom components
 import Navbar from "./components/navbar/Navbar";
 import Dashboard from "./components/Dashboard";
 import Auth from "./components/Auth";
@@ -73,15 +70,6 @@ root.render(
             </PrivateRoute>
           }
         />
-
-        {/* <Route
-          path="/new/project"
-          element={
-            <PrivateRoute>
-              <NewProject />
-            </PrivateRoute>
-          }
-        /> */}
 
         <Route
           path="/new/task"
