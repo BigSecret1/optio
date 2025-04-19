@@ -13,7 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import Navbar from "./components/navbar/Navbar";
 import Dashboard from "./components/Dashboard";
-import Auth from "./components/Auth";
+import Auth from "./components/auth/Auth";
 import Projects from "./components/Projects";
 import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
