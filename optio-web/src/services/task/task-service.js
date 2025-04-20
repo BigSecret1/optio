@@ -1,4 +1,3 @@
-import { Class } from "@mui/icons-material";
 import { isAuthenticated } from "../../utils/auth";
 
 // These status values are case sensitive sp Changing them can break the functionality.
@@ -24,6 +23,33 @@ class Task {
     this.dueDate = dueDate;
     this.description = description;
     this.taskStatus = taskStatus;
+  }
+
+  async create(data = {}) {
+    const endpoint = "/create-task/";
+    const url = `${BASE_URL}${endpoint}`;
+    const accessToken = localStorage.getItem("access_token");
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      console.error("Error creating task:", error);
+      throw error;
+    }
   }
 
   async getTasks(params = {}) {

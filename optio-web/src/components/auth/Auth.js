@@ -1,12 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./styles/auth.css";
+import { login } from "../../utils/auth";
 
 function Auth() {
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState({
     username: "",
     password: "",
   });
-
   const [showPassword, setShowPassword] = useState(false);
 
   function handleChange(e) {
@@ -18,8 +22,19 @@ function Auth() {
     }
   }
 
-  function handleSignIn(e) {
+  async function handleSignIn(e) {
     e.preventDefault();
+    const { access_token, refresh_token } = await login(
+      userData.username,
+      userData.password
+    );
+    if (access_token) {
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+      navigate("/dashboard");
+    } else {
+      // handle error
+    }
   }
 
   return (

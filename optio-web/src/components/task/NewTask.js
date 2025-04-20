@@ -5,17 +5,30 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { InputLabel, Select, MenuItem } from "@mui/material";
 
 import "./styles/new-task.css";
 import { NewContext } from "../../contexts/NewContext";
+import { TASK_STATUS } from "../../constants";
+import Task from "../../services/task/task-service";
 
 export default function NewTask() {
+  const taskAction = new Task();
   const { openCreateTask, setOpenCreateTask } = useContext(NewContext);
-  const [name, setName] = useState("");
+
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [status, setStatus] = useState(TASK_STATUS[0]);
 
   function handleSubmit() {
+    const data = {
+      title: title,
+      description: description,
+      status: status,
+      project: 2, // this is dummy value, need to improve this part
+    };
+    taskAction.create(data);
+
     setOpenCreateTask(false);
   }
 
@@ -40,31 +53,43 @@ export default function NewTask() {
       >
         <DialogTitle className="new-task-dialog-title">Task</DialogTitle>
         <DialogContent className="new-task-dialog-content">
-          <label htmlFor="name">Title</label>
+          <label htmlFor="title">Title</label>
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             required
           />
+
           <label htmlFor="description">Description</label>
           <textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <label for="dropdown">Status</label>
-          <select id="dropdown" name="options">
-            <option value="To Do">To Do</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-          </select>
+
+          <InputLabel id="status-label">Status</InputLabel>
+          <Select
+            labelId="status-label"
+            id="status-select"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            label="Status"
+          >
+            {TASK_STATUS.map((statusOption) => {
+              return (
+                <MenuItem key={statusOption} value={statusOption}>
+                  {statusOption}
+                </MenuItem>
+              );
+            })}
+          </Select>
         </DialogContent>
 
         <DialogActions className="new-task-dialog-actions">
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Save</Button>
+          <Button onClick={handleSubmit}>Create</Button>
         </DialogActions>
       </Dialog>
     </div>
