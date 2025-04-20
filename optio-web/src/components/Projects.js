@@ -45,7 +45,6 @@ function Projects() {
           <h3 className="project-name">{project.name}</h3>
           <p className="project-description">{project.description}</p>
           <div className="project-info">
-            <span className="project-stars">⭐ Starred</span>
             <span className="project-updated">
               Modified : {convertToLocalTime(project.last_updated)}
             </span>
