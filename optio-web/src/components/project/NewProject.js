@@ -8,17 +8,24 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import "./styles/new-project.css";
 import { NewContext } from "../../contexts/NewContext";
+import ProjectAction from "../../project/action";
 
 export default function NewProject() {
+  const projectAction = new ProjectAction();
+
   const { openCreateProject, setOpenCreateProject } = useContext(NewContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  function handleSubmit() {
+  function handleCreate() {
+    projectAction.create({
+      name: name,
+      description: description,
+    });
     setOpenCreateProject(false);
   }
 
-  function handleClose() {
+  function handleCancel() {
     setOpenCreateProject(false);
   }
 
@@ -26,10 +33,10 @@ export default function NewProject() {
     <div>
       <Dialog
         open={openCreateProject}
-        onClose={handleClose}
+        onClose={handleCancel}
         PaperProps={{
           component: "form",
-          onSubmit: handleSubmit,
+          onSubmit: handleCreate,
           sx: {
             width: "1000px",
             maxWidth: "90vw",
@@ -56,8 +63,8 @@ export default function NewProject() {
         </DialogContent>
 
         <DialogActions className="new-project-dialog-actions">
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Save</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleCreate}>Create</Button>
         </DialogActions>
       </Dialog>
     </div>
