@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 
@@ -25,15 +26,24 @@ import App from "./App";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const PrivateRoute = ({ children }) => {
-  // Authentication check before component is rendered
-  const isAuthenticated = localStorage.getItem("access_token");
-  return isAuthenticated ? (
+  const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (!isAuthenticated) {
+    return <h1>moving you to login page ...</h1>
+  }
+
+  return (
     <>
       <Navbar />
       {children}
     </>
-  ) : (
-    <Navigate to="/login" />
   );
 };
 

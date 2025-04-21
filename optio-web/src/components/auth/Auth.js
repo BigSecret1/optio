@@ -24,16 +24,14 @@ function Auth() {
 
   async function handleSignIn(e) {
     e.preventDefault();
-    const { access_token, refresh_token } = await login(
+    const { accessToken, refreshToken } = await login(
       userData.username,
       userData.password
     );
-    if (access_token) {
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+    if (accessToken) {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       navigate("/dashboard");
-    } else {
-      // handle error
     }
   }
 
