@@ -6,27 +6,42 @@ import MenuItem from "@mui/material/MenuItem";
 import { deepOrange } from "@mui/material/colors";
 
 import "./styles/profile-menu.css";
+import { signOut } from "../../user/actions/signOut";
+import { useNavigate } from "react-router-dom";
 
 function ProfileMenu() {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  function handleAvatarClick(event){
-    setAnchorEl(event.currentTarget); 
-  };
+  function handleAvatarClick(event) {
+    setAnchorEl(event.currentTarget);
+  }
 
-  function handleClose(){
+  function routeToLoginPage() {
+    navigate("/login");
+  }
+
+  function handleClose(option) {
+    const optionActions = {
+      "Sign out": () => signOut(),
+    };
+    const action = optionActions[option];
+    if (action) {
+      action();
+    }
+    if (option === "Sign out") {
+      routeToLoginPage();
+    }
     setAnchorEl(null);
-  };
+  }
 
   const profileMenuOptions = [
-    "Your account",
+    "Your profile",
     "Your projects",
     "Your tasks",
-    "Sign out",
-    "Your account",
-    "Your projects",
-    "Your tasks",
+    "Change password",
     "Sign out",
   ];
 
@@ -53,11 +68,11 @@ function ProfileMenu() {
           horizontal: "right",
         }}
         PaperProps={{
-            className: 'profile-menu',
-          }}
+          className: "profile-menu",
+        }}
       >
         {profileMenuOptions.map((option) => (
-          <MenuItem key={option} onClick={handleClose}>
+          <MenuItem key={option} onClick={() => handleClose(option)}>
             {option}
           </MenuItem>
         ))}
