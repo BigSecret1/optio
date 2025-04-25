@@ -24,13 +24,15 @@ function Auth() {
 
   async function handleSignIn(e) {
     e.preventDefault();
-    const { accessToken, refreshToken } = await login(
+    const { accessToken, refreshToken, user } = await login(
       userData.username,
       userData.password
     );
+    console.log("Received user object after login ", typeof(user));
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("user", JSON.stringify(user));
       navigate("/dashboard");
     }
   }

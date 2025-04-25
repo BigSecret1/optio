@@ -30,11 +30,12 @@ export async function login(email, password) {
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log("Login successful!");
+      console.log("Login successful! with data", data);
 
       const accessToken = data.access;
       const refreshToken = data.refresh;
-      return { accessToken, refreshToken };
+      const user = data.user;
+      return { accessToken, refreshToken, user };
     } else {
       console.error(
         `Login failed: ${response.status} - ${response.statusText}`
