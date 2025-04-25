@@ -6,7 +6,7 @@ class ProjectAction {
   async create(data = {}) {
     const endpoint = "/projects/create/";
     const url = this.host + endpoint;
-    const accessToken = localStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("accessToken");
 
     try {
       const response = await fetch(url, {
@@ -32,7 +32,7 @@ class ProjectAction {
 
   async fetchAll() {
     const url = this.host + "/projects/list";
-    const accessToken = localStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("accessToken");
 
     try {
       const response = await fetch(url, {

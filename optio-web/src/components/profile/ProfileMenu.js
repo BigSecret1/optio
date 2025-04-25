@@ -8,6 +8,7 @@ import { deepOrange } from "@mui/material/colors";
 import "./styles/profile-menu.css";
 import { signOut } from "../../user/actions/signOut";
 import { useNavigate } from "react-router-dom";
+import { isAdmin } from "../../utils/user";
 
 function ProfileMenu() {
   const navigate = useNavigate();
@@ -42,8 +43,14 @@ function ProfileMenu() {
     "Your projects",
     "Your tasks",
     "Change password",
-    "Sign out",
   ];
+  let currentUser = localStorage.getItem("user");
+  const userIsAdmin = isAdmin(JSON.parse(currentUser).groups);
+  if (userIsAdmin) {
+    const optionsForAdmin = ["List users"];
+    profileMenuOptions.push(...optionsForAdmin);
+  }
+  profileMenuOptions.push("Sign Out");
 
   return (
     <div className="profile-menu-container">

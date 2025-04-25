@@ -28,7 +28,7 @@ class Task {
   async create(data = {}) {
     const endpoint = "/create-task/";
     const url = `${BASE_URL}${endpoint}`;
-    const accessToken = localStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("accessToken");
 
     try {
       const response = await fetch(url, {
@@ -60,7 +60,7 @@ class Task {
 
     const projectId = params["projectId"];
     const endpoint = `/get-tasks/?project_id=${projectId}`;
-    const accessToken = localStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("accessToken");
 
     try {
       const response = await fetch(`${BASE_URL}${endpoint}`, {
@@ -83,7 +83,7 @@ class Task {
     if (!loggedIn) {
       return;
     }
-    const accessToken = localStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("accessToken");
 
     const endpoint = `/get-task-by-id/${taskId}`;
 
@@ -117,7 +117,7 @@ class Task {
     if (!loggedIn) {
       return;
     }
-    const accessToken = localStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("accessToken");
 
     const requestBody = Object.fromEntries(
       Object.entries(params).filter(([key, value]) => value != undefined)
