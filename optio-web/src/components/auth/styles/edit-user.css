@@ -1,0 +1,34 @@
+.edit-user-wrapper Container {
+    background-color: red;
+    min-height: 100vh;
+    padding-top: 50px;
+  }
+  
+  .edit-user-paper {
+    background-color: #304971 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    color: white !important;
+  }
+  
+  .edit-user-input .MuiInputBase-root {
+    background-color: #3F5880;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  .edit-user-input .MuiInputLabel-root {
+    color: white; 
+  }
+  
+  
+  .edit-user-input .MuiInputLabel-root.Mui-focused {
+    color: white;
+  }
+  
+
+  .edit-user-input input::placeholder {
+    color: white !important;
+    opacity: 1;
+  }
+  

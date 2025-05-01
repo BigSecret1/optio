@@ -1,0 +1,135 @@
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Switch,
+  FormControlLabel,
+  Button,
+  Paper,
+  MenuItem,
+} from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
+
+import { ROLES } from "../../constants";
+import "./styles/edit-user.css";
+
+const roles = ROLES;
+
+const dummyUsers = [
+  {
+    id: 1,
+    firstName: "anyusernamewhichislong",
+    lastName: "Doe",
+    username: "johndoe",
+    isActive: true,
+    role: "Admin",
+  },
+  {
+    id: 2,
+    firstName: "Jane",
+    lastName: "Iamalonglastname",
+    username: "janesmith",
+    isActive: false,
+    role: "User",
+  },
+];
+
+function EditUser() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const selectedUser = dummyUsers.find((u) => u.id === parseInt(id));
+    if (selectedUser) {
+      setUser(selectedUser);
+    }
+  }, [id]);
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  function handleToggleActive() {
+    setUser((prev) => ({
+      ...prev,
+      isActive: !prev.isActive,
+    }));
+  }
+
+  function handleSubmit() {
+    console.log("Updated user:", user);
+    navigate("/");
+  }
+
+  if (!user) return <Typography>Loading...</Typography>;
+
+  return (
+    <Container maxWidth="sm">
+      <Paper className="edit-user-paper" sx={{ p: 4, mt: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Edit User
+        </Typography>
+
+        <TextField
+          className="edit-user-input"
+          label="First Name"
+          fullWidth
+          margin="normal"
+          name="firstName"
+          value={user.firstName}
+          onChange={handleChange}
+        />
+        <TextField
+          className="edit-user-input"
+          label="Last Name"
+          fullWidth
+          margin="normal"
+          name="lastName"
+          value={user.lastName}
+          onChange={handleChange}
+        />
+        <TextField
+          className="edit-user-input"
+          label="Username"
+          fullWidth
+          margin="normal"
+          name="username"
+          value={user.username}
+          onChange={handleChange}
+        />
+        <TextField
+          className="edit-user-input"
+          select
+          label="Role"
+          fullWidth
+          margin="normal"
+          name="role"
+          value={user.role}
+          onChange={handleChange}
+        >
+          {roles.map((role) => (
+            <MenuItem key={role} value={role}>
+              {role}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <Button
+          variant="contained"
+          sx={{ mt: 2, backgroundColor: "#3F5880" }}
+          onClick={handleSubmit}
+        >
+          Save
+        </Button>
+      </Paper>
+    </Container>
+  );
+}
+
+export default EditUser;
