@@ -15,6 +15,7 @@ import "./index.css";
 import Navbar from "./components/navbar/Navbar";
 import Dashboard from "./components/Dashboard";
 import Auth from "./components/auth/Auth";
+import ListUsers from "./components/auth/ListUsers";
 import Projects from "./components/Projects";
 import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
@@ -36,7 +37,7 @@ const PrivateRoute = ({ children }) => {
   }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) {
-    return <h1>moving you to login page ...</h1>
+    return <h1>moving you to login page ...</h1>;
   }
 
   return (
@@ -56,6 +57,15 @@ root.render(
     <Router>
       <Routes>
         <Route path="/login" element={<Auth />} />
+
+        <Route
+          path="/users/list"
+          element={
+            <PrivateRoute>
+              <ListUsers />
+            </PrivateRoute>
+          }
+        />
 
         <Route
           path="/dashboard"

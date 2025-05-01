@@ -1,0 +1,46 @@
+.MuiTableHead-root .MuiTableCell-root {
+    color: white !important;
+    border-bottom: 1px solid white !important;
+    font-size: 16px;
+}
+
+.user-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    min-height: 200%;
+    color: white !important;
+}
+
+.user-table tbody tr {
+    border-bottom: 0.01px solid white !important; 
+}
+
+.user-table tbody tr:hover {
+    background-color: #3F5880;
+}
+
+.user-table td,
+.user-table th {
+    padding: 12px;
+    text-align: left;
+    border: none;
+    color: white !important;
+}
+
+
+.icon-cell {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.icon-button svg {
+    font-size: 16px;
+    color: white;
+}
+
+.icon-button {
+    padding: 4px !important;    
+}

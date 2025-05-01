@@ -1,12 +1,12 @@
-/* Reset some default browser styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Set a default font for the entire application */
 body {
   font-family: Arial, sans-serif;
-  color: yellow; /* Global font color */
+  color: white; 
+  font-size: 16px;
 }
+

@@ -24,6 +24,10 @@ function ProfileMenu() {
     navigate("/login");
   }
 
+  function routeToListUsesrsPage() {
+    navigate("/users/list");
+  }
+
   function handleClose(option) {
     const optionActions = {
       "Sign out": () => signOut(),
@@ -34,6 +38,9 @@ function ProfileMenu() {
     }
     if (option === "Sign out") {
       routeToLoginPage();
+    }
+    if (option === "List users") {
+      routeToListUsesrsPage();
     }
     setAnchorEl(null);
   }
