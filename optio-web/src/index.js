@@ -16,6 +16,7 @@ import Navbar from "./components/navbar/Navbar";
 import Dashboard from "./components/Dashboard";
 import Auth from "./components/auth/Auth";
 import ListUsers from "./components/auth/ListUsers";
+import EditUser from "./components/auth/EditUser";
 import Projects from "./components/Projects";
 import Tasks from "./components/tasks/Tasks";
 import TaskManager from "./components/TaskManager";
@@ -63,6 +64,15 @@ root.render(
           element={
             <PrivateRoute>
               <ListUsers />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/user/edit/:id"
+          element={
+            <PrivateRoute>
+              <EditUser />
             </PrivateRoute>
           }
         />
