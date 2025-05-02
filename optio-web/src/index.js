@@ -99,7 +99,7 @@ root.render(
           path="/tasks"
           element={
             <PrivateRoute>
-              <Tasks columns={["Task", "Project", "Status"]} />
+              <Tasks />
             </PrivateRoute>
           }
         />
