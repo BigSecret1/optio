@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import "../../styles/Tasks.css";
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Task from "../../services/task/task-service";
 
-export default function ResizableLayout({ columns }) {
+import Task from "../../services/task/task-service";
+import "../../styles/Tasks.css";
+
+function Tasks() {
+  const searchOptions = ["Task", "Status", "Assignee"];
   const task = new Task();
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export default function ResizableLayout({ columns }) {
     // Since state updates in React are not immediate, passing event value directly instead of relying on the state
     const searchedTasks = await task.search({
       task: searchType === "task" ? searchTasksWith : searchByTask,
-      project: searchType === "project" ? searchTasksWith : searchByProject,
+      project: searchType === "assignee" ? searchTasksWith : searchByProject,
       status: searchType === "status" ? searchTasksWith : searchByStatus,
     });
     setTasks(searchedTasks);
@@ -49,7 +51,7 @@ export default function ResizableLayout({ columns }) {
     <div className="resizable-layout-container">
       {/* Create responsive panels with input of text type */}
       <PanelGroup direction="horizontal">
-        {columns.map((col, index) => {
+        {searchOptions.map((col, index) => {
           return (
             <React.Fragment key={index}>
               <Panel className="panel">
@@ -62,7 +64,7 @@ export default function ResizableLayout({ columns }) {
                 />
               </Panel>
 
-              {index < columns.length - 1 && (
+              {index < searchOptions.length - 1 && (
                 <PanelResizeHandle className="resize-handle inactive" />
               )}
             </React.Fragment>
@@ -88,3 +90,5 @@ export default function ResizableLayout({ columns }) {
     </div>
   );
 }
+
+export default Tasks;
