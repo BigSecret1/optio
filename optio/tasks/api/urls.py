@@ -17,7 +17,8 @@ urlpatterns = [
     path('delete-task/<int:task_id>/', DeleteTask.as_view(), name='delete-task'),
     path('create-subtask/', CreateSubTask.as_view(), name='create-subtask'),
     path(
-        '<int:parent_task_id>/get-subtask/', GetSubTasks.as_view(),
+        '<int:parent_task_id>/get-subtask/',
+        GetSubTasks.as_view(),
         name="get-subtasks"
     )
 ]

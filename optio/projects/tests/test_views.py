@@ -24,6 +24,7 @@ class TestProjectListView(BaseAPITestCase):
         response = self.client.get(self.fetch_url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("db response ", response.data)
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[0]["name"], "Project Alpha")
 
