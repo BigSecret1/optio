@@ -11,22 +11,7 @@ from optio.tasks.models import Task
 from optio.projects.models import Project
 from optio.users.models import UserProfile
 from optio.utils.exceptions import perm_required_error
-
-
-class BaseAPITestCase(APITestCase):
-    def setUp(self):
-        self.client = APIClient()
-
-        self.user = UserProfile.objects.create_user(
-            email="optiotestemail@example.com",
-            password="optio@123"
-        )
-
-        refresh: RefreshToken = RefreshToken.for_user(self.user)
-        self.token = str(refresh.access_token)
-
-    def authenticate(self):
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
+from optio.tests.base_test import BaseAPITestCase
 
 
 class TestCreateTaskView(BaseAPITestCase):

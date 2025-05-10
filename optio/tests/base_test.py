@@ -1,7 +1,9 @@
 from rest_framework.test import APITestCase, APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from optio.users.models import UserProfile
+from django.contrib.auth.models import Group
+
+from optio.users.models import UserProfile, UserGroup
 
 
 class BaseAPITestCase(APITestCase):
@@ -12,6 +14,9 @@ class BaseAPITestCase(APITestCase):
             email="optiotestemail@example.com",
             password="optio@123"
         )
+
+        self.group = Group.objects.get(name="Admin")
+        UserGroup.objects.create(user=self.user, group=self.group)
 
         refresh: RefreshToken = RefreshToken.for_user(self.user)
         self.token = str(refresh.access_token)
