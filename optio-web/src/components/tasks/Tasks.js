@@ -6,19 +6,26 @@ import { Link } from "react-router-dom";
 import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 
-function Tasks() {
+function Tasks({ projectTasks = [] }) {
   const searchOptions = ["Task", "Status", "Assignee"];
   const task = new Task();
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      const allTasks = await task.getTasks({ projectId: 2 });
+    async function fetchTasks() {
+      const allTasks = await task.getTasks();
       setTasks(allTasks);
-    };
-    fetchTasks();
-  }, []);
+    }
 
-  const [tasks, setTasks] = useState([]);
+    if (projectTasks.length) {
+      console.log(projectTasks);
+      setTasks(projectTasks);
+    } else {
+      console.log("I don't have any project", projectTasks);
+      fetchTasks();
+    }
+  }, [projectTasks]);
+
   const [searchByProject, setSearchByProject] = useState("");
   const [searchByTask, setSearchByTask] = useState("");
   const [searchByStatus, setSearchByStatus] = useState("");

@@ -44,6 +44,7 @@ function Projects() {
         <div key={index} className="project-card">
           <h3 className="project-name">{project.name}</h3>
           <p className="project-description">{project.description}</p>
+          {/* <Link to={`/projects/${project.id}`}>{project.name}</Link> */}
           <div className="project-info">
             <span className="project-updated">
               Modified : {convertToLocalTime(project.last_updated)}
