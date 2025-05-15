@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import "./Projects.css";
 import ProjectAction from "../project/action";
@@ -17,8 +18,7 @@ function Projects() {
   }, []);
 
   // Helper function to convert UTC to local time in "yy:dd:mm:H:M" format
-  const convertToLocalTime = (utcDateStr) => {
-    console.log("RECEIVED UTC TIME :", utcDateStr);
+  function convertToLocalTime(utcDateStr) {
     const utcDate = new Date(utcDateStr);
     const localDay = utcDate.getDate();
     const localMonth = utcDate.getMonth() + 1; // Months are zero-based
@@ -36,15 +36,16 @@ function Projects() {
     const localTime = `${formattedYear}-${formattedDay}-${formattedMonth}${" "}${formattedHours}:${formattedMinutes}`;
     console.log("CONVERTED TIME :", localTime);
     return localTime;
-  };
+  }
 
   return (
     <div className="projects-container">
       {projects.map((project, index) => (
         <div key={index} className="project-card">
-          <h3 className="project-name">{project.name}</h3>
+          <h3 className="project-name">
+            <Link to={`/projects/${project.id}/tasks`}>{project.name}</Link>
+          </h3>
           <p className="project-description">{project.description}</p>
-          {/* <Link to={`/projects/${project.id}`}>{project.name}</Link> */}
           <div className="project-info">
             <span className="project-updated">
               Modified : {convertToLocalTime(project.last_updated)}
