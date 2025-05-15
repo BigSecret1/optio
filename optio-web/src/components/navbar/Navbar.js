@@ -26,7 +26,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link
               className="nav-link"
-              to="/projects"
+              to="/projects/list"
               target="_blank"
               rel="noopener noreferrer"
             >

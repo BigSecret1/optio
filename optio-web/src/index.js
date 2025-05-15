@@ -19,6 +19,7 @@ import ListUsers from "./components/auth/ListUsers";
 import EditUser from "./components/auth/EditUser";
 import Projects from "./components/Projects";
 import Tasks from "./components/tasks/Tasks";
+import ProjectTasks from "./components/tasks/ProjectTasks";
 import TaskManager from "./components/TaskManager";
 import NewTask from "./components/task/NewTask";
 import Profile from "./components/profile/Profile";
@@ -87,10 +88,19 @@ root.render(
         />
 
         <Route
-          path="/projects"
+          path="/projects/list"
           element={
             <PrivateRoute>
               <Projects />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/projects/:projectId/tasks"
+          element={
+            <PrivateRoute>
+              <ProjectTasks />
             </PrivateRoute>
           }
         />
