@@ -10,6 +10,8 @@ import { signOut } from "../../user/actions/signOut";
 import { useNavigate } from "react-router-dom";
 import { isAdmin } from "../../utils/user";
 
+const SIGN_OUT = "Sign out";
+
 function ProfileMenu() {
   const navigate = useNavigate();
 
@@ -21,6 +23,7 @@ function ProfileMenu() {
   }
 
   function routeToLoginPage() {
+    console.log("Received user request to log out, routing to login page ...");
     navigate("/login");
   }
 
@@ -30,13 +33,13 @@ function ProfileMenu() {
 
   function handleClose(option) {
     const optionActions = {
-      "Sign out": () => signOut(),
+      SIGN_OUT : () => signOut(),
     };
     const action = optionActions[option];
     if (action) {
       action();
     }
-    if (option === "Sign out") {
+    if (option === SIGN_OUT) {
       routeToLoginPage();
     }
     if (option === "List users") {
@@ -57,7 +60,7 @@ function ProfileMenu() {
     const optionsForAdmin = ["List users"];
     profileMenuOptions.push(...optionsForAdmin);
   }
-  profileMenuOptions.push("Sign Out");
+  profileMenuOptions.push("Sign out");
 
   return (
     <div className="profile-menu-container">

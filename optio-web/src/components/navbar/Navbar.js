@@ -4,12 +4,17 @@ import { Link } from "react-router-dom";
 import "../Navbar.css";
 import ProfileMenu from "../profile/ProfileMenu";
 
-const Navbar = () => {
+function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
-      <a className="navbar-brand" href="#">
-        OpTio
-      </a>
+      <Link
+        className="nav-link"
+        to="/dashboard"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img className="optio-logo" src="/optio.svg" alt="Company Logo" />
+      </Link>
       <button
         className="navbar-toggler"
         type="button"
@@ -58,6 +63,6 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
+}
 
 export default Navbar;
