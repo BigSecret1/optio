@@ -67,9 +67,11 @@ def assign_permissions_to_group_on_models(
                 permission: Permission = Permission.objects.get(
                     codename=codename,
                     content_type
-                    =content_type)
+                    =content_type
+                    )
                 group.permissions.add(permission)
             except Permission.DoesNotExist:
                 raise ValueError(
                     f"Permission with codename {codename} and content type {content_type} not found."
                 )
+

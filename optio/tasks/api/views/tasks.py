@@ -17,9 +17,10 @@ from django.http import JsonResponse
 from django.contrib.auth.models import Group
 
 import logging
+logger = logging.getLogger(__name__)
+
 
 task_action_manager = TaskActionManager(TaskAPIAction())
-
 app_label = Task._meta.app_label
 
 
@@ -57,8 +58,11 @@ class GetTasks(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request) -> Response:
+        logger.info(f"Received GET /tasks request from user: {request.user}")
+
         user = UserProfile.objects.get(email=request.user)
         if not check_permission(request.user, "tasks", "Task", "view"):
+            logger.warning(f"Permission denied for user: {request.user} for view_task")
             raise PermissionDenied(perm_required_error)
 
         try:
@@ -66,7 +70,7 @@ class GetTasks(APIView):
             return Response(task_action_manager.perform_fetch_all(project_id),
                             status=status.HTTP_200_OK)
         except Exception as e:
-            logging.error("%s occured while fetching tasks ", str(e))
+            logger.error("Exception occurred while fetching tasks", exc_info=True)
             return JsonResponse({'ERROR': "Bad Request"}, status=500)
 
 

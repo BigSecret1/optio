@@ -1,4 +1,6 @@
-const base_url = "http://localhost:8000";
+import { SERVER_HOST } from "../constants";
+
+const base_url = SERVER_HOST;
 
 const login_url = `${base_url}/users/login/`;
 const logout_url = `${base_url}/users/logout/`;

@@ -10,11 +10,13 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth.models import Group
 
 import json
+import logging
 
 from optio.users.models import UserProfile, UserGroup
 from optio.users.serializers import UserSerializer
 
 ROLES = ["Admin", "Alpha", "Beta", "Gamma"]
+logger = logging.getLogger(__name__)
 
 
 class RegisterView(APIView):
@@ -74,6 +76,7 @@ class LoginView(APIView):
         email = data.get('email')
         password = data.get('password')
 
+        logger.info("[Auth] Received login request from user %s", email)
         user = authenticate(request, email=email, password=password)
 
         if user is not None:
