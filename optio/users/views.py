@@ -79,7 +79,7 @@ class LoginView(APIView):
         logger.info("[Auth] Received login request from user %s", email)
         user = authenticate(request, email=email, password=password)
 
-        if user is not None:
+        if user is not None:                                        
             refresh = RefreshToken.for_user(user)
             return Response(
                 {

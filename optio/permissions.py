@@ -18,24 +18,26 @@ class Permission:
     def has_permission(self, action: str):
         permission_codename = f"{action}_{self.model_instance.lower()}"
         logger.info(
-            f"[Permission Check] User: {self.user.email} | Action: {action} | "
-            f"Permission: {permission_codename}"
+            "[Permission Check] User: %s | Action: %s | Permission: %s",
+            self.user.email, action, permission_codename
         )
 
         # Lookup in groups the user is part of to see if they have the required permission
         for group in self.user.groups.all():
-            logger.debug(f"Checking group '{group.name}' for permissions.")
+            logger.debug("Checking assigned permission to group : %s", group.name)
 
             for permission in group.permissions.all():
-                logger.debug(f"Found permission: {permission.codename}")
+                logger.debug("Found permission: %s", permission.codename)
                 if permission.codename == permission_codename:
                     logger.info(
-                        f"[Permission Granted] User: {self.user.email} | Permission: {permission_codename}"
+                        "[Permission Granted] User: %s | Permission: %s",
+                        self.user.email, permission_codename
                     )
                     return True
 
         logger.warning(
-            f"[Permission Denied] User: {self.user.email} | Missing Permission: {permission_codename}"
+            "[Permission Denied] User: %s | Missing Permission: %s",
+            self.user.email, permission_codename
         )
         return False
 
@@ -50,7 +52,10 @@ class Permission:
 
 
 def check_permission(user: User, app_label: str, model_instance: str, action: str):
-    logger.info(f"[Permission Entry] Action: {action} | User: {user.email}")
+    logger.info(
+        "[Permission Entry] Action: %s | User: %s",
+        action, user.email
+    )
 
     permission = Permission(user, app_label, model_instance)
 
