@@ -53,15 +53,9 @@ jobs:
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
 
-      - name: Create .env file manually
+      - name: Create .env file from .env.example
         run: |
-          cat <<EOF > optio/optioconf/.env
-      DB_NAME=postgres
-      DB_USER=postgres
-      DB_PASSWORD=postgres
-      DB_HOST=localhost
-      DB_PORT=5432
-      EOF
+          cp optio/optioconf/.env.example optio/optioconf/.env
 
       - name: Run tests
         env:
