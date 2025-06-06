@@ -15,16 +15,21 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_migrate)
 def create_groups(sender, **kwargs):
-    self.stdout.write(self.style.NOTICE("Creating user groups..."))
-    if sender == "optio.users":
+    if sender.name == "optio.users":
+        logger.info(
+            """[Post Migration Signal]: Creating user groups, signal triggered from app 
+            : %s
+            """,
+            sender.name
+        )
         group_names = ["Admin", "Alpha", "Beta", "Gamma"]
 
         for group_name in group_names:
-            _, created = Group.objects.get_or_create(name=group_name)
+            group, created = Group.objects.get_or_create(name=group_name)
             if created:
-                self.stdout.write(self.style.SUCCESS(f"Created group: {name}"))
+                logger.info(f"Created group: {group_name}")
             else:
-                self.stdout.write(self.style.WARNING(f"Group already exists: {name}"))
+                logger.info(f"Group already exists: {group_name}")
 
 
 @receiver(post_migrate)

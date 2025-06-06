@@ -9,6 +9,7 @@ class ProfilesConfig(AppConfig):
 
     def ready(self):
         """Trigger signal post migration to create groups and assign permissions to groups"""
+
         from optio.users.signals import create_groups, assign_permissions_to_groups
-        post_migrate.connect(create_groups, sender=self.name)
-        post_migrate.connect(assign_permissions_to_groups, sender=self.name)
+        post_migrate.connect(create_groups, sender=self.__class__)
+        post_migrate.connect(assign_permissions_to_groups, sender=self.__class__)
