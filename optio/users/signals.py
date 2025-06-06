@@ -10,13 +10,17 @@ from optio.permissions_mapping import APPS_PERMISSIONS
 from typing import Dict, List, Iterator
 import logging
 
+logger = logging.getLogger(__name__)
+
 
 @receiver(post_migrate)
 def create_groups(sender, **kwargs):
+    logger.info("[Post Migration Signal]: Signal received to create auth groups")
     if sender == "optio.users":
         group_names = ["Admin", "Alpha", "Beta", "Gamma"]
 
         for group_name in group_names:
+            logger.debug("Creating %s group", group_name)
             Group.objects.get_or_create(name=group_name)
 
 
@@ -68,10 +72,9 @@ def assign_permissions_to_group_on_models(
                     codename=codename,
                     content_type
                     =content_type
-                    )
+                )
                 group.permissions.add(permission)
             except Permission.DoesNotExist:
                 raise ValueError(
                     f"Permission with codename {codename} and content type {content_type} not found."
                 )
-
