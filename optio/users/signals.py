@@ -21,10 +21,10 @@ def create_groups(sender, **kwargs):
 
         for group_name in group_names:
             _, created = Group.objects.get_or_create(name=group_name)
-            created:
-            self.stdout.write(self.style.SUCCESS(f"Created group: {name}"))
-        else:
-            self.stdout.write(self.style.WARNING(f"Group already exists: {name}"))
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Created group: {name}"))
+            else:
+                self.stdout.write(self.style.WARNING(f"Group already exists: {name}"))
 
 
 @receiver(post_migrate)
