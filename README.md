@@ -229,6 +229,9 @@ Then run:
 # Run Django migrations
 python manage.py migrate
 
+# Create groups and assign permissions [RBAC]
+python manage.py setup_groups
+
 # Rebuild Elasticsearch index
 python manage.py search_index --rebuild
 ```
