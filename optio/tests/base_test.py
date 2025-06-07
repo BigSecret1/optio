@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import Group
 
 from optio.users.models import UserProfile, UserGroup
+from django.core.management import call_command
 
 
 class BaseAPITestCase(APITestCase):
@@ -23,3 +24,8 @@ class BaseAPITestCase(APITestCase):
 
     def authenticate(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
+
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        call_command('setup_groups')

@@ -1,8 +1,9 @@
 import { isAuthenticated } from "../../utils/auth";
+import { SERVER_HOST } from "../../constants";
 
 // These status values are case sensitive sp Changing them can break the functionality.
 export const ALL_STATUS = ["To Do", "In Progress", "Completed"];
-const BASE_URL = "http://localhost:8000/tasks";
+const BASE_URL = SERVER_HOST + "/tasks";
 
 class Task {
   constructor(
@@ -58,7 +59,8 @@ class Task {
       return;
     }
 
-    const projectId = params["projectId"];
+    // const projectId = params["projectId"];
+    const projectId = 2; // need to remove
     const endpoint = `/get-tasks/?project_id=${projectId}`;
     const accessToken = localStorage.getItem("accessToken");
 

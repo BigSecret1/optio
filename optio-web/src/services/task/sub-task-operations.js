@@ -1,7 +1,9 @@
 import { Class } from "@mui/icons-material";
 import { isAuthenticated } from "../../utils/auth";
 
-const BASE_URL = "http://localhost:8000/tasks";
+import { SERVER_HOST } from "../../constants";
+
+const BASE_URL = SERVER_HOST + "/tasks";
 
 class SubTasksOperation {
   async getSubTasks(parentTaskId) {

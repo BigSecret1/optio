@@ -114,7 +114,7 @@ class ProjectESQuery(ESQuery):
 
     def __show_search_results(self):
         for record in self.search_results:
-            print(f"\n id : {record["id"]} | project name : {record["project_name"]}")
+            print(f"\n id : {record['id']} | project name : {record['project_name']}")
 
     def __remove_duplicate_search_results(self):
         df = pd.DataFrame(self.search_results).drop_duplicates()
