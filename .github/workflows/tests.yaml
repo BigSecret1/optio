@@ -65,5 +65,6 @@ jobs:
           cd optio/
           source ../venv/bin/activate
           python manage.py migrate
+          python manage.py setup_groups
           python manage.py test
 
