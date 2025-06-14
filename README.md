@@ -17,7 +17,8 @@ Ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (v18.19.x)
 - [Python 3.12+](https://www.python.org/)
 - [PostgreSQL](https://www.postgresql.org/)
-- [Docker & Docker Compose](https://docs.docker.com/) 
+- [Docker & Docker Compose](https://docs.docker.com/)[Optional: Needed only for docker 
+  based deployment] 
 - [Elasticsearch 8.18.x](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
 
 ---
@@ -140,7 +141,7 @@ python manage.py runserver 8000
 
 ---
 
-## You're All Set!
+### You're All Set!
 
 | Service       | URL                       |
 |---------------|---------------------------|
@@ -150,13 +151,16 @@ python manage.py runserver 8000
 
 
 
-# Optio - Docker Deployment Guide
+
+
+
+## Docker Deployment Guide
 
 This guide walks you through deploying the **Optio** project using Docker and Docker Compose. You can customize ports and configure Nginx for production as needed.
 
 ---
 
-## Project Structure
+### Project Structure
 
 ```
 optio/
@@ -168,7 +172,7 @@ optio/
 
 ---
 
-## Step 1: Create a `.env` File in the Root
+### Step 1: Create a `.env` File in the Root
 
 Create a file named `.env` in the **root** directory with the following content:
 
@@ -193,7 +197,7 @@ REACT_APP_SERVER_HOST=http://localhost:8001
 
 ---
 
-## Step 2: Build and Start the Containers
+### Step 2: Build and Start the Containers
 
 From the root directory, run:
 
@@ -204,7 +208,7 @@ docker-compose up -d
 
 ---
 
-## Step 3: Access the Services
+### Step 3: Access the Services
 
 | Service       | URL / Port            |
 |---------------|------------------------|
@@ -215,7 +219,7 @@ docker-compose up -d
 
 ---
 
-## Step 4: Backend Setup (Migrations & Elasticsearch)
+### Step 4: Backend Setup (Migrations & Elasticsearch)
 
 Access the backend container:
 

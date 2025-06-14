@@ -13,27 +13,11 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { ROLES } from "../../constants";
 import "./styles/edit-user.css";
+import { User } from "../../user/index";
+
+const userAction = new User();
 
 const roles = ROLES;
-
-const dummyUsers = [
-  {
-    id: 1,
-    firstName: "anyusernamewhichislong",
-    lastName: "Doe",
-    username: "johndoe",
-    isActive: true,
-    role: "Admin",
-  },
-  {
-    id: 2,
-    firstName: "Jane",
-    lastName: "Iamalonglastname",
-    username: "janesmith",
-    isActive: false,
-    role: "User",
-  },
-];
 
 function EditUser() {
   const { id } = useParams();
@@ -41,11 +25,13 @@ function EditUser() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const selectedUser = dummyUsers.find((u) => u.id === parseInt(id));
-    if (selectedUser) {
-      setUser(selectedUser);
+    async function fetchUser() {
+      const userDetail = await userAction.listUsers(id);
+      setUser(userDetail);
     }
-  }, [id]);
+
+    fetchUser();
+  }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -55,16 +41,19 @@ function EditUser() {
     }));
   }
 
-  function handleToggleActive() {
-    setUser((prev) => ({
-      ...prev,
-      isActive: !prev.isActive,
-    }));
-  }
-
-  function handleSubmit() {
-    console.log("Updated user:", user);
-    navigate("/");
+  async function handleSave() {
+    try {
+      const groups = [user.groups];
+      await userAction.updateUser(
+        user.id,
+        user.firstName,
+        user.lastName,
+        groups
+      );
+      navigate("/users/list");
+    } catch (err) {
+      console.error("Update failed:", err);
+    }
   }
 
   if (!user) return <Typography>Loading...</Typography>;
@@ -99,8 +88,8 @@ function EditUser() {
           label="Username"
           fullWidth
           margin="normal"
-          name="username"
-          value={user.username}
+          name="email"
+          value={user.email}
           onChange={handleChange}
         />
         <TextField
@@ -109,8 +98,8 @@ function EditUser() {
           label="Role"
           fullWidth
           margin="normal"
-          name="role"
-          value={user.role}
+          name="groups"
+          value={user.groups}
           onChange={handleChange}
         >
           {roles.map((role) => (
@@ -123,7 +112,7 @@ function EditUser() {
         <Button
           variant="contained"
           sx={{ mt: 2, backgroundColor: "#3F5880" }}
-          onClick={handleSubmit}
+          onClick={handleSave}
         >
           Save
         </Button>

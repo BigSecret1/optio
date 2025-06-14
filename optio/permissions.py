@@ -15,6 +15,18 @@ class Permission:
         self.app_label = app_label
         self.model_instance = model_instance
 
+    def has_view_permission(self):
+        return self.has_permission("view")
+
+    def has_delete_permission(self):
+        return self.has_permission("delete")
+
+    def has_create_permission(self):
+        return self.has_permission("add")
+
+    def has_change_permission(self):
+        return self.has_permission("change")
+
     def has_permission(self, action: str):
         permission_codename = f"{action}_{self.model_instance.lower()}"
         logger.info(
@@ -41,15 +53,6 @@ class Permission:
         )
         return False
 
-    def has_view_permission(self):
-        return self.has_permission("view")
-
-    def has_delete_permission(self):
-        return self.has_permission("delete")
-
-    def has_create_permission(self):
-        return self.has_permission("add")
-
 
 def check_permission(user: User, app_label: str, model_instance: str, action: str):
     logger.info(
@@ -65,6 +68,8 @@ def check_permission(user: User, app_label: str, model_instance: str, action: st
         return permission.has_delete_permission()
     elif action == "view":
         return permission.has_view_permission()
+    elif action == "edit":
+        return permission.has_change_permission()
     else:
         logger.error(f"[Invalid Action] Action: {action} is not recognized.")
         return False

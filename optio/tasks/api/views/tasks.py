@@ -30,7 +30,7 @@ class CreateTask(APIView):
 
     def post(self, request: Request) -> Response:
         logging.info("Received request to create task")
-        user = UserProfile.objects.get(email=request.user)
+        user = UserProfile.objects.get(email=request.user.email)
         if not check_permission(request.user, "tasks", "Task", "create"):
             raise PermissionDenied(perm_required_error)
 
@@ -60,7 +60,7 @@ class GetTasks(APIView):
     def get(self, request: Request) -> Response:
         logger.info(f"Received GET /tasks request from user: {request.user}")
 
-        user = UserProfile.objects.get(email=request.user)
+        user = UserProfile.objects.get(email=request.user.email)
         if not check_permission(request.user, "tasks", "Task", "view"):
             logger.warning(f"Permission denied for user: {request.user} for view_task")
             raise PermissionDenied(perm_required_error)
@@ -79,7 +79,7 @@ class GetTaskById(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, task_id: int) -> Response:
-        user = UserProfile.objects.get(email=request.user)
+        user = UserProfile.objects.get(email=request.user.email)
         if not check_permission(request.user, "tasks", "Task", "view"):
             raise PermissionDenied(perm_required_error)
 
@@ -103,7 +103,7 @@ class UpdateTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request: Request, task_id: int) -> Response:
-        user = UserProfile.objects.get(email=request.user)
+        user = UserProfile.objects.get(email=request.user.email)
         if not check_permission(request.user, "tasks", "Task", "change"):
             raise PermissionDenied(perm_required_error)
 
@@ -120,7 +120,7 @@ class DeleteTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request: Request, task_id: int) -> Response:
-        user = UserProfile.objects.get(email=request.user)
+        user = UserProfile.objects.get(email=request.user.email)
         groups = Group.objects.filter(usergroup__user=user)
 
         logging.info("User is part of the groups")

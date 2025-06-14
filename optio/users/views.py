@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import NotFound, PermissionDenied
 
 from django.contrib.auth.models import Group
 
@@ -14,9 +15,14 @@ import logging
 
 from optio.users.models import UserProfile, UserGroup
 from optio.users.serializers import UserSerializer
+from optio.permissions import check_permission
+from optio.utils.exceptions import perm_required_error
+from optio.users.actions.user import User
 
 ROLES = ["Admin", "Alpha", "Beta", "Gamma"]
 logger = logging.getLogger(__name__)
+
+user_action = User()
 
 
 class RegisterView(APIView):
@@ -79,7 +85,7 @@ class LoginView(APIView):
         logger.info("[Auth] Received login request from user %s", email)
         user = authenticate(request, email=email, password=password)
 
-        if user is not None:                                        
+        if user is not None:
             refresh = RefreshToken.for_user(user)
             return Response(
                 {
@@ -123,5 +129,77 @@ class LogoutView(APIView):
         except Exception as e:
             return Response(
                 {"msg": "Unexpected error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class ListUsers(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, id=None):
+        user = UserProfile.objects.get(email=request.user.email)
+
+        if not check_permission(user, "users", "UserProfile", "view"):
+            raise PermissionDenied(perm_required_error)
+
+        try:
+            if id:
+                return Response(user_action.fetch(id), status=status.HTTP_200_OK)
+
+            return Response(
+                user_action.fetch_all(),
+                status=status.HTTP_200_OK
+            )
+
+        except Exception as e:
+            logger.error("Failed to fetch user(s): %s", str(e))
+            return Response(
+                {"msg": "Unexpected error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class EditUser(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, id):
+        user = UserProfile.objects.get(email=request.user.email)
+
+        if not check_permission(user, "users", "UserProfile", "edit"):
+            raise PermissionDenied(perm_required_error)
+
+        try:
+            return Response(
+                user_action.update(id, request.data),
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error("Failed with an error %s", str(e))
+            return Response(
+                {"detail": "Internal server error"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class DeleteUser(APIView):
+    def delete(self, request, id):
+        user = UserProfile.objects.get(email=request.user.email)
+
+        if not check_permission(user, "users", "UserProfile", "delete"):
+            raise PermissionDenied(perm_required_error)
+
+        try:
+            result = user_action.delete(id)
+            return Response(result, status=status.HTTP_200_OK)
+        except NotFound as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception:
+            return Response(
+                {"detail": "Internal server error"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
