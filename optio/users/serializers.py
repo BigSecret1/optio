@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from optio.users.models import UserProfile
-from django.contrib.auth.models import Group
+
+ALLOWED_GROUPS = ["Admin", "Alpha", "Beta", "Gamma"]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+
         model = UserProfile
         fields = [
             'id',
@@ -21,3 +23,11 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active',
             'groups'
         ]
+
+    def validate_groups(self, value):
+        invalid = [group for group in value if group not in ALLOWED_GROUPS]
+        if invalid:
+            raise serializers.ValidationError(
+                f"Invalid group(s): {', '.join(invalid)}. Allowed groups are: {', '.join(ALLOWED_GROUPS)}"
+            )
+        return value

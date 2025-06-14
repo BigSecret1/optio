@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   Table,
   TableBody,
@@ -15,33 +17,35 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import "./styles/list-users.css";
+import { User } from "../../user/index";
 
-const users = [
-  {
-    id: 1,
-    firstName: "anyusernamewhichislong",
-    lastName: "Doe",
-    username: "johndoe",
-    isActive: true,
-    role: "Admin",
-  },
-  {
-    id: 2,
-    firstName: "Jane",
-    lastName: "Iamalonglastname",
-    username: "janesmith",
-    isActive: false,
-    role: "User",
-  },
-];
+const userAction = new User();
 
 function ListUsers() {
+  const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
+
   function handleEdit(id) {
-    console.log("Edit user with id:", id);
+    navigate(`/user/edit/${id}`);
   }
 
-  function handleDelete(id) {
-    console.log("Delete user with id:", id);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  async function handleDelete(id) {
+    try {
+      await userAction.deleteUser(id);
+      await fetchUsers();
+    } catch (error) {
+      console.error("Deletion failed", error);
+    }
+  }
+
+  async function fetchUsers() {
+    console.log("Calling list users method ");
+    const usersList = await userAction.listUsers();
+    setUsers(usersList);
   }
 
   return (
@@ -91,9 +95,9 @@ function ListUsers() {
 
                 <TableCell>{user.firstName}</TableCell>
                 <TableCell>{user.lastName}</TableCell>
-                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.email}</TableCell>
                 <TableCell>{user.isActive ? "Yes" : "No"}</TableCell>
-                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.groups}</TableCell>
               </TableRow>
             ))}
           </TableBody>
