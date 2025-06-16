@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -48,10 +48,17 @@ function ListUsers() {
     setUsers(usersList);
   }
 
+  function handleCreateUser() {
+    navigate("/users/create");
+  }
+
   return (
     <>
-      <Button sx={{ backgroundColor: "#304971", color: "white" }}>
-        ADD USER
+      <Button
+        sx={{ backgroundColor: "#304971", color: "white" }}
+        onClick={handleCreateUser}
+      >
+        CREATE USER
       </Button>
       <TableContainer
         component={Paper}
