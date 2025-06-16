@@ -7,6 +7,36 @@ export class User {
     this.baseUrl = SERVER_HOST;
   }
 
+  async createUser(userData) {
+    const url = this.baseUrl + "/users/register/";
+    console.log("Sending user data to create a new user", userData)
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Failed to create user: ${errorData.detail || response.status}`
+        );
+      }
+
+      const result = await response.json();
+      console.log("User created successfully:", result);
+      return result;
+    } catch (error) {
+      console.error("Error creating user:", error.message);
+      throw error;
+    }
+  }
+
   async listUsers(id = null) {
     const endPoint = id ? `/users/list/${id}` : "/users/list/";
     const url = this.baseUrl + endPoint;

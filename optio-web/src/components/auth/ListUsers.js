@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -51,7 +51,7 @@ function ListUsers() {
   return (
     <>
       <Button sx={{ backgroundColor: "#304971", color: "white" }}>
-        ADD USER
+        CREATE USER
       </Button>
       <TableContainer
         component={Paper}
