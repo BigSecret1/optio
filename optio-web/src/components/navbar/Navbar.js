@@ -49,14 +49,14 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <a
+            <Link
               className="nav-link"
-              href="http://your-performance-metrics-url.com"
+              to="/quicknote"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Quick notes
-            </a>
+              Quick notest
+            </Link>
           </li>
         </ul>
         <ProfileMenu />
