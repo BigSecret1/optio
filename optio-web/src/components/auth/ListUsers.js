@@ -65,7 +65,7 @@ function ListUsers() {
         sx={{ mt: 4, backgroundColor: "#304971", color: "white" }}
       >
         <Typography variant="h6" sx={{ p: 2 }}>
-          List Users
+          Users
         </Typography>
         <Table className="user-table">
           <TableHead>

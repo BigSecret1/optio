@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -7,52 +7,31 @@ import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 
 function Tasks({ projectTasks = [] }) {
+  console.log("Received project from ProjecTasks component ", projectTasks);
   const searchOptions = ["Task", "Status", "Assignee"];
   const task = new Task();
   const [tasks, setTasks] = useState([]);
+  const hasSetProjectTasks = useRef(false);
 
   useEffect(() => {
     async function fetchTasks() {
       const allTasks = await task.getTasks();
+      console.log("Calling if no tasks received from parent");
       setTasks(allTasks);
     }
+    console.log(projectTasks.length);
 
-    if (projectTasks.length) {
-      console.log(projectTasks);
+    if (projectTasks.length && !hasSetProjectTasks.current) {
+      console.log("Setting received projectTasks to task state");
       setTasks(projectTasks);
-    } else {
+      hasSetProjectTasks.current = true;
+    } else if (!hasSetProjectTasks.current && projectTasks.length == 0) {
       console.log("I don't have any project", projectTasks);
       fetchTasks();
     }
-  }, [projectTasks]);
+  }, []);
 
-  const [searchByProject, setSearchByProject] = useState("");
-  const [searchByTask, setSearchByTask] = useState("");
-  const [searchByStatus, setSearchByStatus] = useState("");
-
-  const handleSearch = async (event) => {
-    const searchType = String(event.target.name).toLowerCase();
-    const searchTasksWith = String(event.target.value).toLowerCase();
-
-    const searchHandlers = {
-      project: setSearchByProject,
-      task: setSearchByTask,
-      status: setSearchByStatus,
-    };
-
-    const searchHandler = searchHandlers[searchType];
-    if (searchHandler) {
-      searchHandler(searchTasksWith);
-    }
-
-    // Since state updates in React are not immediate, passing event value directly instead of relying on the state
-    const searchedTasks = await task.search({
-      task: searchType === "task" ? searchTasksWith : searchByTask,
-      project: searchType === "assignee" ? searchTasksWith : searchByProject,
-      status: searchType === "status" ? searchTasksWith : searchByStatus,
-    });
-    setTasks(searchedTasks);
-  };
+  async function handleSearch(event) {}
 
   return (
     <div className="resizable-layout-container">

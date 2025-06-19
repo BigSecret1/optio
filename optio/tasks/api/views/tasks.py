@@ -17,11 +17,11 @@ from django.http import JsonResponse
 from django.contrib.auth.models import Group
 
 import logging
+
 logger = logging.getLogger(__name__)
 
-
 task_action_manager = TaskActionManager(TaskAPIAction())
-app_label = Task._meta.app_label
+app_label = "tasks"
 
 
 class CreateTask(APIView):
@@ -53,11 +53,29 @@ class CreateTask(APIView):
             )
 
 
+class GetUserProjectTasks(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not user_has_permission("view", request.user.email):
+            raise PermissionDenied(perm_required_error)
+
+        try:
+            return Response(
+                task_action_manager.perform_fetch_user_tasks(request.user.id),
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            logger.error("Error occured while pulling as task", e);
+            return Response({}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class GetTasks(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request: Request) -> Response:
+    def get(self, request: Request, project_id) -> Response:
         logger.info(f"Received GET /tasks request from user: {request.user}")
 
         user = UserProfile.objects.get(email=request.user.email)
@@ -66,7 +84,7 @@ class GetTasks(APIView):
             raise PermissionDenied(perm_required_error)
 
         try:
-            project_id = request.GET.get("project_id")
+            # project_id = request.GET.get("project_id")
             return Response(task_action_manager.perform_fetch_all(project_id),
                             status=status.HTTP_200_OK)
         except Exception as e:
@@ -141,3 +159,9 @@ class DeleteTask(APIView):
             logging.error("Error deleting task: %s", e)
             return Response({"error": "Failed to delete the task"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def user_has_permission(action, email):
+    user = UserProfile.objects.get(email=email)
+
+    return check_permission(user, app_label, "Task", "view");

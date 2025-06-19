@@ -74,3 +74,13 @@ class TaskAPIAction(APIAction):
             raise NotFound(detail=f"Task with ID {task_id} does not exist.")
         except Exception as e:
             raise
+
+    def fetch_user_projects_tasks(self, user_id):
+        try:
+            tasks = Task.objects.filter(project__userproject__user_id=user_id)
+            serializer = TaskSerializer(instance=tasks, many=True)
+            return serializer.data
+        except Exception as e:
+            raise Exception(f"Exception {e}")
+
+

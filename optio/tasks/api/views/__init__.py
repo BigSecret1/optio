@@ -4,6 +4,7 @@ from optio.tasks.api.views.tasks import (
     UpdateTask,
     DeleteTask,
     GetTasks,
+    GetUserProjectTasks
 )
 
 from optio.tasks.api.views.subtasks import (
@@ -17,5 +18,6 @@ __all__ = [
     "UpdateTask",
     "DeleteTask",
     "GetTasks",
-    "CreateSubTask"
+    "CreateSubTask",
+    "GetUserProjectTasks"
 ]

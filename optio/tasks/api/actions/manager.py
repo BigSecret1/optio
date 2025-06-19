@@ -28,3 +28,6 @@ class TaskActionManager:
 
     def perform_delete(self, task_id: int):
         return self.strategy.delete(task_id)
+
+    def perform_fetch_user_tasks(self, user_id : int):
+        return self.strategy.fetch_user_projects_tasks(user_id)
