@@ -76,7 +76,6 @@ class Task {
         throw new Error(`Failed to get tassk under project`);
         return;
       }
-      console.log("Fetched tasks are ", tasks);
       return tasks;
     } catch (err) {
       console.error("Failed to fetch tasks ", err);

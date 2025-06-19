@@ -7,7 +7,6 @@ import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 
 function Tasks({ projectTasks = [] }) {
-  console.log("Received project from ProjecTasks component ", projectTasks);
   const searchOptions = ["Task", "Status", "Assignee"];
   const task = new Task();
   const [tasks, setTasks] = useState([]);
@@ -16,17 +15,13 @@ function Tasks({ projectTasks = [] }) {
   useEffect(() => {
     async function fetchTasks() {
       const allTasks = await task.getTasks();
-      console.log("Calling if no tasks received from parent");
       setTasks(allTasks);
     }
-    console.log(projectTasks.length);
 
     if (projectTasks.length && !hasSetProjectTasks.current) {
-      console.log("Setting received projectTasks to task state");
       setTasks(projectTasks);
       hasSetProjectTasks.current = true;
-    } else if (!hasSetProjectTasks.current && projectTasks.length == 0) {
-      console.log("I don't have any project", projectTasks);
+    } else if (projectTasks.length == 0 && !hasSetProjectTasks.current) {
       fetchTasks();
     }
   }, []);
