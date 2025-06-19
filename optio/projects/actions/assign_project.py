@@ -10,6 +10,8 @@ def assign_project_to_admin(project):
     for user in users_with_admin_role:
         assign_project(user, project)
 
+def revoke_user_project_access():
+    pass
 
 def assign_project_to_normal_user(user, project):
     assign_project(user, project)

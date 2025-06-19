@@ -17,3 +17,7 @@ class APIAction(ABC):
 
     def delete(self, task_id: int):
         pass
+
+    def fetch_user_projects_tasks(self):
+        pass
+

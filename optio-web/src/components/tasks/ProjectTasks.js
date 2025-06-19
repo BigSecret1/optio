@@ -18,7 +18,7 @@ function ProjectTasks() {
     if (projectId) {
       fetchTasks();
     }
-  }, [projectId]);
+  }, []);
 
   return (
     <>
