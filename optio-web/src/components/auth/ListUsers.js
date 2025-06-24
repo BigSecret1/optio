@@ -19,9 +19,8 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./styles/list-users.css";
 import { User } from "../../user/index";
 
-const userAction = new User();
-
 function ListUsers() {
+  const userAction = new User();
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 

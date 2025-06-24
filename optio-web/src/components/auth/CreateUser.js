@@ -14,9 +14,8 @@ import {
 import { ROLES as roles } from "../../constants";
 import { User } from "../../user/index";
 
-const userAction = new User();
-
 function CreateUser() {
+  const userAction = new User();
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",

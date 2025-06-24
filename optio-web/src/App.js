@@ -22,27 +22,18 @@ import CreateUser from "./components/auth/CreateUser";
 import { NewProvider } from "./contexts/NewContext";
 
 // PrivateRoute wrapper
-const PrivateRoute = ({ children }) => {
-  const navigate = useNavigate();
+function PrivateRoute({ children }) {
   const isAuthenticated = localStorage.getItem("accessToken");
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, navigate]);
-
   if (!isAuthenticated) {
-    return <h1>Moving you to login page...</h1>;
+    return <Navigate to="/login" replace />;
   }
-
   return (
     <>
       <Navbar />
       {children}
     </>
   );
-};
+}
 
 function App() {
   return (
