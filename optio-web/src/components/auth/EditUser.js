@@ -15,11 +15,10 @@ import { ROLES } from "../../constants";
 import "./styles/edit-user.css";
 import { User } from "../../user/index";
 
-const userAction = new User();
-
 const roles = ROLES;
 
 function EditUser() {
+  const userAction = new User();
   const { id } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);

@@ -9,7 +9,7 @@ export class User {
 
   async createUser(userData) {
     const url = this.baseUrl + "/users/register/";
-    console.log("Sending user data to create a new user", userData)
+    console.log("Sending user data to create a new user", userData);
 
     try {
       const response = await fetch(url, {
@@ -119,3 +119,4 @@ export class User {
     }
   }
 }
+
