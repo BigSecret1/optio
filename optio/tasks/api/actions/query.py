@@ -1,12 +1,10 @@
-from optio.common.es_query import ESQuery
-
-from rest_framework.request import Request
-
-from typing import Dict, List, Optional
 import logging
 import pandas as pd
-
 from elasticsearch_dsl import Search, Q
+
+from optio.common.es_query import ESQuery
+
+logger = logging.getLogger(__name__)
 
 
 class TaskESQuery(ESQuery):
@@ -14,104 +12,66 @@ class TaskESQuery(ESQuery):
     search = Search(index=index_to_search)
 
     def __init__(self):
-        self.search_text: str = ""
-        self.search_results: List[Dict] = []
+        self.query_text = ""
+        self.search_results = []
 
-    def execute(self, query_data: Request) -> Optional[List[Dict]]:
-        if "title" in query_data:
-            self.search_text = query_data["title"]
-        else:
-            return {"error_message": "Field title is required"}
+    def execute(self, text):
+        if text is None:
+            raise Exception("Please provide a text to search")
 
-        try:
-            logging.info("Starting search operation for task title input : '%s' ",
-                         self.search_text)
-            self.exact_match()
-            self.prefix_match()
-            self.substring_match()
-            self.fuzzy_match()
+        self.query_text = text
 
-            self.__remove_duplicate_search_results()
-            self.__show_search_results()
+        self.exact_match()
+        self.prefix_match()
+        self.substring_match()
+        self.fuzzy_match()
 
-            return self.search_results
-        except Exception as e:
-            logging.error("Exception occured while searching task title : %s", str(e))
+        self.__remove_duplicate_search_results()
+        self.__show_search_results()
+        return self.search_results
 
     def exact_match(self):
-        query = Q(
-            "match_phrase",
-            title=self.search_text
-        )
-
-        """
-        To avoid fetching partial results (for e.g. 1000 or even 10) as the elastic 
-        search dsl docs says
-        """
-        TaskESQuery.search.extra(track_total_hits=False)
-
-        matched_results = TaskESQuery.search.query(query).execute()
+        q = Q('term', **{'title.raw': self.query_text})
+        matched_results = self._execute_query(q)
         self.__add_to_search_results(matched_results)
 
     def prefix_match(self):
-        search = TaskESQuery.search.suggest('title-suggestion', self.search_text,
-                                            completion={"field": 'title_suggest'})
-
-        matched_result = search.execute().to_dict()
-
-        """Query not returning results in hit field so using custom adding logic"""
-        if 'suggest' in matched_result:
-            for suggestion in matched_result["suggest"]["title-suggestion"]:
-                for option in suggestion["options"]:
-                    record = {}
-                    record["id"] = option["_id"]
-                    record["title"] = option["_source"]["title"]
-                    self.search_results.append(record)
-        else:
-            logging.info("No suggestions found.")
-
-    """
-    Elastic search Wild card search query is a good option to start with for 
-    substring march but increase in performance issue would indicate to introduce a good appraoch
-    """
+        q = Q('match_phrase_prefix', **{'title.prefix': self.query_text})
+        matched_results = self._execute_query(q)
+        self.__add_to_search_results(matched_results)
 
     def substring_match(self):
-        search_patterns = [
-            f"*{self.search_text}",
-            f"{self.search_text}*",
-            f"*{self.search_text}*"
-        ]
-
-        for pattern in search_patterns:
-            query = Q("wildcard", title={"value": pattern, "case_insensitive": True})
-            search = TaskESQuery.search.query(query)
-
-            matched_results = search.execute()
-            self.__add_to_search_results(matched_results)
+        q = Q('match', title=self.query_text)
+        matched_results = self._execute_query(q)
+        self.__add_to_search_results(matched_results)
 
     def fuzzy_match(self):
-        query = Q(
-            "fuzzy",
-            title={
-                "value": self.search_text,
-                "fuzziness": "2"
-            }
-        )
-        search = TaskESQuery.search.query(query)
-        matched_results = search.source(["title"]).execute()
+        q = Q('fuzzy', title={"value": self.query_text, "fuzziness": "AUTO"})
+        matched_results = self._execute_query(q)
         self.__add_to_search_results(matched_results)
 
     def __add_to_search_results(self, results):
-        for hit in results:
-            record = {}
-            record["id"] = hit.meta.id
-            record["title"] = hit.title
-            self.search_results.append(record)
+        self.search_results.extend(results)
 
     def __show_search_results(self):
         for record in self.search_results:
-            print(f"\n id : {record['id']} | task title : {record['title']}")
+            print(
+                f"\n id : {record['id']} | task title : {record.get('title') or record.get('name')}")
 
     def __remove_duplicate_search_results(self):
         df = pd.DataFrame(self.search_results).drop_duplicates()
         self.search_results = df.where(pd.notna(df), None).to_dict(orient="records")
+
+    def _execute_query(self, query):
+        try:
+            s = TaskESQuery.search.query(query)
+            response = s.execute()
+            results = []
+            for hit in response:
+                results.append({
+                    'id': hit.id,
+                    'name': hit.title
+                })
+            return results
+        except Exception as e:
+            logger.error("Elastic search query failed with exception %s", str(e))

@@ -18,8 +18,12 @@ autocomplete_analyzer = analyzer('autocomplete_analyzer',
 
 @registry.register_document
 class ProjectDocument(Document):
-    project_name = fields.TextField(required=True, analyzer=autocomplete_analyzer)
-    project_name_suggest = fields.CompletionField()
+    project_name = fields.TextField(
+        required=True,
+        analyzer=autocomplete_analyzer,
+        search_analyzer=autocomplete_analyzer
+    )
+    # project_name_suggest = fields.CompletionField()
 
     class Index:
         name = "projects_index"
@@ -33,16 +37,16 @@ class ProjectDocument(Document):
         model = Project
         fields = ["id"]
 
-    def prepare_project_name_suggest(self, instance):
-        """
-        Generate the data for the `title_suggest` field, may be need to remove in
-        future. Not needed
-        """
-        logging.info(f"Generating project name suggestions for: {instance.name}")
-        return {
-            "input": instance.name.split() if instance.name else [],
-            "weight": 1,
-        }
+    # def prepare_project_name_suggest(self, instance):
+    #     """
+    #     Generate the data for the `title_suggest` field, may be need to remove in
+    #     future. Not needed
+    #     """
+    #     logging.info(f"Generating project name suggestions for: {instance.name}")
+    #     return {
+    #         "input": instance.name.split() if instance.name else [],
+    #         "weight": 1,
+    #     }
 
     def prepare_project_name(self, instance):
         return instance.name
