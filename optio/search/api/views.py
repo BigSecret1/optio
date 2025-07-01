@@ -19,9 +19,7 @@ class SearchTaskAPIView(APIView):
         task_es_query = TaskESQuery()
         try:
             title = request.data.get("title")
-            print("got title ", title)
-
-            search_results = task_es_query.execute(title)
+            search_results = task_es_query.find(title)
             return Response(search_results, status=status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))
@@ -46,7 +44,3 @@ class SearchProjectAPIView(APIView):
                 {"msg": "Internal server error"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
-class SearchAssigneeAPIView(APIView):
-    pass

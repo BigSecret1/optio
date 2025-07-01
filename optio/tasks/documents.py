@@ -4,7 +4,6 @@ from elasticsearch_dsl import analyzer, tokenizer
 
 from optio.tasks.models import Task
 
-# Prefix analyzer (edge_ngram)
 prefix_analyzer = analyzer(
     'prefix_analyzer',
     tokenizer=tokenizer(
@@ -16,7 +15,6 @@ prefix_analyzer = analyzer(
     filter=['lowercase']
 )
 
-# Substring analyzer (ngram)
 substring_analyzer = analyzer(
     'substring_analyzer',
     tokenizer=tokenizer(

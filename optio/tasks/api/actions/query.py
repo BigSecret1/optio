@@ -15,19 +15,17 @@ class TaskESQuery(ESQuery):
         self.query_text = ""
         self.search_results = []
 
-    def execute(self, text):
+    def find(self, text):
         if text is None:
             raise Exception("Please provide a text to search")
-
         self.query_text = text
 
         self.exact_match()
         self.prefix_match()
         self.substring_match()
         self.fuzzy_match()
-
         self.__remove_duplicate_search_results()
-        self.__show_search_results()
+
         return self.search_results
 
     def exact_match(self):
@@ -52,11 +50,6 @@ class TaskESQuery(ESQuery):
 
     def __add_to_search_results(self, results):
         self.search_results.extend(results)
-
-    def __show_search_results(self):
-        for record in self.search_results:
-            print(
-                f"\n id : {record['id']} | task title : {record.get('title') or record.get('name')}")
 
     def __remove_duplicate_search_results(self):
         df = pd.DataFrame(self.search_results).drop_duplicates()
