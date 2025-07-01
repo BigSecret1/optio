@@ -3,47 +3,57 @@ from django_elasticsearch_dsl.registries import registry
 from elasticsearch_dsl import analyzer, tokenizer
 
 from optio.tasks.models import Task
-import logging
 
+prefix_analyzer = analyzer(
+    'prefix_analyzer',
+    tokenizer=tokenizer(
+        'edge_ngram_tokenizer',
+        'edge_ngram',
+        min_gram=1,
+        max_gram=20,
+    ),
+    filter=['lowercase']
+)
 
-"""
-Custom analyzer : Generates subsrings and tokenize them for faster search
-Also it has filtering mechanism which makes it case insensitive(filter=lowercase)
-"""
-autocomplete_analyzer = analyzer('autocomplete_analyzer',
-                                 tokenizer=tokenizer('trigram', 'ngram', min_gram=1,
-                                                     max_gram=6),
-                                 filter=['lowercase']
-                                 )
+substring_analyzer = analyzer(
+    'substring_analyzer',
+    tokenizer=tokenizer(
+        'ngram_tokenizer',
+        'ngram',
+        min_gram=2,
+        max_gram=20,
+    ),
+    filter=['lowercase']
+)
 
 
 @registry.register_document
 class TaskDocument(Document):
-    title = fields.TextField(required=True, analyzer=autocomplete_analyzer)
-    title_suggest = fields.CompletionField()
+    title = fields.TextField(
+        analyzer=substring_analyzer,
+        search_analyzer=substring_analyzer,
+        fields={
+            # For autocomplete
+            'prefix': fields.TextField(
+                analyzer=prefix_analyzer,
+                search_analyzer=prefix_analyzer,
+            ),
+            # For exact match
+            'raw': fields.KeywordField(),
+        }
+    )
 
     class Index:
-        name = "tasks_index"
-
-        settings = {'number_of_shards': 1,
-                    'number_of_replicas': 0,
-                    'max_ngram_diff': 5
-                    }
+        name = 'tasks_index'
+        settings = {
+            'number_of_shards': 1,
+            'number_of_replicas': 0,
+            'max_ngram_diff': 18,
+        }
 
     class Django:
         model = Task
-        fields = ["id", "status"]
-
-    def prepare_title_suggest(self, instance):
-        """
-        Generate the data for the `title_suggest` field, may be need to remove in
-        future. Not needed
-        """
-        logging.info(f"Generating title suggestions for: {instance.title}")
-        return {
-            "input": instance.title.split() if instance.title else [],
-            "weight": 1,
-        }
-
-    def prepare_title(self, instance):
-        return instance.title
+        fields = [
+            'id',
+            'status'
+        ]

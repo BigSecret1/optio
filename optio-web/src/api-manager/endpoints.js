@@ -1,0 +1,8 @@
+import { SERVER_HOST } from "../constants";
+
+export const BASE_URL = SERVER_HOST;
+const ENDPOINTS = {
+  SEARCH_TASK: "/search/task-title/",
+};
+
+export default ENDPOINTS;

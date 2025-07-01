@@ -10,17 +10,16 @@ import logging
 from optio.tasks.api.actions.query import TaskESQuery
 from optio.projects.query import ProjectESQuery
 
-task_es_query = TaskESQuery()
-project_es_query = ProjectESQuery()
-
 
 class SearchTaskAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
+        task_es_query = TaskESQuery()
         try:
-            search_results = task_es_query.execute(request.data)
+            title = request.data.get("title")
+            search_results = task_es_query.find(title)
             return Response(search_results, status=status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))
@@ -36,7 +35,8 @@ class SearchProjectAPIView(APIView):
 
     def post(self, request: Request) -> Response:
         try:
-            search_results = project_es_query.execute(request.data)
+            project_es_query = ProjectESQuery()
+            search_results = SearchProjectAPIView.project_es_query.execute(request.data)
             return Response(search_results, status=status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))
@@ -44,7 +44,3 @@ class SearchProjectAPIView(APIView):
                 {"msg": "Internal server error"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
-class SearchAssigneeAPIView(APIView):
-    pass
