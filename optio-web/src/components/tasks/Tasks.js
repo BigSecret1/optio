@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+
+
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,7 +13,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
-import { Link } from "react-router-dom";
+
 import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 import { searchContext, taskSearchStrategy } from "../../search/index";
@@ -47,9 +50,7 @@ function Tasks({ projectTasks = [] }) {
       const results = await searchContext.executeSearch(query);
       setSearchResults(results);
       setShowDropdown(true);
-    }
-    // Add logic for "Status" or "Assignee" as needed
-    else {
+    } else {
       setSearchResults([]);
       setShowDropdown(false);
     }
@@ -63,14 +64,6 @@ function Tasks({ projectTasks = [] }) {
   function handleSelect(item) {
     setShowDropdown(false);
     setQuery(item.title || item.name);
-    // You can add navigation or detail showing here
-  }
-
-  function handleTypeChange(event) {
-    setSearchType(event.target.value);
-    setQuery("");
-    setSearchResults([]);
-    setShowDropdown(false);
   }
 
   return (
