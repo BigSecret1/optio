@@ -34,9 +34,10 @@ class SearchProjectAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
+        project_es_query = ProjectESQuery()
         try:
-            project_es_query = ProjectESQuery()
-            search_results = SearchProjectAPIView.project_es_query.execute(request.data)
+            name = request.data.get('name')
+            search_results = project_es_query.find(name)
             return Response(search_results, status=status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))

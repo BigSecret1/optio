@@ -24,7 +24,7 @@ class ProjectSearchStrategy extends SearchStrategy {
   }
 
   search(query) {
-    return ApiManager.searchTask(query);
+    return ApiManager.searchProject(query);
   }
 }
 

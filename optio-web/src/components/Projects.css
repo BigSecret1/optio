@@ -49,3 +49,28 @@
   background-color:  #304971;
   color: #721c24;
 }
+
+.project-search-input-wrapper {
+  flex: 1;
+  position: sticky;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100vw;
+  background: #3F5880 !important;
+  padding: 20px 280px;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: none;
+  margin: 0;
+}
+
+.project-list-container {
+  margin-top: 80px;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+}
+
