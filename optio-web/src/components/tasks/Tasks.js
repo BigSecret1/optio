@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
-
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -17,10 +16,13 @@ import Paper from "@mui/material/Paper";
 import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 import { searchContext, taskSearchStrategy } from "../../search/index";
+import { extractSearchResults } from "../../util";
 
 function Tasks({ projectTasks = [] }) {
   const [searchType, setSearchType] = useState("Task");
   const task = new Task();
+
+  const [allTasks, setAllTasks] = useState([]);
   const [tasks, setTasks] = useState([]);
   const hasSetProjectTasks = useRef(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -30,11 +32,6 @@ function Tasks({ projectTasks = [] }) {
   const anchorRef = useRef(null);
 
   useEffect(() => {
-    async function fetchTasks() {
-      const allTasks = await task.getTasks();
-      setTasks(allTasks);
-    }
-
     if (projectTasks.length && !hasSetProjectTasks.current) {
       setTasks(projectTasks);
       hasSetProjectTasks.current = true;
@@ -43,33 +40,41 @@ function Tasks({ projectTasks = [] }) {
     }
   }, []);
 
-  async function search(type, input) {
-    if (type.toLowerCase() === "task") {
-      const query = { title: input };
-      searchContext.setStrategy(taskSearchStrategy);
-      const results = await searchContext.executeSearch(query);
-      setSearchResults(results);
-      setShowDropdown(true);
-    } else {
-      setSearchResults([]);
-      setShowDropdown(false);
-    }
+  async function fetchTasks() {
+    const response = await task.getTasks();
+    setTasks(response);
+    setAllTasks(response);
   }
 
   function handleSearch(event) {
-    setQuery(event.target.value);
-    search(searchType, event.target.value);
+    const input = event.target.value;
+    setQuery(input);
+    if (input.trim() === "") {
+      setTasks(allTasks);
+      return;
+    }
+    search(searchType, input);
+  }
+
+  async function search(input) {
+    const query = { title: input };
+    searchContext.setStrategy(taskSearchStrategy);
+
+    const results = await searchContext.executeSearch(query);
+
+    setSearchResults(results);
+    setShowDropdown(true);
   }
 
   function handleSelect(item) {
     setShowDropdown(false);
-    setQuery(item.title || item.name);
+    setQuery(item.title);
+    setTasks(extractSearchResults(allTasks, [item]));
   }
 
   return (
-    <div className="resizable-layout-container">
-      <div className="search-row">
-        <div className="search-input-wrapper">
+    <div className="tasks-container">
+        <div className="task-search-input-wrapper">
           <TextField
             className="myCustomTextField"
             inputRef={anchorRef}
@@ -115,8 +120,7 @@ function Tasks({ projectTasks = [] }) {
             </Paper>
           </Popper>
         </div>
-      </div>
-      <div className="dialogue-box">
+      <div className="tasks-list-container">
         {tasks.map((task, index) => (
           <div
             key={index}

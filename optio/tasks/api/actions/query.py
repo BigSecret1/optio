@@ -63,7 +63,7 @@ class TaskESQuery(ESQuery):
             for hit in response:
                 results.append({
                     'id': hit.id,
-                    'name': hit.title
+                    'title': hit.title
                 })
             return results
         except Exception as e:

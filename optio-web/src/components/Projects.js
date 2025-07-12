@@ -12,10 +12,12 @@ import Paper from "@mui/material/Paper";
 import "./Projects.css";
 import ProjectAction from "../project/action";
 import { searchContext, projectSearchStrategy } from "../search/index";
+import { extractSearchResults } from "../util";
 
 function Projects() {
   const projectAction = new ProjectAction();
 
+  const [allProjects, setAllProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -29,12 +31,19 @@ function Projects() {
 
   async function fetchProjects() {
     const data = await projectAction.fetchAll();
-    setProjects(data || []);
+    setProjects(data);
+    setAllProjects(data);
   }
 
   function handleSearch(event) {
     const input = event.target.value;
     setQuery(input);
+
+    if (input.trim() === "") {
+      setProjects(allProjects);
+      return;
+    }
+
     search(input);
   }
 
@@ -43,19 +52,20 @@ function Projects() {
     searchContext.setStrategy(projectSearchStrategy);
 
     const results = await searchContext.executeSearch(query);
+
     setSearchResults(results);
-    console.log("Found results are ", results);
     setShowDropdown(true);
   }
 
   function handleSelect(item) {
     setShowDropdown(false);
-    setQuery(item.title || item.name);
+    setQuery(item.name);
+    setProjects(extractSearchResults(allProjects, [item]));
   }
 
   return (
     <div className="projects-container">
-      <div className="search-input-wrapper">
+      <div className="project-search-input-wrapper">
         <TextField
           className="myCustomTextField"
           inputRef={anchorRef}
@@ -102,17 +112,19 @@ function Projects() {
           </Paper>
         </Popper>
       </div>
-      {projects.map((project, index) => (
-        <div key={index} className="project-card">
-          <h3 className="project-name">
-            <Link to={`/projects/${project.id}/tasks`}>{project.name}</Link>
-          </h3>
-          <p className="project-description">{project.description}</p>
-          <div className="project-info">
-            <span className="project-updated">Modified : some_time</span>
+      <div className="project-list-container">
+        {projects.map((project, index) => (
+          <div key={index} className="project-card">
+            <h3 className="project-name">
+              <Link to={`/projects/${project.id}/tasks`}>{project.name}</Link>
+            </h3>
+            <p className="project-description">{project.description}</p>
+            <div className="project-info">
+              <span className="project-updated">Modified : some_time</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
