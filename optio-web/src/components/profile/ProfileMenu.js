@@ -50,8 +50,6 @@ function ProfileMenu() {
 
   const profileMenuOptions = [
     "Your profile",
-    "Your projects",
-    "Your tasks",
     "Change password",
   ];
   let currentUser = localStorage.getItem("user");
