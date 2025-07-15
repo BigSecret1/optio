@@ -53,13 +53,13 @@ function Tasks({ projectTasks = [] }) {
       setTasks(allTasks);
       return;
     }
-    search(searchType, input);
+    search(input);
   }
 
   async function search(input) {
     const query = { title: input };
-    searchContext.setStrategy(taskSearchStrategy);
 
+    searchContext.setStrategy(taskSearchStrategy);
     const results = await searchContext.executeSearch(query);
 
     setSearchResults(results);
@@ -74,52 +74,52 @@ function Tasks({ projectTasks = [] }) {
 
   return (
     <div className="tasks-container">
-        <div className="task-search-input-wrapper">
-          <TextField
-            className="myCustomTextField"
-            inputRef={anchorRef}
-            value={query}
-            onChange={handleSearch}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-            onFocus={() => {
-              if (searchResults.length) setShowDropdown(true);
-            }}
-            type="text"
-            name={searchType}
-            placeholder={`Enter task title...`}
-            fullWidth
-            variant="outlined"
-            size="small"
-          />
-          <Popper
-            open={showDropdown && searchResults.length > 0}
-            anchorEl={anchorRef.current}
-            placement="bottom-start"
-            style={{
-              zIndex: 1300,
-              width: anchorRef.current?.offsetWidth,
-            }}
-          >
-            <Paper elevation={3}>
-              <List dense style={{ maxHeight: 240, overflowY: "auto" }}>
-                {searchResults.map((item) => (
-                  <ListItem
-                    key={item.id}
-                    disablePadding
-                    onMouseDown={() => handleSelect(item)}
-                    sx={{
-                      borderBottom: "0.2px solid black",
-                    }}
-                  >
-                    <ListItemButton>
-                      <ListItemText primary={item.title || item.name} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Paper>
-          </Popper>
-        </div>
+      <div className="task-search-input-wrapper">
+        <TextField
+          className="myCustomTextField"
+          inputRef={anchorRef}
+          value={query}
+          onChange={handleSearch}
+          onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+          onFocus={() => {
+            if (searchResults.length) setShowDropdown(true);
+          }}
+          type="text"
+          name={searchType}
+          placeholder={`Enter task title...`}
+          fullWidth
+          variant="outlined"
+          size="small"
+        />
+        <Popper
+          open={showDropdown && searchResults.length > 0}
+          anchorEl={anchorRef.current}
+          placement="bottom-start"
+          style={{
+            zIndex: 1300,
+            width: anchorRef.current?.offsetWidth,
+          }}
+        >
+          <Paper elevation={3}>
+            <List dense style={{ maxHeight: 240, overflowY: "auto" }}>
+              {searchResults.map((item) => (
+                <ListItem
+                  key={item.id}
+                  disablePadding
+                  onMouseDown={() => handleSelect(item)}
+                  sx={{
+                    borderBottom: "0.2px solid black",
+                  }}
+                >
+                  <ListItemButton>
+                    <ListItemText primary={item.title || item.name} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </Popper>
+      </div>
       <div className="tasks-list-container">
         {tasks.map((task, index) => (
           <div
