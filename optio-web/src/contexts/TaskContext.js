@@ -15,7 +15,7 @@ export function TaskProvider({ children }) {
   const [subTasks, setSubTasks] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isWaitingForSubTasks, setIsWaitingForSubTasks] = useState(true);
-  const [isEditingTaskTitle, setIsEditingTaskTitle] = useState(false);
+  const [isEditingTaskHeader, setIsEditingTaskHeader] = useState(false);
   const [isEditingTaskStatus, setIsEditingTaskStatus] = useState(false);
   const [isEditingTaskDescription, setIsEditingTaskDescription] =
     useState(false);
@@ -27,7 +27,7 @@ export function TaskProvider({ children }) {
    * For each selected option in option menu of different sections(header, description etc.)
    * a mapping is needed with there respective state which is responsible for rednering
    * editing components.
-   * for e.g. ("Edit title" : setIsEditingTaskTitle)
+   * for e.g. ("Edit title" : setIsEditingTaskHeader)
    */
   const optionToState = new Map();
 
@@ -76,8 +76,8 @@ export function TaskProvider({ children }) {
         loading,
         setLoading,
         isWaitingForSubTasks,
-        isEditingTaskTitle,
-        setIsEditingTaskTitle,
+        isEditingTaskHeader,
+        setIsEditingTaskHeader,
         isEditingTaskStatus,
         setIsEditingTaskStatus,
         isEditingTaskDescription,

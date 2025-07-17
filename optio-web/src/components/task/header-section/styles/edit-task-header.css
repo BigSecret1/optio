@@ -1,0 +1,31 @@
+.edit-header-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px !important;
+}
+
+.edit-header-dialog-content label {
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 4px;
+  color: white;
+}
+
+.edit-header-dialog-content input,
+.edit-header-dialog-content textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 17px;
+  border: none;
+  border-radius: 6px;
+  background-color: #304971;
+  resize: vertical;
+  color: white;
+  outline: none;
+  box-shadow: none;
+}
+
+.edit-header-dialog-actions {
+  padding: 16px 24px;
+}
