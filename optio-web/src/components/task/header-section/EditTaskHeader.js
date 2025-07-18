@@ -38,7 +38,6 @@ export default function EditTaskHeader({ taskId }) {
       assignee: taskHeaders.assignee,
       status: taskHeaders.status,
     };
-    console.log("Sending data to save", data);
     setIsEditingTaskHeader(false);
   }
 
@@ -100,13 +99,13 @@ export default function EditTaskHeader({ taskId }) {
               backgroundColor: "#304971",
               borderRadius: "6px",
               "& .MuiOutlinedInput-notchedOutline": {
-                border: "none"
+                border: "none",
               },
               "&:hover .MuiOutlinedInput-notchedOutline": {
-                border: "none"
+                border: "none",
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                border: "none"
+                border: "none",
               },
               "& .MuiSelect-icon": {
                 color: "white",
