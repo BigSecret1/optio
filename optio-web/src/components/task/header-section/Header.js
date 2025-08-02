@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import Box from "@mui/material/Box";
+import { Typography, Box } from "@mui/material";
 
 import { TaskContext } from "../../../contexts/TaskContext.js";
 import OptionMenu from "../../UI/OptionMenu.js";
@@ -11,11 +11,12 @@ import UpdateTaskStatus from "./UpdateTaskStatus.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import EditTaskHeader from "./EditTaskHeader.js";
 
-/**
- * This component contains(parent component of)  all the child components which helps to build header
- * of an opened task.
- */
 export default function Header({ taskId }) {
+  /**
+   * This component contains(parent component of)  all the child components which helps to build header
+   * of an opened task.
+   */
+
   const {
     task,
     isEditingTaskHeader,
@@ -61,13 +62,11 @@ export default function Header({ taskId }) {
           <StatusIcon status={task.status} />
         )}
         <Link>
-          <h5>GSMI/1248</h5>
+          <h5>GSMIMEMEME/1248</h5>
         </Link>
-        <p>
-          Assigee : {task.assignee.firstName} {task.assignee.lastName}
-        </p>
+
         <div className="optionMenuEllipsContainer">
-          <OptionMenu options={menuOptionsForTitleBox}>                       
+          <OptionMenu options={menuOptionsForTitleBox}>
             <EllipsisWithSpacing containerClass="optionDots" />
           </OptionMenu>
         </div>
@@ -75,6 +74,18 @@ export default function Header({ taskId }) {
       <div className="taskTitle">
         <h3>{task.title}</h3>
       </div>
+
+      <Typography
+        variant="body2"
+        sx={{
+          mt: 1,
+          display: "flex",
+          alignItems: "center",
+          color: "lightblue",
+        }}
+      >
+        Assignee: {task.assignee.firstName} {task.assignee.lastName}
+      </Typography>
       {isEditingTaskHeader === true ? <EditTaskHeader taskId={taskId} /> : null}
     </Box>
   );
