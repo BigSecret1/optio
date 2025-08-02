@@ -5,6 +5,9 @@ from copy import deepcopy
 
 from optio.projects.models import Project
 from optio.tasks.models import Task
+from optio.projects.serializers import ProjectSerializer
+from optio.users.serializers import UserSerializer
+from optio.users.models import UserProfile
 
 
 class BaseSerializer(serializers.ModelSerializer):
@@ -24,12 +27,20 @@ class BaseSerializer(serializers.ModelSerializer):
     created_time = serializers.DateTimeField(
         read_only=True, default=datetime.now, format="%Y-%m-%d %H:%M:%S"
     )
+    assignee = UserSerializer(read_only=True)  # for response
+    assignee_id = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),  # for input
+        write_only=True,
+        source='assignee'  # maps to the same field
+    )
+    project = ProjectSerializer()
 
     class Meta:
         model = Task
         fields = [
             'id', 'title', 'due_date', 'comments', 'description',
-            'status', 'created_time', 'project', 'parent_task'
+            'status', 'created_time', 'project', 'parent_task', 'assignee',
+            'assignee_id'
         ]
         extra_kwargs = {
             'title': {

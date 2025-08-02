@@ -9,6 +9,7 @@ import logging
 
 from optio.tasks.api.actions.query import TaskESQuery
 from optio.projects.query import ProjectESQuery
+from optio.users.query import UserESQuery
 
 
 class SearchTaskAPIView(APIView):
@@ -38,6 +39,24 @@ class SearchProjectAPIView(APIView):
         try:
             name = request.data.get('name')
             search_results = project_es_query.find(name)
+            return Response(search_results, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.info("error : %s", str(e))
+            return Response(
+                {"msg": "Internal server error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class SearchUserAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request):
+        user_es_query = UserESQuery()
+        try:
+            first_name = request.data.get('first_name')
+            search_results = user_es_query.find(first_name)
             return Response(search_results, status=status.HTTP_200_OK)
         except Exception as e:
             logging.info("error : %s", str(e))

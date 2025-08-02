@@ -63,8 +63,11 @@ export default function Header({ taskId }) {
         <Link>
           <h5>GSMI/1248</h5>
         </Link>
+        <p>
+          Assigee : {task.assignee.firstName} {task.assignee.lastName}
+        </p>
         <div className="optionMenuEllipsContainer">
-          <OptionMenu options={menuOptionsForTitleBox}>
+          <OptionMenu options={menuOptionsForTitleBox}>                       
             <EllipsisWithSpacing containerClass="optionDots" />
           </OptionMenu>
         </div>

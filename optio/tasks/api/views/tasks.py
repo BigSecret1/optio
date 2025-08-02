@@ -122,7 +122,7 @@ class UpdateTask(APIView):
 
     def put(self, request: Request, task_id: int) -> Response:
         user = UserProfile.objects.get(email=request.user.email)
-        if not check_permission(request.user, "tasks", "Task", "change"):
+        if not check_permission(request.user, "tasks", "Task", "edit"):
             raise PermissionDenied(perm_required_error)
 
         try:
