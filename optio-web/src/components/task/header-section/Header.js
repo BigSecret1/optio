@@ -3,6 +3,8 @@ import { useEffect, useState, createContext, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { Typography, Box } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import { Chip } from "@mui/material";
 
 import { TaskContext } from "../../../contexts/TaskContext.js";
 import OptionMenu from "../../UI/OptionMenu.js";
@@ -56,14 +58,30 @@ export default function Header({ taskId }) {
       ]}
     >
       <div className="taskTitleHeader">
-        {isEditingTaskStatus === true ? (
+        {/* {isEditingTaskStatus === true ? (
           <UpdateTaskStatus taskId={taskId} />
         ) : (
           <StatusIcon status={task.status} />
-        )}
-        <Link>
-          <h5>GSMIMEMEME/1248</h5>
-        </Link>
+        )} */}
+        <Chip
+          label={task.project.name}
+          component={RouterLink}
+          to={`/projects/${task.project.id}/tasks`}
+          clickable
+          variant="outlined"
+          sx={{
+            fontWeight: 500,
+            fontSize: "0.95rem",
+            height: 23,
+            px: 0.1,
+            marginTop: "5px",
+            color: "yellow",
+            borderColor: "yellow",
+            "&:hover": {
+              backgroundColor: "rgba(255, 215, 0, 0.08)",
+            },
+          }}
+        />
 
         <div className="optionMenuEllipsContainer">
           <OptionMenu options={menuOptionsForTitleBox}>
@@ -81,11 +99,25 @@ export default function Header({ taskId }) {
           mt: 1,
           display: "flex",
           alignItems: "center",
+          gap: 2, // adds spacing between items
           color: "lightblue",
+          flexWrap: "wrap", // allows wrap on small screens
         }}
       >
-        Assignee: {task.assignee.firstName} {task.assignee.lastName}
+        <Box component="span" sx={{ fontWeight: 500, color: "#fff" }}>
+          Status:
+        </Box>
+        <Box component="span" sx={{ mr: 2 }}>
+          {task.status}
+        </Box>
+        <Box component="span" sx={{ fontWeight: 500, color: "#fff" }}>
+          Assignee:
+        </Box>
+        <Box component="span">
+          {task.assignee.firstName} {task.assignee.lastName}
+        </Box>
       </Typography>
+
       {isEditingTaskHeader === true ? <EditTaskHeader taskId={taskId} /> : null}
     </Box>
   );
