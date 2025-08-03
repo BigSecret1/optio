@@ -196,7 +196,7 @@ class TestUpdateTaskView(BaseAPITestCase):
             self.user,
             "tasks",
             "Task",
-            "change"
+            "edit"
         )
         mock_perform_update.assert_called_once_with(
             self.task.id,
@@ -225,7 +225,7 @@ class TestUpdateTaskView(BaseAPITestCase):
             self.user,
             "tasks",
             "Task",
-            "change"
+            "edit"
         )
 
     @patch("optio.tasks.api.views.tasks.check_permission")
