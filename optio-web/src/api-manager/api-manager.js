@@ -6,8 +6,14 @@ class ApiManager {
     const url = ENDPOINTS.SEARCH_TASK;
     return ApiMethods.post(url, params);
   }
+
   static searchProject(param) {
     const url = ENDPOINTS.SEARCH_PROJECT;
+    return ApiMethods.post(url, param);
+  }
+
+  static searchUser(param) {
+    const url = ENDPOINTS.SEARCH_USER;
     return ApiMethods.post(url, param);
   }
 }

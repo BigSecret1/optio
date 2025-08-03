@@ -57,14 +57,16 @@ class TaskAPIAction(APIAction):
     def update(self, task_id, data):
         try:
             task: Task = Task.objects.get(id=task_id)
+            logging.info("Data receive to update task is %s", data)
             serializer: TaskSerializer = TaskSerializer(task, data=data, partial=True)
+            print("Data to update task is", data)
             if serializer.is_valid():
                 serializer.save()
                 return serializer.data
             else:
-                raise
-        except FileNotFoundError:
-            raise
+                raise ValidationError(serializer.errors)
+        except Task.DoesNotExist:
+            raise(f"No such task found with id {task_id}")
 
     def delete(self, task_id: int):
         try:

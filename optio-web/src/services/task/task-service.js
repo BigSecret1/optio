@@ -89,7 +89,7 @@ class Task {
     }
     const accessToken = localStorage.getItem("accessToken");
 
-    const endpoint = `/get-task-by-id/${taskId}`;
+    const endpoint = `/fetch/${taskId}`;
 
     try {
       console.log(
@@ -129,9 +129,10 @@ class Task {
     if (!requestBody["id"]) {
       return;
     }
-    const updateEndpoint = `/update-task/${requestBody["id"]}/`;
+    const updateEndpoint = `/edit/${requestBody["id"]}/`;
 
     try {
+      console.log("Sending update with data ", requestBody);
       const response = await fetch(`${BASE_URL}${updateEndpoint}`, {
         method: "PUT",
         headers: {

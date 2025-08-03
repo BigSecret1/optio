@@ -28,6 +28,16 @@ class ProjectSearchStrategy extends SearchStrategy {
   }
 }
 
+class UserSearchStrategy extends SearchStrategy {
+  constructor() {
+    super();
+  }
+
+  search(query) {
+    return ApiManager.searchUser(query);
+  }
+}
+
 class SearchContext {
   constructor(strategy) {
     this.strategy = strategy;
@@ -46,5 +56,6 @@ const searchContext = new SearchContext(new TaskSearchStrategy());
 
 const taskSearchStrategy = new TaskSearchStrategy();
 const projectSearchStrategy = new ProjectSearchStrategy();
+const userSearchStrategy = new UserSearchStrategy();
 
-export { searchContext, taskSearchStrategy, projectSearchStrategy };
+export { searchContext, taskSearchStrategy, projectSearchStrategy, userSearchStrategy };
