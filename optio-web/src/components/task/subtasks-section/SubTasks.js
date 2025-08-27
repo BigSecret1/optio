@@ -1,79 +1,77 @@
-import React from "react";
-import { useEffect, useState, createContext, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
 
 import Box from "@mui/material/Box";
 
 import { TaskContext } from "../../../contexts/TaskContext.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import OptionMenu from "../../UI/OptionMenu.js";
-import StatusIcon from "../StatusIcon.js";
+import NewTask from "../NewTask.js";    
 
 export default function SubTasks({ taskId }) {
-  const { task, subTasks, isWaitingForSubTasks, refreshSubTasks } =
-    useContext(TaskContext);
+  const { task } = useContext(TaskContext);
+  const [openNewTask, setOpenNewTask] = useState(false);
 
-  const menuOptionsForTitleBox = ["Create Subtask"];
+  useEffect(() => {}, [taskId]);
 
-  useEffect(() => {
-    refreshSubTasks(taskId);
-  }, [taskId]);
+  function handleMenuSelect(option) {
+    if (option.toLowerCase() === "create subtask") {
+      setOpenNewTask(true);
+    }
+  }
 
-  console.log("Is it waiting for subtassk to load ? ", isWaitingForSubTasks);
+  function handleCloseNewTaskDialogue() {
+    setOpenNewTask(false);
+  }
+
+  async function handleCreateSubtask(payload) {
+    console.log("Sending data to create new subtask", payload);
+    setOpenNewTask(false);
+  }
 
   return (
-    <Box
-      sx={[
-        (theme) => ({
-          display: "flex",
-          flexDirection: "column",
-          m: 1,
-          p: 1,
-          minHeight: '30vh',
-          height: 'auto',
-          bgcolor: "#304971",
-          position: "relative",
-          color: "white",
-          border: "0.5px solid",
-          borderColor: "#3F5880",
-          borderRadius: 2,
-          fontSize: "0.875rem",
-          fontWeight: "700",
-          ...theme.applyStyles("dark", {
-            bgcolor: "#101010",
-            color: "white",
-            // borderColor: 'grey.800',
-          }),
-        }),
-      ]}
-    >
+    <Box sx={subTaskBoxSx}>
       <div className="subTaskHeader">
-        <h3>SubTasks</h3>
+        <h3>Sub Tasks</h3>
 
+        {/* Cluster of components which allow to to click 3 dots and open option Menu */}
         <div className="optionMenuEllipsContainer">
-          <OptionMenu options={menuOptionsForTitleBox}>
+          <OptionMenu options={["Create Subtask"]} onSelect={handleMenuSelect}>
             <EllipsisWithSpacing containerClass="optionDots" />
           </OptionMenu>
         </div>
       </div>
-
-      {isWaitingForSubTasks === false ? (
-        subTasks.map((subTask) => {
-          return (
-            <div key={subTask.id}>
-              <Link to="#">
-                <h6>
-                  <StatusIcon status={subTask.task_status} />{" "}
-                  HardcodedProjectName/{subTask.id}
-                  {subTask.title}
-                </h6>
-              </Link>
-            </div>
-          );
-        })
-      ) : (
-        <p>Loading SubTasks</p>
-      )}
+      {/* Render dialogue form to create new subtask */}
+      <NewTask
+        open={openNewTask}
+        onClose={handleCloseNewTaskDialogue}
+        onSubmit={handleCreateSubtask}
+        parentTaskId={taskId}
+        project={task?.project_id ?? 2}
+        taskData={{ title: "", description: "", status: "" }}
+      />
     </Box>
   );
+}
+
+function subTaskBoxSx(theme) {
+  return {
+    display: "flex",
+    flexDirection: "column",
+    m: 1,
+    p: 1,
+    minHeight: "30vh",
+    height: "auto",
+    bgcolor: "#304971",
+    position: "relative",
+    color: "white",
+    border: "0.5px solid",
+    borderColor: "#3F5880",
+    borderRadius: 2,
+    fontSize: "0.875rem",
+    fontWeight: "700",
+    ...theme.applyStyles("dark", {
+      bgcolor: "#101010",
+      color: "white",
+    }),
+  };
 }

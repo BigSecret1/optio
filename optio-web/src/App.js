@@ -16,10 +16,10 @@ import NewTask from "./components/task/NewTask";
 import Profile from "./components/profile/Profile";
 import Note from "./components/quicknotes/Note";
 import Create from "./components/common/Create";
-import NewProject from "./components/project/NewProject";
+import NewProject from "./components/Project/NewProject";
 import CreateUser from "./components/auth/CreateUser";
-
 import { NewProvider } from "./contexts/NewContext";
+import ProjectOverview from "./components/Project/ProjectOverview/index";
 
 // PrivateRoute wrapper
 function PrivateRoute({ children }) {
@@ -85,6 +85,15 @@ function App() {
           element={
             <PrivateRoute>
               <Projects />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/projects/:projectId/overview"
+          element={
+            <PrivateRoute>
+              <ProjectOverview />
             </PrivateRoute>
           }
         />

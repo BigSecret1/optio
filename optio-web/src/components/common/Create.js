@@ -1,65 +1,84 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import { Box, Menu, MenuItem } from "@mui/material";
 
 import "./styles/create.css";
 import { NewContext } from "../../contexts/NewContext";
+import NewTask from "../task/NewTask";
 
 export default function Create() {
-  const { setOpenCreateProject, setOpenCreateTask } = useContext(NewContext);
+  const { setOpenCreateProject } = useContext(NewContext);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [openCreateTask, setOpenCreateTask] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  function toggleDropdown() {
-    setIsOpen(!isOpen);
+  useEffect(() => {}, []);
+
+  function createTask(taskDetails) {
+    console.log("Creating task with data:", taskDetails);
   }
 
-  function handleClickOutside(event) {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  function handleOpenCreateMenu(e) {
+    e.stopPropagation();
+    if (isOpen) {
       setIsOpen(false);
+      setAnchorEl(null);
+    } else {
+      setIsOpen(true);
+      setAnchorEl(e.currentTarget);
     }
   }
 
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
   return (
     <div className="create-container">
-      <div
-        className="create-dropdown-button"
-        onClick={toggleDropdown}
-        ref={dropdownRef}
-      >
+      {/* Dropdown trigger */}
+      <div className="create-dropdown-button" onClick={handleOpenCreateMenu}>
         <span className="plus-icon">+</span>
         <span className="dropdown-arrow">▼</span>
       </div>
 
-      {isOpen && (
-        <div className="create-dropdown-options">
-          <ul>
-            <li>
-              <button
-                onClick={() => {
-                  setOpenCreateProject(true);
-                }}
-              >
-                Project
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => {
-                  setOpenCreateTask(true);
-                }}
-              >
-                Task
-              </button>
-            </li>
-          </ul>
-        </div>
-      )}
+      {/* Dropdown menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={isOpen}
+        onClose={() => {
+          // required: close handler
+          setIsOpen(false);
+          setAnchorEl(null);
+        }}
+        MenuListProps={{
+          onClick: (e) => e.stopPropagation(), // keep clicks inside
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            setOpenCreateProject(true);
+            setIsOpen(false);
+            setAnchorEl(null);
+          }}
+        >
+          Project
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            setOpenCreateTask(true);
+            setIsOpen(false);
+            setAnchorEl(null);
+          }}
+        >
+          Task
+        </MenuItem>
+      </Menu>
+
+      {/* Dialog kept OUTSIDE the dropdown so it doesn't unmount */}
+      <NewTask
+        open={openCreateTask}
+        onClose={() => setOpenCreateTask(false)}
+        onSubmit={(data) => {
+          createTask(data);
+          setOpenCreateTask(false);
+        }}
+      />
     </div>
   );
 }
