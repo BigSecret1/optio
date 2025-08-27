@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -8,12 +8,8 @@ import {
   TextField,
   FormControl,
   FormLabel,
-  Select,
-  MenuItem,
   Stack,
 } from "@mui/material";
-
-import { TASK_STATUS } from "../../constants";
 
 const fieldSx = {
   "& .MuiOutlinedInput-root": {
@@ -30,37 +26,20 @@ const labelTopSx = {
   "&.Mui-focused": { color: "#2196f3" },
 };
 
-const selectSx = {
-  color: "#e6edf3",
-  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#90caf9" },
-  "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#64b5f6" },
-  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-    borderColor: "#2196f3",
-  },
-};
-
-export default function NewTask({
-  project = 2,
-  onSubmit,
-  onClose,
-  open,
-  parentTaskId,
-}) {
-  const [title, setTitle] = useState("");
+export default function EditProject({ open, onClose, project, onSave }) {
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState(TASK_STATUS[0]);
 
-  
+  useEffect(() => {
+    if (open && project) {
+      setName(project.name || "");
+      setDescription(project.description || "");
+    }
+  }, [open, project]);
 
-  const handleSubmit = () => {
-    onSubmit({
-      title,
-      description,
-      status,
-      project,
-      parentTaskId: parentTaskId ?? null,
-    });
-  };
+  function handleSubmit(e) {
+    onSave({ ...project, name, description });
+  }
 
   return (
     <Dialog
@@ -70,10 +49,7 @@ export default function NewTask({
       fullWidth
       PaperProps={{
         component: "form",
-        onSubmit: (e) => {
-          e.preventDefault();
-          handleSubmit();
-        },
+        onSubmit: handleSubmit,
         sx: {
           borderRadius: 3,
           bgcolor: "#243754",
@@ -91,38 +67,37 @@ export default function NewTask({
           pb: 1,
         }}
       >
-        Create Task
+        Edit Project
       </DialogTitle>
 
       <DialogContent sx={{ pt: 2 }}>
         <Stack spacing={2.5}>
-          {/* Title */}
+          {/* Project Name */}
           <FormControl fullWidth>
-            <FormLabel htmlFor="task-title" sx={labelTopSx}>
+            <FormLabel htmlFor="project-name" sx={labelTopSx}>
               Title *
             </FormLabel>
             <TextField
-              id="task-title"
+              id="project-name"
               placeholder="Enter a clear, concise title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               fullWidth
               autoFocus
               sx={fieldSx}
-              // no label here — we’re using top-aligned FormLabel
               InputLabelProps={{ shrink: false }}
             />
           </FormControl>
 
           {/* Description */}
           <FormControl fullWidth>
-            <FormLabel htmlFor="task-description" sx={labelTopSx}>
+            <FormLabel htmlFor="project-description" sx={labelTopSx}>
               Description
             </FormLabel>
             <TextField
-              id="task-description"
-              placeholder="Add task description here"
+              id="project-description"
+              placeholder="Add project description here"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               fullWidth
@@ -132,32 +107,11 @@ export default function NewTask({
               InputLabelProps={{ shrink: false }}
             />
           </FormControl>
-
-          {/* Status */}
-          <FormControl fullWidth>
-            <FormLabel id="status-label" sx={labelTopSx}>
-              Status
-            </FormLabel>
-            <Select
-              aria-labelledby="status-label"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              sx={selectSx}
-              displayEmpty
-              inputProps={{ id: "task-status" }}
-            >
-              {TASK_STATUS.map((opt) => (
-                <MenuItem key={opt} value={opt}>
-                  {opt}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
         </Stack>
       </DialogContent>
 
+      {/* Actions */}
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        {/* Cancel button - subtle */}
         <Button
           onClick={onClose}
           sx={{
@@ -168,7 +122,6 @@ export default function NewTask({
           Cancel
         </Button>
 
-        {/* Create button - accent */}
         <Button
           type="submit"
           variant="contained"
@@ -176,7 +129,7 @@ export default function NewTask({
             bgcolor: "#304971",
             "&:hover": { bgcolor: "#1e40af" },
             fontWeight: 700,
-            fontSize: "1rem", // e.g., 16px
+            fontSize: "1rem",
             borderRadius: 2,
             px: 3,
             color: "#ffffff",
@@ -184,7 +137,7 @@ export default function NewTask({
             boxShadow: "0 4px 12px rgba(37, 99, 235, 0.4)",
           }}
         >
-          Create
+          Save
         </Button>
       </DialogActions>
     </Dialog>
