@@ -6,6 +6,7 @@ import HeaderSection from "./HeaderSection";
 import MembersList from "./MembersList";
 import EditProject from "./EditProject";
 import { BRAND_PRIMARY, BRAND_SECONDARY } from "../../../constants";
+import ManageMembers from "./Members/ManageMembers";
 
 export default function ProjectOverview({
   project = {
@@ -57,6 +58,26 @@ export default function ProjectOverview({
 }) {
   const [openEditProject, setOpenEditProject] = useState(false);
   const [currentProject, setCurrentProject] = useState(project);
+  const [openManageMembers, setOpenManageMembers] = useState(false);
+  const [currentMembers, setCurrentMembers] = useState([]);
+
+  const mockResponse = [
+    { id: "1", name: "Aarav Sharma", email: "aarav@example.com" },
+    { id: "2", name: "Diya Patel", email: "diya@example.com" },
+    { id: "3", name: "Diya Patel", email: "diya@example.com" },
+    { id: "4", name: "Diya Patel", email: "diya@example.com" },
+    { id: "5", name: "Diya Patel", email: "diya@example.com" },
+    { id: "6", name: "Diya Patel", email: "diya@example.com" },
+    { id: "7", name: "Diya Patel", email: "diya@example.com" },
+    { id: "8", name: "Diya Patel", email: "diya@example.com" },
+    { id: "9", name: "Diya Patel", email: "diya@example.com" },
+    { id: "10", name: "Diya Patel", email: "diya@example.com" },
+    { id: "11", name: "Diya Patel", email: "diya@example.com" },
+    { id: "12", name: "Diya Patel", email: "diya@example.com" },
+    { id: "13", name: "Diya Patel", email: "diya@example.com" },
+    { id: "14", name: "Diya Patel", email: "diya@example.com" },
+    { id: "15", name: "Diya Patel", email: "diya@example.com" },
+  ];
 
   function handleProjectSave(updatedDetails) {
     setCurrentProject(updatedDetails);
@@ -76,7 +97,7 @@ export default function ProjectOverview({
           <HeaderSection
             project={currentProject}
             onProjectEdit={() => setOpenEditProject(true)}
-            onManageMembers={onManageMembers}
+            onManageMembers={() => setOpenManageMembers(true)}
           />
           <MembersList members={members} />
         </Container>
@@ -86,6 +107,16 @@ export default function ProjectOverview({
         onClose={() => setOpenEditProject(false)}
         project={currentProject}
         onSave={handleProjectSave}
+      />
+      <ManageMembers
+        open={openManageMembers}
+        onClose={() => setOpenManageMembers(false)}
+        members={currentMembers}
+        onChangeMembers={setCurrentMembers}
+        fetchUsers={async (q) => {
+          console.log("Received api call ehre", q);
+          return mockResponse;
+        }}
       />
     </ProjectOverviewThemeProvider>
   );
