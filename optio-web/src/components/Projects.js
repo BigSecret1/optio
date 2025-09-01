@@ -1,20 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import TextField from "@mui/material/TextField";
-import Popper from "@mui/material/Popper";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Paper from "@mui/material/Paper";
+import {
+  TextField,
+  Popper,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Paper,
+  Card,
+  CardContent,
+  Typography,
+  Stack,
+  Box,
+} from "@mui/material";
 
 import "./Projects.css";
 import ProjectAction from "../project/action";
 import { searchContext, projectSearchStrategy } from "../search/index";
 import { extractSearchResults } from "../util";
 
-function Projects() {
+export default function Projects() {
   const projectAction = new ProjectAction();
 
   const [allProjects, setAllProjects] = useState([]);
@@ -64,7 +71,7 @@ function Projects() {
   }
 
   return (
-    <div className="projects-container">
+    <Box sx={{ p: 3 }}>
       <div className="project-search-input-wrapper">
         <TextField
           className="myCustomTextField"
@@ -112,21 +119,64 @@ function Projects() {
           </Paper>
         </Popper>
       </div>
-      <div className="project-list-container">
-        {projects.map((project, index) => (
-          <div key={index} className="project-card">
-            <h3 className="project-name">
-              <Link to={`/projects/${project.id}/tasks`}>{project.name}</Link>
-            </h3>
-            <p className="project-description">{project.description}</p>
-            <div className="project-info">
-              <span className="project-updated">Modified : some_time</span>
-            </div>
-          </div>
+
+      <Stack spacing={2} sx={{ mt: 8 }}>
+        {projects.map((project) => (
+          <Card
+            key={project.id}
+            component={Link}
+            to={`/projects/${project.id}/overview`}
+            sx={{
+              borderRadius: 3,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              transition: "all 0.2s ease",
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
+            <CardContent>
+              <Typography
+                component={Link}
+                to={`/projects/${project.id}/tasks`}
+                variant="h6"
+                fontWeight={700}
+                sx={{
+                  color: (theme) => theme.palette.primary.contrastText,
+                  textDecoration: "none",
+                  "&:hover": {
+                    textDecoration: "underline",
+                    color: (theme) => theme.palette.primary.light,
+                  },
+                }}
+              >
+                {project.name}
+              </Typography>
+
+              <Typography
+                variant="body1"
+                sx={{
+                  mt: 1,
+                  mb: 1.5,
+                  color: (theme) => theme.palette.primary.contrastText,
+                }}
+              >
+                {project.description}
+              </Typography>
+
+              <Typography
+                variant="caption"
+                sx={{
+                  color: (theme) => theme.palette.grey[400],
+                  fontStyle: "italic",
+                  fontSize: "0.9rem",
+                }}
+              >
+                Modified: some_time
+              </Typography>
+            </CardContent>
+          </Card>
         ))}
-      </div>
-    </div>
+      </Stack>
+    </Box>
   );
 }
-
-export default Projects;
