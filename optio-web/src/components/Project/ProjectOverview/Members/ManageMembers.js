@@ -99,7 +99,13 @@ export default function ManageMembers({
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2 }}>
-        <Button onClick={onClose}>Close</Button>
+        <Button variant="cancel" onClick={onClose}>
+          Cancel
+        </Button>
+
+        <Button variant="save" onClick={onClose}>
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
