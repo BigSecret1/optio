@@ -40,18 +40,41 @@ const scopedTheme = createTheme({
       },
     },
     MuiButton: {
-      defaultProps: { disableElevation: true },
+      defaultProps: {
+        disableElevation: true,
+      },
       styleOverrides: {
-        root: { borderRadius: 12, paddingInline: 16, paddingBlock: 10 },
-        outlinedInherit: {
-          borderColor: alpha("#fff", 0.28),
-          color: "#fff",
-          "&:hover": {
-            borderColor: alpha("#fff", 0.48),
-            background: alpha("#fff", 0.06),
-          },
+        root: {
+          borderRadius: 12,
+          paddingInline: 16,
+          paddingBlock: 10,
+          textTransform: "none", // so both buttons skip uppercase
         },
       },
+      variants: [
+        {
+          // Cancel button
+          props: { variant: "cancel" },
+          style: {
+            color: "#c5d1e0",
+            "&:hover": { color: "#ffffff" },
+          },
+        },
+        {
+          // Save button
+          props: { variant: "save" },
+          style: {
+            backgroundColor: "#304971",
+            "&:hover": { backgroundColor: "#1e40af" },
+            fontWeight: 700,
+            fontSize: "1rem",
+            borderRadius: 8, // = theme.spacing(1) * 2, same as `borderRadius: 2` sx
+            paddingInline: 24, // px: 3
+            color: "#ffffff",
+            boxShadow: "0 4px 12px rgba(37, 99, 235, 0.4)",
+          },
+        },
+      ],
     },
     MuiTableCell: {
       styleOverrides: {
