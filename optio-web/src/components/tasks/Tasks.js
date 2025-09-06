@@ -12,6 +12,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
+import { Typography, Box } from "@mui/material";
 
 import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
@@ -38,6 +39,7 @@ function Tasks({ projectTasks = [] }) {
     } else if (projectTasks.length === 0 && !hasSetProjectTasks.current) {
       fetchTasks();
     }
+    console.log("Tasks ", tasks);
   }, []);
 
   async function fetchTasks() {
@@ -121,19 +123,127 @@ function Tasks({ projectTasks = [] }) {
         </Popper>
       </div>
       <div className="tasks-list-container">
-        {tasks.map((task, index) => (
-          <div
-            key={index}
-            className="task-item"
-            style={{ backgroundColor: "#304971", marginBottom: "20px" }}
-          >
-            <p>
-              <Link to={`/task-manager/${task["id"]}`} state={{ task }}>
+        {tasks.map((task, index) => {
+          const statusColor =
+            task.status === "Completed"
+              ? "#16a34a"
+              : task.status === "In Progress"
+              ? "#f59e0b"
+              : "#64748b";
+
+          return (
+            <Paper
+              key={index}
+              elevation={1}
+              sx={{
+                backgroundColor: "#122333",
+                color: "#ffffff",
+                borderRadius: 2,
+                padding: 2,
+                marginBottom: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                transition: "transform 0.18s ease, box-shadow 0.18s ease",
+                "&:hover": {
+                  transform: "translateY(-4px)",
+                  boxShadow: "0 8px 28px rgba(0,0,0,0.35)",
+                },
+              }}
+            >
+              {/* Left: Title */}
+              <Link
+                to={`/task-manager/${task["id"]}`}
+                state={{ task }}
+                style={{
+                  textDecoration: "none",
+                  color: "#ffffff",
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                title={task.title}
+              >
                 {task["title"]}
               </Link>
-            </p>
-          </div>
-        ))}
+
+              {/* Right: Status & Assignee */}
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  color: "#e2e8f0", // light gray text
+                  flexWrap: "wrap", // wraps nicely on small screens
+                }}
+              >
+                {/* Status */}
+                <Box
+                  component="span"
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <Box
+                    component="span"
+                    sx={{
+                      backgroundColor:
+                        task.status === "Completed"
+                          ? "#16a34a"
+                          : task.status === "In Progress"
+                          ? "#f59e0b"
+                          : "#64748b",
+                      color: "#fff",
+                      px: 1.5,
+                      py: 0.3,
+                      borderRadius: "12px",
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {task.status || "Unknown"}
+                  </Box>
+                </Box>
+
+                {/* Assignee */}
+                <Box
+                  component="span"
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <Box
+                    component="span"
+                    sx={{
+                      fontWeight: 600,
+                      color: "#fff",
+                    }}
+                  >
+                    Assignee:
+                  </Box>
+                  <Box
+                    component="span"
+                    sx={{
+                      color: "#60a5fa",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {task.assignee?.firstName} {task.assignee?.lastName || ""}
+                  </Box>
+                </Box>
+              </Typography>
+            </Paper>
+          );
+        })}
       </div>
     </div>
   );
