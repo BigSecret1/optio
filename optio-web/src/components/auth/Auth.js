@@ -28,7 +28,6 @@ function Auth() {
       userData.username,
       userData.password
     );
-    console.log("Received user object after login ", typeof(user));
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);

@@ -50,8 +50,6 @@ export default function NewTask({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(TASK_STATUS[0]);
 
-  
-
   const handleSubmit = () => {
     onSubmit({
       title,
@@ -103,7 +101,6 @@ export default function NewTask({
             </FormLabel>
             <TextField
               id="task-title"
-              placeholder="Enter a clear, concise title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -122,7 +119,6 @@ export default function NewTask({
             </FormLabel>
             <TextField
               id="task-description"
-              placeholder="Add task description here"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               fullWidth
@@ -168,18 +164,17 @@ export default function NewTask({
           Cancel
         </Button>
 
-        {/* Create button - accent */}
         <Button
           type="submit"
           variant="contained"
           sx={{
-            bgcolor: "#304971",
+            bgcolor: "#60A5FA",
             "&:hover": { bgcolor: "#1e40af" },
             fontWeight: 700,
             fontSize: "1rem", // e.g., 16px
             borderRadius: 2,
             px: 3,
-            color: "#ffffff",
+            color: "#002027",
             textTransform: "none",
             boxShadow: "0 4px 12px rgba(37, 99, 235, 0.4)",
           }}
