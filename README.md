@@ -5,6 +5,19 @@ Optio is yet to release ...
 
 ---
 
+
+## Quick Glimpse
+<p align="center">
+  <img src="assets/images/home-page.png" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="assets/images/task.png" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="assets/images/users.png" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="assets/images/project.png" />
+</p>
+
+
 ## Development Setup
 
 Note that below steps are tested with linux system. Please change commands
