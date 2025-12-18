@@ -2,10 +2,9 @@ import React from "react";
 
 import { TextField, MenuItem } from "@mui/material";
 
-import { textFieldSx } from "./utils";
 import { ROLES as roles } from "../../../constants";
 
-export default function RoleSelect({ value, onChange }) {
+export default function RoleSelect({ value, onChange, sx }) {
   return (
     <TextField
       select
@@ -16,7 +15,7 @@ export default function RoleSelect({ value, onChange }) {
       fullWidth
       required
       variant="filled"
-      sx={textFieldSx}
+      sx={sx}
       InputProps={{ disableUnderline: true }}
     >
       {roles.map((role) => (
