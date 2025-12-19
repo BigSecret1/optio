@@ -4,7 +4,12 @@ import { Button } from "@mui/material";
 
 import TOKENS from "./utils";
 
-export default function SubmitButton({ disabled, submitting }) {
+export default function SubmitButton({
+  disabled,
+  submitting,
+  processText = "",
+  actionText = "",
+}) {
   return (
     <Button
       type="submit"
@@ -25,7 +30,7 @@ export default function SubmitButton({ disabled, submitting }) {
         },
       }}
     >
-      {submitting ? "Creating..." : "Create user"}
+      {submitting ? processText : actionText}
     </Button>
   );
 }
