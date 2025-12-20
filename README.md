@@ -154,19 +154,6 @@ python manage.py runserver 8000
 
 ---
 
-### You're All Set!
-
-| Service       | URL                       |
-|---------------|---------------------------|
-| Frontend      | http://localhost:3000     |
-| Backend API   | http://localhost:8000     |
-| Elasticsearch | http://localhost:9200     |
-
-
-
-
-
-
 ## Docker Deployment Guide
 
 This guide walks you through deploying the **Optio** project using Docker and Docker Compose. You can customize ports and configure Nginx for production as needed.
