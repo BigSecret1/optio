@@ -60,13 +60,10 @@ export default function CreateUser() {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    console.log("name is = ", name, " and value is = ", value);
-    setUserData((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function handlePasswordChange(e) {
-    const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   }
 
   async function handleSubmit(e) {
@@ -156,7 +153,7 @@ export default function CreateUser() {
                   label="Password"
                   name="password"
                   value={userData.password}
-                  onChange={handlePasswordChange}
+                  onChange={handleChange}
                   show={showPassword}
                   setShow={setShowPassword}
                   helper={"Use at least 8 characters"}
@@ -169,7 +166,7 @@ export default function CreateUser() {
                   label="Confirm password"
                   name="confirmPassword"
                   value={userData.confirmPassword}
-                  onChange={handlePasswordChange}
+                  onChange={handleChange}
                   show={showConfirm}
                   setShow={setShowConfirm}
                   sx={textFieldSx}
@@ -185,7 +182,12 @@ export default function CreateUser() {
               </Grid>
 
               <Grid item xs={12}>
-                <SubmitButton disabled={isDisabled} submitting={submitting} />
+                <SubmitButton
+                  disabled={isDisabled}
+                  submitting={submitting}
+                  processText="Creating User..."
+                  actionText="Create User"
+                />
               </Grid>
             </Grid>
           </Box>

@@ -10,6 +10,8 @@ export default function TextInput({
   value,
   onChange,
   required = false,
+  readOnly = false,
+  disabled = false,
   ...rest
 }) {
   return (
@@ -22,7 +24,10 @@ export default function TextInput({
       required={required}
       variant="filled"
       sx={textFieldSx}
-      InputProps={{ disableUnderline: true }}
+      InputProps={{
+        disableUnderline: true,
+        readOnly: readOnly,
+      }}
       {...rest}
     />
   );
