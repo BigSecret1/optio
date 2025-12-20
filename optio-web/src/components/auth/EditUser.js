@@ -1,127 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   Container,
-//   Typography,
-//   TextField,
-//   Switch,
-//   FormControlLabel,
-//   Button,
-//   Paper,
-//   MenuItem,
-// } from "@mui/material";
-// import { useParams, useNavigate } from "react-router-dom";
-
-// import { ROLES } from "../../constants";
-// import "./styles/edit-user.css";
-// import { User } from "../../user/index";
-
-// const roles = ROLES;
-
-// function EditUser() {
-//   const userAction = new User();
-//   const { id } = useParams();
-//   const navigate = useNavigate();
-//   const [user, setUser] = useState(null);
-
-//   useEffect(() => {
-//     async function fetchUser() {
-//       const userDetail = await userAction.listUsers(id);
-//       setUser(userDetail);
-//     }
-
-//     fetchUser();
-//   }, []);
-
-//   function handleChange(e) {
-//     const { name, value } = e.target;
-//     setUser((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   }
-
-//   async function handleSave() {
-//     try {
-//       const groups = [user.groups];
-//       await userAction.updateUser(
-//         user.id,
-//         user.firstName,
-//         user.lastName,
-//         groups
-//       );
-//       navigate("/users/list");
-//     } catch (err) {
-//       console.error("Update failed:", err);
-//     }
-//   }
-
-//   if (!user) return <Typography>Loading...</Typography>;
-
-//   return (
-//     <Container maxWidth="sm">
-//       <Paper className="edit-user-paper" sx={{ p: 4, mt: 4 }}>
-//         <Typography variant="h5" gutterBottom>
-//           Edit User
-//         </Typography>
-
-//         <TextField
-//           className="edit-user-input"
-//           label="First Name"
-//           fullWidth
-//           margin="normal"
-//           name="firstName"
-//           value={user.firstName}
-//           onChange={handleChange}
-//         />
-//         <TextField
-//           className="edit-user-input"
-//           label="Last Name"
-//           fullWidth
-//           margin="normal"
-//           name="lastName"
-//           value={user.lastName}
-//           onChange={handleChange}
-//         />
-//         <TextField
-//           className="edit-user-input"
-//           label="Username"
-//           fullWidth
-//           margin="normal"
-//           name="email"
-//           value={user.email}
-//           onChange={handleChange}
-//         />
-//         <TextField
-//           className="edit-user-input"
-//           select
-//           label="Role"
-//           fullWidth
-//           margin="normal"
-//           name="groups"
-//           value={user.groups}
-//           onChange={handleChange}
-//         >
-//           {roles.map((role) => (
-//             <MenuItem key={role} value={role}>
-//               {role}
-//             </MenuItem>
-//           ))}
-//         </TextField>
-
-//         <Button
-//           variant="contained"
-//           sx={{ mt: 2, backgroundColor: "#3F5880" }}
-//           onClick={handleSave}
-//         >
-//           Save
-//         </Button>
-//       </Paper>
-//     </Container>
-//   );
-// }
-
-// export default EditUser;
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -130,7 +6,6 @@ import { User } from "../../user/index";
 
 import HeaderCard from "./ManageUser/HeaderCard";
 import TextInput from "./ManageUser/TextInput";
-import PasswordField from "./ManageUser/PasswordField";
 import RoleSelect from "./ManageUser/RoleSelect";
 import SubmitButton from "./ManageUser/SubmitButton";
 
@@ -155,46 +30,40 @@ export default function EditUser() {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
-  const [passwordMatch, setPasswordMatch] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const isDisabled = false;
-  // submitting ||
-  // !userData.firstName ||
-  // !userData.email ||
-  // !userData.password ||
-  // !userData.confirmPassword ||
-  // !userData.role ||
-  // !passwordMatch ||
-  // !emailValid(userData.email);
+  const isDisabled =
+    userData == null ? false : !userData.firstName || !userData.groups;
 
   useEffect(() => {
     async function fetchUser() {
       const userDetail = await userAction.listUsers(id);
-      console.log("User details is ", userDetail);
       setUserData(userDetail);
     }
-
     fetchUser();
   }, []);
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   }
 
-  async function handleSubmit(e) {
+  async function handleSave(e) {
     e.preventDefault();
-    setSubmitting(true);
-
     try {
-      await userAction.createUser(userData);
+      const groups = [userData.groups];
+      await userAction.updateUser(
+        userData.id,
+        userData.firstName,
+        userData.lastName,
+        groups
+      );
       navigate("/users/list");
     } catch (err) {
-      console.error("create user failed", err);
-      setSubmitting(false);
+      console.error("Update failed:", err);
     }
   }
 
@@ -227,7 +96,7 @@ export default function EditUser() {
         >
           <HeaderCard title={"Edit User"} />
 
-          <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Box component="form" onSubmit={handleSave} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextInput
@@ -259,20 +128,13 @@ export default function EditUser() {
                   required
                   readOnly={true}
                   disabled={true}
-                  error={
-                    userData.email.length > 0 && !emailValid(userData.email)
-                  }
-                  helperText={
-                    userData.email.length > 0 && !emailValid(userData.email)
-                      ? "Enter a valid email"
-                      : ""
-                  }
                   sx={textFieldSx}
                 />
               </Grid>
 
               <Grid item xs={12}>
                 <RoleSelect
+                  name="groups"
                   value={userData.groups}
                   onChange={handleChange}
                   sx={textFieldSx}

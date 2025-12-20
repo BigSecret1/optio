@@ -4,12 +4,12 @@ import { TextField, MenuItem } from "@mui/material";
 
 import { ROLES as roles } from "../../../constants";
 
-export default function RoleSelect({ value, onChange, sx }) {
+export default function RoleSelect({ value, name = "role", onChange, sx }) {
   return (
     <TextField
       select
       label="Role"
-      name="role"
+      name={name}
       value={value}
       onChange={onChange}
       fullWidth
