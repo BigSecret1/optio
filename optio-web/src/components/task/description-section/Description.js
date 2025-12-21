@@ -1,14 +1,10 @@
 import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
 
-// matrical UI
-import Box from "@mui/material/Box";
+import { Typography, Box } from "@mui/material";
 
-// Internal modules
 import { TaskContext } from "../../../contexts/TaskContext";
 import OptionMenu from "../../UI/OptionMenu.js";
-
-// Child components
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import EditTaskDescription from "./EditTaskDescription.js";
 
@@ -60,7 +56,9 @@ export default function Description({ taskId }) {
       {isEditingTaskDescription === true ? (
         <EditTaskDescription taskId={taskId} />
       ) : (
-        <p>{task.description}</p>
+        <Typography sx={{ whiteSpace: "pre-wrap" }}>
+          {task.description}
+        </Typography>
       )}
     </Box>
   );

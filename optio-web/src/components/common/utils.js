@@ -1,4 +1,4 @@
-export const TOKENS = {
+const TOKENS = {
   projectSecondary: "#304971",
   inputSurface: "rgba(255,255,255,0.05)",
   inputHover: "rgba(255,255,255,0.07)",
@@ -36,3 +36,5 @@ export const textFieldSx = {
 // simpler and reliable email validator for most use-cases
 export const emailValid = (email) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
+
+export default TOKENS;
