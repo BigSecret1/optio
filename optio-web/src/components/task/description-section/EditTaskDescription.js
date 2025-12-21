@@ -1,16 +1,25 @@
-import * as React from "react";
+import React from "react";
 import { useState, useContext } from "react";
 
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { Box, Grid } from "@mui/material";
+import { FormControl, FormLabel, TextField } from "@mui/material";
 
 import { TaskContext } from "../../../contexts/TaskContext";
+import SubmitButton from "../../common/SubmitButton";
+import CancelButton from "../../common/CancelButton";
+
+const fieldSx = {
+  "& .MuiOutlinedInput-root": {
+    color: "#e6edf3",
+    "& fieldset": { borderColor: "#90caf9" },
+    "&:hover fieldset": { borderColor: "#64b5f6" },
+    "&.Mui-focused fieldset": { borderColor: "#2196f3" },
+  },
+};
 
 export default function EditTaskDescription({ taskId }) {
   const { task, getUpdatedTask, taskService, setIsEditingTaskDescription } =
     useContext(TaskContext);
-
   const [description, setDescription] = useState(task.description);
 
   function handleEditing(event) {
@@ -30,22 +39,27 @@ export default function EditTaskDescription({ taskId }) {
   return (
     <Box
       component="form"
-      sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
+      sx={{ "& .MuiTextField-root": { m: 1 } }}
+      onSubmit={handleSave}
       noValidate
       autoComplete="off"
     >
-      <div>
+      <FormControl fullWidth>
         <TextField
-          id="outlined-multiline-static"
-          multiline
-          rows={5}
-          defaultValue={description}
-          style={{ width: "100%" }}
+          value={description}
           onChange={handleEditing}
+          fullWidth
+          multiline
+          minRows={5}
+          sx={fieldSx}
+          InputLabelProps={{ shrink: false }}
         />
-        <Button onClick={handleSave}>Save</Button>
-        <Button onClick={handleClose}>Cancel</Button>
-      </div>
+      </FormControl>
+
+      <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
+        <SubmitButton actionText="Save" />
+        <CancelButton onClose={handleClose} />
+      </Box>
     </Box>
   );
 }
