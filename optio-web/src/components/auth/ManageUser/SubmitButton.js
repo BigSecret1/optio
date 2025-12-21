@@ -14,14 +14,16 @@ export default function SubmitButton({
     <Button
       type="submit"
       variant="contained"
-      fullWidth
       disabled={disabled}
       sx={{
-        py: 1.25,
+        px: 3,
+        py: 1.0,
         mt: 1,
         fontWeight: 700,
         textTransform: "none",
         bgcolor: TOKENS.accent,
+        whiteSpace: "nowrap",
+        width: "fit-content",
         color: "#002027",
         "&:hover": { bgcolor: "#3fb0ff" },
         "&.Mui-disabled": {

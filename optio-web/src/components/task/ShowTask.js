@@ -8,7 +8,7 @@ import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import { TaskContext } from "../../contexts/TaskContext.js";
 import "../../styles/ShowTask.css";
-import EllipsisWithSpacing from "../UI/ThreeDots.js";
+import { TextBox, SubmitButton, CancelButton } from "../common";
 import Header from "./header-section/Header.js";
 import Description from "./description-section/Description.js";
 import SubTasks from "./subtasks-section/SubTasks.js";
@@ -75,29 +75,12 @@ export default function ShowTasks({ taskId }) {
           <h3>Comments</h3>
 
           <div className="commentBox">
-            <TextField
-              id="filled-textarea"
-              placeholder="Add a comment..."
-              multiline
-              variant="filled"
-              value={newComment}
-              onChange={(event) => setNewComment(event.target.value)}
-              InputLabelProps={{
-                style: { color: "white" },
-              }}
-            />
-            <button
-              type="button"
-              className="btn btn-outline-success"
-              onClick={handleAddComment}
-            >
-              comment
-            </button>
+            <TextBox />
+            <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
+              <SubmitButton actionText="Add Comment" />
+            </Box>
           </div>
 
-          <div className="commentHeader">
-            <h5>{task.comments.length} Comments</h5>
-          </div>
           {task.comments.map((comment, index) => {
             return (
               <div className="comment" key={index}>

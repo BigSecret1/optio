@@ -7,19 +7,21 @@ export default function SubmitButton({
   submitting = false,
   processText = "",
   actionText = "",
-  fullWidth = false,
 }) {
   return (
     <Button
       type="submit"
       variant="contained"
-      fullWidth={fullWidth}
       disabled={disabled}
       sx={{
-        py: 1.25,
-        mt: 1,
-        fontWeight: 700,
+        py: 1,
+        px: 3,
+        fontWeight: 600,
+        fontSize: "0.9rem",
         textTransform: "none",
+        whiteSpace: "nowrap",
+        width: "fit-content",
+        lineHeight: 1.2,
         bgcolor: TOKENS.accent,
         color: "#002027",
         "&:hover": { bgcolor: "#3fb0ff" },
