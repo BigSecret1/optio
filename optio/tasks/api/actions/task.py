@@ -32,7 +32,6 @@ class TaskAPIAction(APIAction):
 
     def fetch(self, task_id: int):
         try:
-            logging.info("fetching all")
             task = Task.objects.get(id=task_id)
             serializer = TaskSerializer(instance=task)
             return serializer.data
@@ -66,7 +65,7 @@ class TaskAPIAction(APIAction):
             else:
                 raise ValidationError(serializer.errors)
         except Task.DoesNotExist:
-            raise(f"No such task found with id {task_id}")
+            raise (f"No such task found with id {task_id}")
 
     def delete(self, task_id: int):
         try:
@@ -84,4 +83,3 @@ class TaskAPIAction(APIAction):
             return serializer.data
         except Exception as e:
             raise Exception(f"Exception {e}")
-

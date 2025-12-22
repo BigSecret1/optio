@@ -20,7 +20,7 @@ error_message: str = "Internal server error"
 validation_error_message: str = "Received invalid data in request please check"
 
 
-class CreateView(APIView):
+class CreateCommentAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -47,7 +47,7 @@ class CreateView(APIView):
             )
 
 
-class ListView(APIView):
+class ListCommentAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -67,7 +67,7 @@ class ListView(APIView):
             )
 
 
-class EditView(APIView):
+class EditCommentAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -94,7 +94,7 @@ class EditView(APIView):
             )
 
 
-class DeleteView(APIView):
+class DeleteCommentAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
