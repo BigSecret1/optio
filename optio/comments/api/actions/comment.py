@@ -11,7 +11,8 @@ from optio.comments.api.serializers import CommentSerializer
 
 
 class CommentAPIAction(APIAction):
-    def add_comment(self, data: Comment):
+    @staticmethod
+    def add_comment(data: Comment):
         try:
             serializer = CommentSerializer(data=data)
             if serializer.is_valid():
@@ -28,17 +29,19 @@ class CommentAPIAction(APIAction):
         except Exception:
             raise
 
-    def fetch_all_comments(self, task_id: int):
+    @staticmethod
+    def fetch_all_comments(task_id: int):
         try:
+            print("in fetch all comments ", task_id)
             comments = Comment.objects.filter(task=task_id)
             serializer = CommentSerializer(instance=comments, many=True)
             return serializer.data
-            return comments
         except Exception as e:
             logging.error("some error occured while fetching the comments %s", str(e))
             raise
 
-    def update_comment(self, comment_id: int, data: Comment):
+    @staticmethod
+    def update_comment(comment_id: int, data: Comment):
         try:
             serializer = CommentSerializer(data=data, partial=True)
             if serializer.is_valid():
@@ -57,7 +60,8 @@ class CommentAPIAction(APIAction):
         except Exception as e:
             raise
 
-    def delete_comment(self, comment_id: int):
+    @staticmethod
+    def delete_comment(comment_id: int):
         try:
             comment = Comment.objects.get(id=comment_id)
             comment.delete()

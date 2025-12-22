@@ -8,15 +8,12 @@ from optio.tasks.models import Task
 from optio.projects.serializers import ProjectSerializer
 from optio.users.serializers import UserSerializer
 from optio.users.models import UserProfile
+from optio.comments.api.interface import CommentInterface
 
 
 class BaseSerializer(serializers.ModelSerializer):
-    comments = serializers.ListField(
-        child=serializers.CharField(max_length=1000),
-        required=False,
-        allow_empty=True,
-        error_messages={"max_length": "Each comment must not exceed 1000 characters."},
-    )
+    comments = serializers.SerializerMethodField()
+
     status = serializers.ChoiceField(
         choices=["To Do", "In Progress", "Completed"],
         required=False,
@@ -78,6 +75,9 @@ class BaseSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
+
+    def get_comments(self, obj):
+        return CommentInterface.get_comments(obj.id)
 
 
 class SubTaskSerializer(BaseSerializer):

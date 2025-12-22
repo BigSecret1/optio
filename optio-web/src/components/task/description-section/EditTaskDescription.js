@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useContext } from "react";
 
 import { Box, Grid } from "@mui/material";
-import { FormControl, FormLabel, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 
 import { TaskContext } from "../../../contexts/TaskContext";
 import SubmitButton from "../../common/SubmitButton";
@@ -44,17 +44,15 @@ export default function EditTaskDescription({ taskId }) {
       noValidate
       autoComplete="off"
     >
-      <FormControl fullWidth>
-        <TextField
-          value={description}
-          onChange={handleEditing}
-          fullWidth
-          multiline
-          minRows={5}
-          sx={fieldSx}
-          InputLabelProps={{ shrink: false }}
-        />
-      </FormControl>
+      <TextField
+        value={description}
+        onChange={handleEditing}
+        fullWidth
+        multiline
+        minRows={5}
+        sx={fieldSx}
+        InputLabelProps={{ shrink: false }}
+      />
 
       <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
         <SubmitButton actionText="Save" />
