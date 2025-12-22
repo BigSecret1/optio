@@ -1,10 +1,9 @@
 import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
 
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { Box, Typography, Divider, IconButton, Stack } from "@mui/material";
 
 import { TaskContext } from "../../contexts/TaskContext.js";
 import "../../styles/ShowTask.css";
@@ -30,6 +29,7 @@ export default function ShowTasks({ taskId }) {
    */
   useEffect(() => {
     getUpdatedTask(taskId);
+    console.log("Fetched task is ", task);
   }, [taskId]);
 
   const [newComment, setNewComment] = useState("");
@@ -81,15 +81,71 @@ export default function ShowTasks({ taskId }) {
             </Box>
           </div>
 
-          {task.comments.map((comment, index) => {
+          {task.comments.map((commentObject, index) => {
             return (
-              <div className="comment" key={index}>
-                <h6>Added on Sep 15 2024: 11:40 IST</h6>
-                <p>{comment}</p>
-                <FontAwesomeIcon icon={faEdit} /> Edit
-                <FontAwesomeIcon icon={faTrash} /> Delete
-                <hr />
-              </div>
+              <Box
+                sx={{
+                  p: 2,
+                  mb: 2,
+                  borderRadius: 2,
+                  backgroundColor: "rgba(255, 255, 255, 0.05)",
+                }}
+              >
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mb={1}
+                >
+                  <Stack direction="row" alignItems="baseline" spacing={1.5}>
+                    <Typography
+                      sx={{
+                        fontSize: "1rem",
+                        color: "white",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Dinesh Kumar
+                    </Typography>
+
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: "white",
+                        position: "relative",
+                        top: 2,
+                      }}
+                    >
+                      Last Update: {commentObject.createdAt}
+                    </Typography>
+                  </Stack>
+
+                  <IconButton
+                    size="small"
+                    sx={{
+                      color: "white",
+                      p: 0.5,
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faEdit}
+                      style={{ marginRight: 10 }}
+                    />
+                    <FontAwesomeIcon icon={faTrash} />
+                  </IconButton>
+                </Stack>
+
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "white",
+                    lineHeight: 1.6,
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {commentObject.comment}
+                </Typography>
+              </Box>
             );
           })}
         </div>
