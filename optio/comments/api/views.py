@@ -14,8 +14,6 @@ from optio.comments.api.actions import CommentAPIAction
 from optio.utils.exceptions import perm_required_error
 from optio.permissions import check_permission
 
-comment_api_action = CommentAPIAction()
-
 error_message: str = "Internal server error"
 validation_error_message: str = "Received invalid data in request please check"
 
@@ -30,7 +28,7 @@ class CreateCommentAPIView(APIView):
 
         try:
             return Response(
-                comment_api_action.add_comment(request.data),
+                CommentAPIAction.add_comment(request.data, user=request.user),
                 status=status.HTTP_200_OK
             )
         except ValidationError as e:
@@ -57,7 +55,7 @@ class ListCommentAPIView(APIView):
 
         try:
             return Response(
-                comment_api_action.fetch_all_comments(task_id),
+                CommentAPIAction.fetch_all_comments(task_id),
                 status=status.HTTP_200_OK
             )
         except Exception:
@@ -72,11 +70,11 @@ class EditCommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request: Request, comment_id: int) -> Response:
-        if not check_permission(request.user, "comments", "Comment", "change"):
+        if not check_permission(request.user, "comments", "Comment", "edit"):
             raise PermissionDenied(perm_required_error)
 
         try:
-            comment_api_action.update_comment(comment_id, request.data)
+            CommentAPIAction.update_comment(comment_id, request.data)
             return Response(
                 {"success": "comment was update successfully"},
                 status=status.HTTP_200_OK
@@ -103,7 +101,7 @@ class DeleteCommentAPIView(APIView):
             raise PermissionDenied(perm_required_error)
 
         try:
-            comment_api_action.delete_comment(comment_id)
+            CommentAPIAction.delete_comment(comment_id)
             return Response(
                 {"success": "Deleted comment successfully"},
                 status=status.HTTP_200_OK
