@@ -11,13 +11,15 @@ from optio.comments.api.serializers import CommentSerializer
 
 
 class CommentAPIAction(APIAction):
+
     @staticmethod
-    def add_comment(data: Comment):
+    def add_comment(data: Comment, user=None):
         try:
+            print("Recevied user ", user)
             serializer = CommentSerializer(data=data)
             if serializer.is_valid():
                 with transaction.atomic():
-                    serializer.save()
+                    serializer.save(user=user)
                 return {"success": "Comment was added successfully"}
             else:
                 logging.error(
@@ -32,7 +34,6 @@ class CommentAPIAction(APIAction):
     @staticmethod
     def fetch_all_comments(task_id: int):
         try:
-            print("in fetch all comments ", task_id)
             comments = Comment.objects.filter(task=task_id)
             serializer = CommentSerializer(instance=comments, many=True)
             return serializer.data

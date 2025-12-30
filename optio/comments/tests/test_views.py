@@ -4,7 +4,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import ValidationError
 
 from unittest.mock import patch
-
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -32,18 +31,17 @@ class BaseAPITestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
 
-class TestCreateView(BaseAPITestCase):
+class TestCreateCommentAPIView(BaseAPITestCase):
     def setUp(self):
         super().setUp()
 
         self.create_url = reverse("add-comment")
 
     @patch('optio.comments.api.views.check_permission')
-    @patch('optio.comments.api.views.comment_api_action.add_comment')
-    def test_create_task_success(self, mock_add_comment, mock_check_permission):
+    @patch('optio.comments.api.views.CommentAPIAction.add_comment')
+    def test_create_comment_success(self, mock_add_comment, mock_check_permission):
         mock_check_permission.return_value = True
         mock_add_comment.return_value = {"message": "Comment was added successfully"}
-
         self.authenticate()
 
         response = self.client.post(
@@ -56,9 +54,12 @@ class TestCreateView(BaseAPITestCase):
         self.assertEqual(response.data, {"message": "Comment was added successfully"})
 
     @patch('optio.comments.api.views.check_permission')
-    @patch('optio.comments.api.views.comment_api_action.add_comment')
-    def test_permission_denied(self, mock_add_comment,
-                               mock_check_permission):
+    @patch('optio.comments.api.views.CommentAPIAction.add_comment')
+    def test_permission_denied(
+            self,
+            mock_add_comment,
+            mock_check_permission
+    ):
         mock_check_permission.return_value = False
 
         self.authenticate()
@@ -72,7 +73,7 @@ class TestCreateView(BaseAPITestCase):
         self.assertEqual(str(response.data['detail']), perm_required_error)
 
     @patch('optio.comments.api.views.check_permission')
-    @patch('optio.comments.api.views.comment_api_action.add_comment')
+    @patch('optio.comments.api.views.CommentAPIAction.add_comment')
     def test_validation_error(self, mock_add_comment, mock_check_permission):
         mock_check_permission.return_value = True
         mock_add_comment.side_effect = ValidationError("Invalid data")
@@ -85,7 +86,7 @@ class TestCreateView(BaseAPITestCase):
         self.assertEqual(response.json(), {"error": "Invalid request body"})
 
     @patch('optio.comments.api.views.check_permission')
-    @patch('optio.comments.api.views.comment_api_action.add_comment')
+    @patch('optio.comments.api.views.CommentAPIAction.add_comment')
     def test_create_comment_server_error(self, mock_add_comment, mock_check_permission):
         mock_check_permission.return_value = True
         mock_add_comment.side_effect = Exception("Some server error")
@@ -102,7 +103,7 @@ class TestCreateView(BaseAPITestCase):
         self.assertEqual(response.data, {"error": "Internal server error"})
 
 
-class TestListView(BaseAPITestCase):
+class TestListCommentAPIView(BaseAPITestCase):
     def setUp(self):
         super().setUp()
 
@@ -113,23 +114,25 @@ class TestListView(BaseAPITestCase):
             {
                 "comment": "This is the first comment.",
                 "taskId": 101,
-                "createdAt": "2024-03-29T12:00:00Z"
+                "createdAt": "2024-03-29T12:00:00Z",
+                "user": 8
             },
             {
                 "comment": "This is another comment related to the task.",
                 "taskId": 101,
-                "createdAat": "2024-03-29T12:05:00Z"
+                "createdAat": "2024-03-29T12:05:00Z",
+                "user": 8
             }
         ]
 
         self.fetch_url = reverse("list-comments", args=[self.task_id])
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.fetch_all_comments")
+    @patch("optio.comments.api.views.CommentAPIAction.fetch_all_comments")
     def test_fetch_comments_success(
-        self,
-        mock_fetch_all_comments,
-        mock_check_permission
+            self,
+            mock_fetch_all_comments,
+            mock_check_permission
     ):
         self.authenticate()
 
@@ -150,7 +153,7 @@ class TestListView(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.fetch_all_comments")
+    @patch("optio.comments.api.views.CommentAPIAction.fetch_all_comments")
     def test_get_comments_internal_server_error(self, mock_fetch_all_comments,
                                                 mock_check_permission):
         self.authenticate()
@@ -163,7 +166,7 @@ class TestListView(BaseAPITestCase):
         self.assertEqual(response.json(), {"error": "Internal server error"})
 
 
-class TestEditView(BaseAPITestCase):
+class TestUpdateCommentAPIView(BaseAPITestCase):
     def setUp(self):
         super().setUp()
 
@@ -171,17 +174,18 @@ class TestEditView(BaseAPITestCase):
         self.task = Task.objects.create(id=1, title="Old Task", project=project)
         self.comment = Comment.objects.create(
             comment="Initial Comment",
-            task=self.task
+            task=self.task,
+            user=self.user
         )
 
         self.update_url = reverse("update-comment", args=[self.comment.id])
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.update_comment")
+    @patch("optio.comments.api.views.CommentAPIAction.update_comment")
     def test_update_comment_success(
-        self,
-        mock_update_comment,
-        mock_check_permission
+            self,
+            mock_update_comment,
+            mock_check_permission
     ):
         self.authenticate()
 
@@ -215,11 +219,11 @@ class TestEditView(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.update_comment")
+    @patch("optio.comments.api.views.CommentAPIAction.update_comment")
     def test_validation_error(
-        self,
-        mock_update_comment,
-        mock_check_permission
+            self,
+            mock_update_comment,
+            mock_check_permission
     ):
         self.authenticate()
 
@@ -236,11 +240,11 @@ class TestEditView(BaseAPITestCase):
         self.assertEqual(response.json(), {"error": "Invalid request body"})
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.update_comment")
+    @patch("optio.comments.api.views.CommentAPIAction.update_comment")
     def test_server_error(
-        self,
-        mock_update_comment,
-        mock_check_permission
+            self,
+            mock_update_comment,
+            mock_check_permission
     ):
         self.authenticate()
 
@@ -257,7 +261,7 @@ class TestEditView(BaseAPITestCase):
         self.assertEqual(response.json(), {"error": error_message})
 
 
-class TestDeleteView(BaseAPITestCase):
+class TestDeleteCommentAPIView(BaseAPITestCase):
     def setUp(self):
         super().setUp()
 
@@ -265,19 +269,19 @@ class TestDeleteView(BaseAPITestCase):
         self.task = Task.objects.create(id=1, title="Old Task", project=project)
         self.comment = Comment.objects.create(
             comment="Initial Comment",
-            task=self.task
+            task=self.task,
+            user=self.user
         )
 
         self.delete_url = reverse("delete-comment", args=[self.comment.id])
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.delete_comment")
+    @patch("optio.comments.api.views.CommentAPIAction.delete_comment")
     def test_delete_comment_success(self, mock_delete_comment, mock_check_permission):
         self.authenticate()
 
         mock_check_permission.return_value = True
         mock_delete_comment.return_value = None
-
         response = self.client.delete(self.delete_url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -294,7 +298,7 @@ class TestDeleteView(BaseAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.delete_comment")
+    @patch("optio.comments.api.views.CommentAPIAction.delete_comment")
     def test_comment_not_found(self, mock_delete_comment, mock_check_permission):
         self.authenticate()
 
@@ -310,11 +314,11 @@ class TestDeleteView(BaseAPITestCase):
         )
 
     @patch("optio.comments.api.views.check_permission")
-    @patch("optio.comments.api.views.comment_api_action.delete_comment")
+    @patch("optio.comments.api.views.CommentAPIAction.delete_comment")
     def test_server_error(
-        self,
-        mock_delete_comment,
-        mock_check_permission
+            self,
+            mock_delete_comment,
+            mock_check_permission
     ):
         self.authenticate()
 
