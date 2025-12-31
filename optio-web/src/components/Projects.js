@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 
 import "./Projects.css";
-import ProjectAction from "../project/action";
+import ProjectAction from "../project/index";
 import { searchContext, projectSearchStrategy } from "../search/index";
 import { extractSearchResults } from "../util";
 

@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import "./styles/new-project.css";
 import { NewContext } from "../../contexts/NewContext";
-import ProjectAction from "../../project/action";
+import ProjectAction from "../../project/index";
 
 export default function NewProject() {
   const projectAction = new ProjectAction();

@@ -92,9 +92,6 @@ class Task {
     const endpoint = `/fetch/${taskId}`;
 
     try {
-      console.log(
-        `Fetching task with ${taskId} requesting to ${BASE_URL}${endpoint}`
-      );
       const response = await fetch(`${BASE_URL}${endpoint}`, {
         method: "GET",
         headers: {
@@ -105,8 +102,6 @@ class Task {
 
       const task = await response.json();
       if (response.ok) {
-        console.log(`Suceessfully fetched task with id ${taskId}`);
-        console.log("Task : ", task);
         return task;
       } else {
         console.log("COULDN'T FETCH TASK");
@@ -132,7 +127,6 @@ class Task {
     const updateEndpoint = `/edit/${requestBody["id"]}/`;
 
     try {
-      console.log("Sending update with data ", requestBody);
       const response = await fetch(`${BASE_URL}${updateEndpoint}`, {
         method: "PUT",
         headers: {
@@ -150,7 +144,7 @@ class Task {
         console.error("FAILED TO UPDATE THE TASK:", response.statusText);
       }
     } catch (error) {
-      console.log("Task update failed error ", error);
+      console.error("Task update failed error ", error);
     }
   }
 }

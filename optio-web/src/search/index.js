@@ -1,5 +1,3 @@
-import { SERVER_HOST } from "../constants";
-import { getToken } from "../user/actions/token";
 import ApiManager from "../api-manager/api-manager";
 
 class SearchStrategy {
@@ -58,4 +56,9 @@ const taskSearchStrategy = new TaskSearchStrategy();
 const projectSearchStrategy = new ProjectSearchStrategy();
 const userSearchStrategy = new UserSearchStrategy();
 
-export { searchContext, taskSearchStrategy, projectSearchStrategy, userSearchStrategy };
+export {
+  searchContext,
+  taskSearchStrategy,
+  projectSearchStrategy,
+  userSearchStrategy,
+};
