@@ -6,7 +6,6 @@ export default class CommentService {
       comment,
       task: taskId,
     };
-    console.log("Adding comment with payload ", payload);
     return ApiManager.addComment(payload);
   }
 }
