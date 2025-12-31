@@ -16,6 +16,11 @@ class ApiManager {
     const url = ENDPOINTS.SEARCH_USER;
     return ApiMethods.post(url, param);
   }
+
+  static addComment(param) {
+    const url = ENDPOINTS.ADD_COMMENT;
+    return ApiMethods.post(url, param);
+  }
 }
 
 export default ApiManager;
