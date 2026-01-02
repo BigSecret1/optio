@@ -6,6 +6,7 @@ const ENDPOINTS = {
   SEARCH_PROJECT: "/search/project/",
   SEARCH_USER: "/search/user/",
   ADD_COMMENT: "/comments/",
+  DELETE_COMMENT: (commentId) => `/comments/delete/${commentId}/`,
 };
 
 export default ENDPOINTS;

@@ -4,20 +4,32 @@ import { useEffect, useState, createContext, useContext } from "react";
 import { TaskContext } from "../../../contexts/TaskContext";
 import CommentService from "../../../comment/index";
 import { TextBox, SubmitButton, CancelButton } from "../../common";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { Box, Typography, Divider, IconButton, Stack } from "@mui/material";
+import OptionMenu from "../../UI/OptionMenu";
+import EllipsisWithSpacing from "../../UI/ThreeDots";
+import { Box, Typography, Stack } from "@mui/material";
 
 export default function Comment({ taskId }) {
   const { task, getUpdatedTask } = useContext(TaskContext);
   const [newComment, setNewComment] = useState("");
+  const menuOptionsForComment = ["Edit Comment", "Delete"];
 
   async function handleAddComment(e) {
     e.preventDefault();
     CommentService.addComment(newComment, taskId);
     getUpdatedTask(taskId);
     setNewComment("");
+  }
+
+  function handleMenuSelection(option, commentId) {
+    if (option.toLowerCase() === "delete") {
+      console.log("Delete the comment with id ", commentId);
+      handleDeleteComment(commentId);
+    }
+  }
+
+  async function handleDeleteComment(commentId) {
+    CommentService.deleteComment(commentId);
+    getUpdatedTask(taskId);
   }
 
   function handleChange(e) {
@@ -89,6 +101,7 @@ export default function Comment({ taskId }) {
                   </Typography>
 
                   <Typography
+                    onClick={() => handleDeleteComment(commentObject.id)}
                     variant="caption"
                     sx={{
                       color: "white",
@@ -99,17 +112,14 @@ export default function Comment({ taskId }) {
                     Last Update: {commentObject.createdAt}
                   </Typography>
                 </Stack>
-
-                <IconButton
-                  size="small"
-                  sx={{
-                    color: "white",
-                    p: 0.5,
-                  }}
+                <OptionMenu
+                  options={menuOptionsForComment}
+                  onSelect={(option) =>
+                    handleMenuSelection(option, commentObject.id)
+                  }
                 >
-                  <FontAwesomeIcon icon={faEdit} style={{ marginRight: 10 }} />
-                  <FontAwesomeIcon icon={faTrash} />
-                </IconButton>
+                  <EllipsisWithSpacing containerClass="optionDots" />
+                </OptionMenu>
               </Stack>
 
               <Typography
