@@ -8,4 +8,8 @@ export default class CommentService {
     };
     return ApiManager.addComment(payload);
   }
+
+  static deleteComment(commentId) {
+    return ApiManager.deleteComment(commentId);
+  }
 }

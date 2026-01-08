@@ -21,6 +21,11 @@ class ApiManager {
     const url = ENDPOINTS.ADD_COMMENT;
     return ApiMethods.post(url, param);
   }
+
+  static deleteComment(commentId) {
+    const url = ENDPOINTS.DELETE_COMMENT(commentId);
+    return ApiMethods.delete(url);
+  }
 }
 
 export default ApiManager;
