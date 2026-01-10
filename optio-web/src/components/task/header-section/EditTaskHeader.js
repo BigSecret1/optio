@@ -21,6 +21,7 @@ import { TaskContext } from "../../../contexts/TaskContext";
 import { TASK_STATUS } from "../../../constants";
 import "./styles/edit-task-header.css";
 import { searchContext, userSearchStrategy } from "../../../search/index";
+import { getAssigneeName } from "../../../util";
 
 export default function EditTaskHeader({ taskId }) {
   const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask } =
@@ -31,10 +32,10 @@ export default function EditTaskHeader({ taskId }) {
   const anchorRef = useRef(null);
   const [taskHeaders, setTaskHeaders] = useState({
     title: task.title,
-    assignee: `${task.assignee.firstName} ${task.assignee.lastName}` || "",
+    assignee: getAssigneeName(task),
     status: task.status,
   });
-  const [assigneeId, setAssigneeId] = useState(task.assignee.id);
+  const [assigneeId, setAssigneeId] = useState(getAssigneeName(task));
 
   const task_actions = new Task();
 
