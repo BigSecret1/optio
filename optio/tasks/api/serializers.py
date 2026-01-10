@@ -80,59 +80,11 @@ class BaseSerializer(serializers.ModelSerializer):
         return CommentInterface.get_comments(obj.id)
 
 
-class SubTaskSerializer(BaseSerializer):
-    class Meta(BaseSerializer.Meta):
-        extra_kwargs = deepcopy(getattr(BaseSerializer.Meta, 'extra_kwargs', {}))
-        extra_kwargs['parent_task'] = {
-            'queryset': Task.objects.all(),
-            'required': True,
-            'allow_null': False,
-            'error_messages': {
-                "invalid": "Parent Task ID must be a valid integer."
-            }
-        }
-
-    def __init__(self, *args, **kwargs):
-        """
-        Customize the fields to include/exclude in the response.
-        If no fields are passed, all fields are kept by default.
-        """
-        fields = kwargs.pop('fields', None)
-        super().__init__(*args, **kwargs)
-        if fields:
-            allowed = set(fields)
-            existing = set(self.fields.keys())
-            for field_name in existing - allowed:
-                self.fields.pop(field_name)
-
-    def validate_due_date(self, value):
-        if value and value < date.today():
-            raise serializers.ValidationError("Due date cannot be in the past.")
-        return value
-
-    def validate_status(self, value):
-        allowed_statuses = ['To Do', 'In Progress', 'Completed']
-        if value not in allowed_statuses:
-            raise serializers.ValidationError(
-                f"Task status must be one of {allowed_statuses}.")
-        return value
-
-    def to_representation(self, instance):
-        """
-            Before sending Response to API call the data finally gets serialized
-            b this method.
-            It can add more properties or remove existing one from the data before sending
-            the response
-        """
-        representation = super().to_representation(instance)
-
-        due_date = representation.get('due_date')
-        if due_date and date.fromisoformat(due_date) < date.today():
-            representation['is_overdue'] = True
-        else:
-            representation['is_overdue'] = False
-
-        return representation
+class SubTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = '__all__'
+        read_only_fields = ['created_time']
 
 
 class TaskSerializer(BaseSerializer):

@@ -11,7 +11,7 @@ import { Box, Typography, Stack } from "@mui/material";
 export default function Comment({ taskId }) {
   const { task, getUpdatedTask } = useContext(TaskContext);
   const [newComment, setNewComment] = useState("");
-  const menuOptionsForComment = ["Edit Comment", "Delete"];
+  const menuOptionsForComment = ["Delete"];
 
   async function handleAddComment(e) {
     e.preventDefault();
@@ -22,7 +22,6 @@ export default function Comment({ taskId }) {
 
   function handleMenuSelection(option, commentId) {
     if (option.toLowerCase() === "delete") {
-      console.log("Delete the comment with id ", commentId);
       handleDeleteComment(commentId);
     }
   }

@@ -12,6 +12,14 @@ export function extractSearchResults(parentList, searchResults) {
       filteredResults.push(parentList[i]);
     }
   }
-
   return filteredResults;
+}
+
+export function getAssigneeName(task) {
+  if (!task?.assignee) {
+    return "Unassigned";
+  }
+
+  const { firstName = "", lastName = "" } = task.assignee;
+  return `${firstName} ${lastName}`.trim();
 }

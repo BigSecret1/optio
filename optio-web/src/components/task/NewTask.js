@@ -50,15 +50,15 @@ export default function NewTask({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(TASK_STATUS[0]);
 
-  const handleSubmit = () => {
+  function handleSubmit() {
     onSubmit({
       title,
       description,
       status,
       project,
-      parentTaskId: parentTaskId ?? null,
+      parentTask: parentTaskId ?? null,
     });
-  };
+  }
 
   return (
     <Dialog

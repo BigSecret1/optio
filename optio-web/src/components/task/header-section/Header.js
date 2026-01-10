@@ -12,6 +12,7 @@ import StatusIcon from "../StatusIcon.js";
 import UpdateTaskStatus from "./UpdateTaskStatus.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import EditTaskHeader from "./EditTaskHeader.js";
+import { getAssigneeName } from "../../../util.js";
 
 export default function Header({ taskId }) {
   /**
@@ -107,15 +108,15 @@ export default function Header({ taskId }) {
         <Box component="span" sx={{ fontWeight: 500, color: "#fff" }}>
           Status:
         </Box>
+
         <Box component="span" sx={{ mr: 2 }}>
           {task.status}
         </Box>
         <Box component="span" sx={{ fontWeight: 500, color: "#fff" }}>
           Assignee:
         </Box>
-        <Box component="span">
-          {task.assignee.firstName} {task.assignee.lastName}
-        </Box>
+
+        <Box component="span">{getAssigneeName(task)}</Box>
       </Typography>
 
       {isEditingTaskHeader === true ? <EditTaskHeader taskId={taskId} /> : null}

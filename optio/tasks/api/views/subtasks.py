@@ -20,7 +20,7 @@ class CreateSubTask(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        if not check_permission(request.user, "tasks", "Task", "add"):
+        if not check_permission(request.user, "tasks", "Task", "create"):
             raise PermissionDenied(perm_required_error)
 
         try:

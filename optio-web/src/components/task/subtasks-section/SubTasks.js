@@ -1,17 +1,30 @@
 import React, { useEffect, useState, useContext } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
-import Box from "@mui/material/Box";
+import { Box, Stack, Typography } from "@mui/material";
 
 import { TaskContext } from "../../../contexts/TaskContext.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import OptionMenu from "../../UI/OptionMenu.js";
-import NewTask from "../NewTask.js";    
+import NewTask from "../NewTask.js";
+import TaskService from "../../../task/index.js";
 
 export default function SubTasks({ taskId }) {
   const { task } = useContext(TaskContext);
+  const [subtasks, setSubtasks] = useState([]);
   const [openNewTask, setOpenNewTask] = useState(false);
 
-  useEffect(() => {}, [taskId]);
+  useEffect(() => {
+    if (taskId) {
+      getSubtasks();
+    }
+  }, [taskId]);
+
+  async function getSubtasks() {
+    const data = await TaskService.getSubtasks(taskId);
+    setSubtasks(data);
+    console.log("List of subtasks is ", data);
+  }
 
   function handleMenuSelect(option) {
     if (option.toLowerCase() === "create subtask") {
@@ -24,8 +37,13 @@ export default function SubTasks({ taskId }) {
   }
 
   async function handleCreateSubtask(payload) {
-    console.log("Sending data to create new subtask", payload);
-    setOpenNewTask(false);
+    try {
+      await TaskService.createSubtask(payload);
+      getSubtasks();
+      setOpenNewTask(false);
+    } catch (err) {
+      console.error("Failed to create subtask");
+    }
   }
 
   return (
@@ -40,6 +58,7 @@ export default function SubTasks({ taskId }) {
           </OptionMenu>
         </div>
       </div>
+
       {/* Render dialogue form to create new subtask */}
       <NewTask
         open={openNewTask}
@@ -49,6 +68,45 @@ export default function SubTasks({ taskId }) {
         project={task?.project_id ?? 2}
         taskData={{ title: "", description: "", status: "" }}
       />
+
+      {/* Subtasks List */}
+      <Stack spacing={1.5} mt={2}>
+        {subtasks.length > 0 ? (
+          subtasks.map((subtask, index) => (
+            <Stack
+              key={subtask.id}
+              component={RouterLink}
+              to={`/task-manager/${subtask.id}`}
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              sx={{
+                textDecoration: "none",
+                color: "white",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "rgba(255,255,255,0.08)",
+                  borderRadius: 1,
+                },
+                p: 0.5,
+              }}
+            >
+              <Typography
+                key={subtask.id ?? index}
+                sx={{
+                  fontSize: "1rem",
+                  fontWeight: 500,
+                  color: "white",
+                }}
+              >
+                {subtask.title}
+              </Typography>
+            </Stack>
+          ))
+        ) : (
+          <Typography sx={{ opacity: 0.7 }}>No subtasks available</Typography>
+        )}
+      </Stack>
     </Box>
   );
 }
