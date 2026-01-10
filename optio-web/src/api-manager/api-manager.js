@@ -1,7 +1,7 @@
 import ApiMethods from "./api-methods";
 import ENDPOINTS from "./endpoints";
 
-class ApiManager {
+export default class ApiManager {
   static searchTask(params) {
     const url = ENDPOINTS.SEARCH_TASK;
     return ApiMethods.post(url, params);
@@ -26,6 +26,15 @@ class ApiManager {
     const url = ENDPOINTS.DELETE_COMMENT(commentId);
     return ApiMethods.delete(url);
   }
-}
 
-export default ApiManager;
+  static getSubtasks(parentTaskId) {
+    const url = ENDPOINTS.GET_SUBTASKS(parentTaskId);
+    console.log("Sending list subtasks request on this url ", url);
+    return ApiMethods.get(url);
+  }
+
+  static createSubtask(param) {
+    const url = ENDPOINTS.CREATE_SUBTASK;
+    return ApiMethods.post(url, param);
+  }
+}

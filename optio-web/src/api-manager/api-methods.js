@@ -9,14 +9,20 @@ function getHeaders() {
 }
 
 class ApiMethods {
-  static apiRequest(method, endpoint, body = {}) {
+  static apiRequest(method, endpoint, body) {
     const url = BASE_URL + endpoint;
-    return new Promise((resolve, reject) => {
-      fetch(url, { method, body: JSON.stringify(body), headers: getHeaders() })
-        .then((res) => res.json())
-        .then(resolve)
-        .catch(reject);
-    });
+
+    const options = {
+      method,
+      headers: getHeaders(),
+    };
+
+    // Sending empty body object in GET/HEAD request can throw an error, so prevention is required
+    if (body && method !== "GET" && method !== "HEAD") {
+      options.body = JSON.stringify(body);
+    }
+
+    return fetch(url, options).then((res) => res.json());
   }
 
   static get(url) {

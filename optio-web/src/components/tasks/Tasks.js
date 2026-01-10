@@ -1,23 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Popper from "@mui/material/Popper";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Paper from "@mui/material/Paper";
-import { Typography, Box } from "@mui/material";
+import {
+  TextField,
+  Popper,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Paper,
+  Typography,
+  Box,
+} from "@mui/material";
 
 import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 import { searchContext, taskSearchStrategy } from "../../search/index";
 import { extractSearchResults } from "../../util";
+import { getAssigneeName } from "../../util";
 
 function Tasks({ projectTasks = [] }) {
   const [searchType, setSearchType] = useState("Task");
@@ -151,7 +151,7 @@ function Tasks({ projectTasks = [] }) {
                 },
               }}
             >
-              {/* Left: Title */}
+              {/* Title */}
               <Link
                 to={`/task-manager/${task["id"]}`}
                 state={{ task }}
@@ -169,7 +169,7 @@ function Tasks({ projectTasks = [] }) {
                 {task["title"]}
               </Link>
 
-              {/* Right: Status & Assignee */}
+              {/* Status & Assignee */}
               <Typography
                 variant="body2"
                 sx={{
@@ -237,7 +237,7 @@ function Tasks({ projectTasks = [] }) {
                       fontWeight: 500,
                     }}
                   >
-                    {task.assignee?.firstName} {task.assignee?.lastName || ""}
+                    {getAssigneeName(task)}
                   </Box>
                 </Box>
               </Typography>
