@@ -25,7 +25,7 @@ const fieldSx = {
 };
 
 const labelTopSx = {
-  color: "rgba(230,237,243,0.85)",
+  color: "white",
   mb: 0.75,
   "&.Mui-focused": { color: "#2196f3" },
 };
@@ -97,7 +97,7 @@ export default function NewTask({
           {/* Title */}
           <FormControl fullWidth>
             <FormLabel htmlFor="task-title" sx={labelTopSx}>
-              Title *
+              Title
             </FormLabel>
             <TextField
               id="task-title"
@@ -107,7 +107,6 @@ export default function NewTask({
               fullWidth
               autoFocus
               sx={fieldSx}
-              // no label here — we’re using top-aligned FormLabel
               InputLabelProps={{ shrink: false }}
             />
           </FormControl>

@@ -1,15 +1,12 @@
 import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import { Typography, Box } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
 import { Chip } from "@mui/material";
 
 import { TaskContext } from "../../../contexts/TaskContext.js";
 import OptionMenu from "../../UI/OptionMenu.js";
-import StatusIcon from "../StatusIcon.js";
-import UpdateTaskStatus from "./UpdateTaskStatus.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import EditTaskHeader from "./EditTaskHeader.js";
 import { getAssigneeName } from "../../../util.js";
@@ -51,7 +48,6 @@ export default function Header({ taskId }) {
           fontSize: "0.875rem",
           fontWeight: "700",
           ...theme.applyStyles("dark", {
-            // bgcolor: '#101010',
             color: "white",
             // borderColor: 'grey.800',
           }),
@@ -59,11 +55,6 @@ export default function Header({ taskId }) {
       ]}
     >
       <div className="taskTitleHeader">
-        {/* {isEditingTaskStatus === true ? (
-          <UpdateTaskStatus taskId={taskId} />
-        ) : (
-          <StatusIcon status={task.status} />
-        )} */}
         <Chip
           label={task.project.name}
           component={RouterLink}

@@ -4,16 +4,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
   Popper,
   Paper,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  TextField
 } from "@mui/material";
 
 import Task from "../../../services/task/task-service";
@@ -22,6 +19,31 @@ import { TASK_STATUS } from "../../../constants";
 import "./styles/edit-task-header.css";
 import { searchContext, userSearchStrategy } from "../../../search/index";
 import { getAssigneeName } from "../../../util";
+import { FormTextField, FormSelectField } from "../../common";
+
+const textFieldSx = {
+  "& .MuiOutlinedInput-root": {
+    color: "#e6edf3",
+    "& fieldset": { borderColor: "#90caf9" },
+    "&:hover fieldset": { borderColor: "#64b5f6" },
+    "&.Mui-focused fieldset": { borderColor: "#2196f3" },
+  },
+};
+
+const labelSx = {
+  color: "white",
+  mb: 0.75,
+  "&.Mui-focused": { color: "#2196f3" },
+};
+
+const selectSx = {
+  color: "#e6edf3",
+  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#90caf9" },
+  "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#64b5f6" },
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#2196f3",
+  },
+};
 
 export default function EditTaskHeader({ taskId }) {
   const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask } =
@@ -36,10 +58,23 @@ export default function EditTaskHeader({ taskId }) {
     status: task.status,
   });
   const [assigneeId, setAssigneeId] = useState(getAssigneeName(task));
-
   const task_actions = new Task();
 
   useEffect(() => {}, [task]);
+
+  function handleTitleChange(e) {
+    setTaskHeaders((prev) => ({
+      ...prev,
+      title: e.target.value,
+    }));
+  }
+
+  function handleStatusSelection(e) {
+    setTaskHeaders((prev) => ({
+      ...prev,
+      status: e.target.value,
+    }));
+  }
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -106,18 +141,26 @@ export default function EditTaskHeader({ taskId }) {
       }}
     >
       <DialogContent
-        className="edit-header-dialog-content"
+        // className="edit-header-dialog-content"
         sx={{ maxHeight: "60vh", overflowY: "auto" }}
       >
-        <label htmlFor="title">Title</label>
-        <input
+        <FormTextField
+          id="title"
+          label="Title"
+          value={taskHeaders.title}
+          onChange={handleTitleChange}
+          textFieldSx={textFieldSx}
+          labelSx={labelSx}
+        />
+        {/* <label htmlFor="title">Title</label> */}
+        {/* <input
           type="text"
           id="title"
           name="title"
           value={taskHeaders.title}
           onChange={handleInputChange}
           required
-        />
+        /> */}
 
         <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
           <label htmlFor="assignee">Assignee</label>
@@ -171,7 +214,7 @@ export default function EditTaskHeader({ taskId }) {
           </Popper>
         </div>
 
-        <InputLabel id="status-label">Status</InputLabel>
+        {/* <InputLabel id="status-label">Status</InputLabel>
         <Select
           labelId="status-label"
           id="status-select"
@@ -209,7 +252,19 @@ export default function EditTaskHeader({ taskId }) {
               {statusOption}
             </MenuItem>
           ))}
-        </Select>
+        </Select> */}
+
+        <FormSelectField
+          label="Status"
+          labelId="status-label"
+          value={taskHeaders.status}
+          onChange={handleStatusSelection}
+          options={TASK_STATUS}
+          labelSx={labelSx}
+          selectSx={selectSx}
+          displayEmpty
+          inputId="task-status"
+        />
       </DialogContent>
 
       <DialogActions>
