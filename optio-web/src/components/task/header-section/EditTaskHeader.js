@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  TextField
+  TextField,
 } from "@mui/material";
 
 import Task from "../../../services/task/task-service";
@@ -19,7 +19,12 @@ import { TASK_STATUS } from "../../../constants";
 import "./styles/edit-task-header.css";
 import { searchContext, userSearchStrategy } from "../../../search/index";
 import { getAssigneeName } from "../../../util";
-import { FormTextField, FormSelectField } from "../../common";
+import {
+  FormTextField,
+  FormSelectField,
+  CancelButton,
+  SubmitButton,
+} from "../../common";
 
 const textFieldSx = {
   "& .MuiOutlinedInput-root": {
@@ -140,10 +145,7 @@ export default function EditTaskHeader({ taskId }) {
         },
       }}
     >
-      <DialogContent
-        // className="edit-header-dialog-content"
-        sx={{ maxHeight: "60vh", overflowY: "auto" }}
-      >
+      <DialogContent sx={{ maxHeight: "60vh", overflowY: "auto" }}>
         <FormTextField
           id="title"
           label="Title"
@@ -152,34 +154,28 @@ export default function EditTaskHeader({ taskId }) {
           textFieldSx={textFieldSx}
           labelSx={labelSx}
         />
-        {/* <label htmlFor="title">Title</label> */}
-        {/* <input
-          type="text"
-          id="title"
-          name="title"
-          value={taskHeaders.title}
-          onChange={handleInputChange}
-          required
-        /> */}
 
         <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
           <label htmlFor="assignee">Assignee</label>
-          <TextField
-            inputRef={anchorRef}
+
+          <FormTextField
+            id="assignee"
             value={taskHeaders.assignee}
             onChange={handleInputChange}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-            onFocus={() => {
-              if (searchResults.length) setShowDropdown(true);
+            textFieldSx={textFieldSx}
+            textFieldProps={{
+              inputRef: anchorRef,
+              name: "assignee",
+              placeholder: "Search user...",
+              type: "text",
+              variant: "outlined",
+              size: "small",
+              autoComplete: "off",
+              onBlur: () => setTimeout(() => setShowDropdown(false), 200),
+              onFocus: () => {
+                if (searchResults.length) setShowDropdown(true);
+              },
             }}
-            type="text"
-            name="assignee"
-            placeholder="Search user..."
-            fullWidth
-            variant="outlined"
-            size="small"
-            autoComplete="off"
-            sx={{ backgroundColor: "white", borderRadius: 1 }}
           />
 
           <Popper
@@ -214,46 +210,6 @@ export default function EditTaskHeader({ taskId }) {
           </Popper>
         </div>
 
-        {/* <InputLabel id="status-label">Status</InputLabel>
-        <Select
-          labelId="status-label"
-          id="status-select"
-          name="status"
-          value={taskHeaders.status}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{
-            color: "white",
-            backgroundColor: "#304971",
-            borderRadius: "6px",
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "none",
-            },
-            "& .MuiSelect-icon": {
-              color: "white",
-            },
-          }}
-        >
-          {TASK_STATUS.map((statusOption) => (
-            <MenuItem
-              key={statusOption}
-              value={statusOption}
-              sx={{
-                backgroundColor: "#304971",
-                color: "white",
-                "&:hover": {
-                  backgroundColor: "#3F5880",
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "#3F5880",
-                },
-              }}
-            >
-              {statusOption}
-            </MenuItem>
-          ))}
-        </Select> */}
-
         <FormSelectField
           label="Status"
           labelId="status-label"
@@ -268,19 +224,8 @@ export default function EditTaskHeader({ taskId }) {
       </DialogContent>
 
       <DialogActions>
-        <Button
-          onClick={handleCancel}
-          variant="contained"
-          style={{
-            color: "white",
-            backgroundColor: "#304971",
-            fontWeight: 600,
-            textTransform: "none",
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
+        <CancelButton onClose={handleCancel} />
+        {/* <Button
           type="submit"
           variant="contained"
           style={{
@@ -292,7 +237,8 @@ export default function EditTaskHeader({ taskId }) {
           }}
         >
           Save
-        </Button>
+        </Button> */}
+        <SubmitButton actionText="Save" />
       </DialogActions>
     </Dialog>
   );

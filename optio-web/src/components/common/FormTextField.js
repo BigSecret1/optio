@@ -12,14 +12,16 @@ export default function FormTextField({
   autoFocus = false,
   textFieldSx = {},
   labelSx = {},
-  textFieldProps = {},
+  textFieldProps = {},   // 👈 escape hatch
 }) {
   return (
     <FormControl fullWidth>
-      <FormLabel htmlFor={id} sx={labelSx}>
-        {label}
-        {required && " *"}
-      </FormLabel>
+      {label && (
+        <FormLabel htmlFor={id} sx={labelSx}>
+          {label}
+          {required && " *"}
+        </FormLabel>
+      )}
 
       <TextField
         id={id}
