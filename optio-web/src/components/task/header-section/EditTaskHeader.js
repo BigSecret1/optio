@@ -4,16 +4,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
   Popper,
   Paper,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  TextField,
 } from "@mui/material";
 
 import Task from "../../../services/task/task-service";
@@ -22,8 +19,41 @@ import { TASK_STATUS } from "../../../constants";
 import "./styles/edit-task-header.css";
 import { searchContext, userSearchStrategy } from "../../../search/index";
 import { getAssigneeName } from "../../../util";
+import { useUser } from "../../../contexts/UserContext";
+
+import {
+  FormTextField,
+  FormSelectField,
+  CancelButton,
+  SubmitButton,
+} from "../../common";
+
+const textFieldSx = {
+  "& .MuiOutlinedInput-root": {
+    color: "#e6edf3",
+    "& fieldset": { borderColor: "#90caf9" },
+    "&:hover fieldset": { borderColor: "#64b5f6" },
+    "&.Mui-focused fieldset": { borderColor: "#2196f3" },
+  },
+};
+
+const labelSx = {
+  color: "white",
+  mb: 0.75,
+  "&.Mui-focused": { color: "#2196f3" },
+};
+
+const selectSx = {
+  color: "#e6edf3",
+  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#90caf9" },
+  "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#64b5f6" },
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#2196f3",
+  },
+};
 
 export default function EditTaskHeader({ taskId }) {
+  const { user, logout } = useUser();
   const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask } =
     useContext(TaskContext);
   const [searchResults, setSearchResults] = useState([]);
@@ -35,11 +65,24 @@ export default function EditTaskHeader({ taskId }) {
     assignee: getAssigneeName(task),
     status: task.status,
   });
-  const [assigneeId, setAssigneeId] = useState(getAssigneeName(task));
-
+  const [assigneeId, setAssigneeId] = useState(user.id);
   const task_actions = new Task();
 
   useEffect(() => {}, [task]);
+
+  function handleTitleChange(e) {
+    setTaskHeaders((prev) => ({
+      ...prev,
+      title: e.target.value,
+    }));
+  }
+
+  function handleStatusSelection(e) {
+    setTaskHeaders((prev) => ({
+      ...prev,
+      status: e.target.value,
+    }));
+  }
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -64,13 +107,13 @@ export default function EditTaskHeader({ taskId }) {
     setShowDropdown(true);
   }
 
-  function handleAssigneeSelect(user) {
+  function handleAssigneeSelect(newAssignee) {
     setTaskHeaders((prev) => ({
       ...prev,
-      assignee: `${user.firstName} ${user.lastName}`,
+      assignee: `${newAssignee.firstName} ${newAssignee.lastName}`,
     }));
-    setAssigneeId(user.id);
-    setQuery(user.firstName);
+    setAssigneeId(newAssignee.id);
+    setQuery(newAssignee.firstName);
     setShowDropdown(false);
   }
 
@@ -82,6 +125,7 @@ export default function EditTaskHeader({ taskId }) {
       status: taskHeaders.status,
     };
 
+    console.log("task payload ", data);
     task_actions.updateTask(data);
     setIsEditingTaskHeader(false);
     getUpdatedTask(task.id);
@@ -105,38 +149,37 @@ export default function EditTaskHeader({ taskId }) {
         },
       }}
     >
-      <DialogContent
-        className="edit-header-dialog-content"
-        sx={{ maxHeight: "60vh", overflowY: "auto" }}
-      >
-        <label htmlFor="title">Title</label>
-        <input
-          type="text"
+      <DialogContent sx={{ maxHeight: "60vh", overflowY: "auto" }}>
+        <FormTextField
           id="title"
-          name="title"
+          label="Title"
           value={taskHeaders.title}
-          onChange={handleInputChange}
-          required
+          onChange={handleTitleChange}
+          textFieldSx={textFieldSx}
+          labelSx={labelSx}
         />
 
         <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
           <label htmlFor="assignee">Assignee</label>
-          <TextField
-            inputRef={anchorRef}
+
+          <FormTextField
+            id="assignee"
             value={taskHeaders.assignee}
             onChange={handleInputChange}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-            onFocus={() => {
-              if (searchResults.length) setShowDropdown(true);
+            textFieldSx={textFieldSx}
+            textFieldProps={{
+              inputRef: anchorRef,
+              name: "assignee",
+              placeholder: "Search user...",
+              type: "text",
+              variant: "outlined",
+              size: "small",
+              autoComplete: "off",
+              onBlur: () => setTimeout(() => setShowDropdown(false), 200),
+              onFocus: () => {
+                if (searchResults.length) setShowDropdown(true);
+              },
             }}
-            type="text"
-            name="assignee"
-            placeholder="Search user..."
-            fullWidth
-            variant="outlined"
-            size="small"
-            autoComplete="off"
-            sx={{ backgroundColor: "white", borderRadius: 1 }}
           />
 
           <Popper
@@ -171,73 +214,22 @@ export default function EditTaskHeader({ taskId }) {
           </Popper>
         </div>
 
-        <InputLabel id="status-label">Status</InputLabel>
-        <Select
+        <FormSelectField
+          label="Status"
           labelId="status-label"
-          id="status-select"
-          name="status"
           value={taskHeaders.status}
-          onChange={handleInputChange}
-          fullWidth
-          sx={{
-            color: "white",
-            backgroundColor: "#304971",
-            borderRadius: "6px",
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "none",
-            },
-            "& .MuiSelect-icon": {
-              color: "white",
-            },
-          }}
-        >
-          {TASK_STATUS.map((statusOption) => (
-            <MenuItem
-              key={statusOption}
-              value={statusOption}
-              sx={{
-                backgroundColor: "#304971",
-                color: "white",
-                "&:hover": {
-                  backgroundColor: "#3F5880",
-                },
-                "&.Mui-selected": {
-                  backgroundColor: "#3F5880",
-                },
-              }}
-            >
-              {statusOption}
-            </MenuItem>
-          ))}
-        </Select>
+          onChange={handleStatusSelection}
+          options={TASK_STATUS}
+          labelSx={labelSx}
+          selectSx={selectSx}
+          displayEmpty
+          inputId="task-status"
+        />
       </DialogContent>
 
       <DialogActions>
-        <Button
-          onClick={handleCancel}
-          variant="contained"
-          style={{
-            color: "white",
-            backgroundColor: "#304971",
-            fontWeight: 600,
-            textTransform: "none",
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          style={{
-            color: "white",
-            backgroundColor: "#304971",
-            fontWeight: 600,
-            marginLeft: "10px",
-            textTransform: "none",
-          }}
-        >
-          Save
-        </Button>
+        <CancelButton onClose={handleCancel} />
+        <SubmitButton actionText="Save" />
       </DialogActions>
     </Dialog>
   );

@@ -1,5 +1,6 @@
-const base_url = "http://localhost:8000";
-const logout_url = `${base_url}/users/logout/`;
+import { SERVER_HOST } from "../../constants";
+
+const logout_url = `${SERVER_HOST}/users/logout/`;
 
 export async function signOut() {
   const accessToken = localStorage.getItem("accessToken");
@@ -26,11 +27,12 @@ export async function signOut() {
   } catch (error) {
     console.error("Error during logout:", error);
   } finally {
-    removeTokens();
+    clearAuthStorage();
   }
 }
 
-function removeTokens() {
+function clearAuthStorage() {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
+  localStorage.removeItem("user");
 }

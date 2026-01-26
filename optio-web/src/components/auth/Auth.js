@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./styles/auth.css";
-import { login } from "../../utils/auth";
+import { useUser } from "../../contexts/UserContext";
 
 function Auth() {
   const navigate = useNavigate();
+  const { login } = useUser();
 
   const [userData, setUserData] = useState({
     username: "",
@@ -22,23 +23,15 @@ function Auth() {
     }
   }
 
-  async function handleSignIn(e) {
+  async function handleLogIn(e) {
     e.preventDefault();
-    const { accessToken, refreshToken, user } = await login(
-      userData.username,
-      userData.password
-    );
-    if (accessToken) {
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user", JSON.stringify(user));
-      navigate("/dashboard");
-    }
+    const { ok } = await login(userData.username, userData.password);
+    if (ok) navigate("/dashboard");
   }
 
   return (
     <div className="auth-container">
-      <form className="auth-form" onSubmit={handleSignIn}>
+      <form className="auth-form" onSubmit={handleLogIn}>
         <h2 className="auth-title">Welcome to Optio !</h2>
 
         <label>Username</label>

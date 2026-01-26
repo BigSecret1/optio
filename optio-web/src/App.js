@@ -19,6 +19,7 @@ import Create from "./components/common/Create";
 import NewProject from "./components/Project/NewProject";
 import CreateUser from "./components/auth/CreateUser";
 import { NewProvider } from "./contexts/NewContext";
+import { UserProvider } from "./contexts/UserContext";
 import ProjectOverview from "./components/Project/ProjectOverview/index";
 
 // PrivateRoute wrapper
@@ -37,8 +38,9 @@ function PrivateRoute({ children }) {
 
 function App() {
   return (
-    <NewProvider>
-      <Create />
+    <UserProvider>
+      <NewProvider>
+        <Create />
       <NewProject />
       <NewTask />
 
@@ -147,7 +149,8 @@ function App() {
 
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
-    </NewProvider>
+      </NewProvider>
+    </UserProvider>
   );
 }
 
