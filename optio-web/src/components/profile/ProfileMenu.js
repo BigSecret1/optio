@@ -6,14 +6,15 @@ import MenuItem from "@mui/material/MenuItem";
 import { deepOrange } from "@mui/material/colors";
 
 import "./styles/profile-menu.css";
-import { signOut } from "../../user/actions/signOut";
+import { useUser } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { isAdmin } from "../../utils/user";
 
-const SIGN_OUT = "Sign out";
+const LOG_OUT = "Log out";
 
 function ProfileMenu() {
   const navigate = useNavigate();
+  const { user, logout } = useUser();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -23,7 +24,6 @@ function ProfileMenu() {
   }
 
   function routeToLoginPage() {
-    console.log("Received user request to log out, routing to login page ...");
     navigate("/login");
   }
 
@@ -31,15 +31,9 @@ function ProfileMenu() {
     navigate("/users/list");
   }
 
-  function handleClose(option) {
-    const optionActions = {
-      SIGN_OUT : () => signOut(),
-    };
-    const action = optionActions[option];
-    if (action) {
-      action();
-    }
-    if (option === SIGN_OUT) {
+  async function handleClose(option) {
+    if (option === LOG_OUT) {
+      await logout();
       routeToLoginPage();
     }
     if (option === "List users") {
@@ -48,32 +42,34 @@ function ProfileMenu() {
     setAnchorEl(null);
   }
 
-  const profileMenuOptions = [
-    "Your profile",
-    "Change password",
-  ];
-  let currentUser = localStorage.getItem("user");
-  const userIsAdmin = isAdmin(JSON.parse(currentUser).groups);
+  const profileMenuOptions = ["Your profile", "Change password"];
+  const groups = user?.groups ?? [];
+  const userIsAdmin = isAdmin(groups);
   if (userIsAdmin) {
     const optionsForAdmin = ["List users"];
     profileMenuOptions.push(...optionsForAdmin);
   }
-  profileMenuOptions.push("Sign out");
+  profileMenuOptions.push("Log out");
 
   return (
     <div className="profile-menu-container">
       <Avatar
         onClick={handleAvatarClick}
         sx={{ bgcolor: deepOrange[500], cursor: "pointer" }}
-        alt="Dinesh Balotiya"
+        alt={
+          user
+            ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() ||
+              user.email
+            : ""
+        }
       >
-        D
+        {user?.firstName?.[0] ?? user?.email?.[0] ?? "?"}
       </Avatar>
 
-      <Menu
+      <Menu 
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => setAnchorEl(null)}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",

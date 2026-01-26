@@ -2,8 +2,7 @@ import { SERVER_HOST } from "../constants";
 
 const base_url = SERVER_HOST;
 
-const login_url = `${base_url}/users/login/`;
-const logout_url = `${base_url}/users/logout/`;
+const loginUrl = `${base_url}/users/login/`;
 
 export function isAuthenticated() {
   let loggedIn = localStorage.getItem("accessToken");
@@ -22,7 +21,7 @@ export async function login(email, password) {
   };
 
   try {
-    const response = await fetch(login_url, {
+    const response = await fetch(loginUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,11 +31,10 @@ export async function login(email, password) {
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log("Login successful! with data", data);
-
       const accessToken = data.access;
       const refreshToken = data.refresh;
       const user = data.user;
+
       return { accessToken, refreshToken, user };
     } else {
       console.error(
@@ -45,7 +43,6 @@ export async function login(email, password) {
       return { accessToken: null, refreshToken: null };
     }
   } catch (error) {
-    console.error("Error during login:", error);
     return { accessToken: null, refreshToken: null };
   }
 }

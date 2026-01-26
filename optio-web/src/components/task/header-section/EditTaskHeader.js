@@ -19,6 +19,8 @@ import { TASK_STATUS } from "../../../constants";
 import "./styles/edit-task-header.css";
 import { searchContext, userSearchStrategy } from "../../../search/index";
 import { getAssigneeName } from "../../../util";
+import { useUser } from "../../../contexts/UserContext";
+
 import {
   FormTextField,
   FormSelectField,
@@ -51,6 +53,7 @@ const selectSx = {
 };
 
 export default function EditTaskHeader({ taskId }) {
+  const { user, logout } = useUser();
   const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask } =
     useContext(TaskContext);
   const [searchResults, setSearchResults] = useState([]);
@@ -62,7 +65,7 @@ export default function EditTaskHeader({ taskId }) {
     assignee: getAssigneeName(task),
     status: task.status,
   });
-  const [assigneeId, setAssigneeId] = useState(getAssigneeName(task));
+  const [assigneeId, setAssigneeId] = useState(user.id);
   const task_actions = new Task();
 
   useEffect(() => {}, [task]);
@@ -104,13 +107,13 @@ export default function EditTaskHeader({ taskId }) {
     setShowDropdown(true);
   }
 
-  function handleAssigneeSelect(user) {
+  function handleAssigneeSelect(newAssignee) {
     setTaskHeaders((prev) => ({
       ...prev,
-      assignee: `${user.firstName} ${user.lastName}`,
+      assignee: `${newAssignee.firstName} ${newAssignee.lastName}`,
     }));
-    setAssigneeId(user.id);
-    setQuery(user.firstName);
+    setAssigneeId(newAssignee.id);
+    setQuery(newAssignee.firstName);
     setShowDropdown(false);
   }
 
@@ -122,6 +125,7 @@ export default function EditTaskHeader({ taskId }) {
       status: taskHeaders.status,
     };
 
+    console.log("task payload ", data);
     task_actions.updateTask(data);
     setIsEditingTaskHeader(false);
     getUpdatedTask(task.id);
@@ -225,19 +229,6 @@ export default function EditTaskHeader({ taskId }) {
 
       <DialogActions>
         <CancelButton onClose={handleCancel} />
-        {/* <Button
-          type="submit"
-          variant="contained"
-          style={{
-            color: "white",
-            backgroundColor: "#304971",
-            fontWeight: 600,
-            marginLeft: "10px",
-            textTransform: "none",
-          }}
-        >
-          Save
-        </Button> */}
         <SubmitButton actionText="Save" />
       </DialogActions>
     </Dialog>
