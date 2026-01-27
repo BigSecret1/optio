@@ -7,6 +7,7 @@ import MembersList from "./MembersList";
 import EditProject from "./EditProject";
 import { BRAND_PRIMARY, BRAND_SECONDARY } from "../../../constants";
 import ManageMembers from "./Members/ManageMembers";
+import { searchContext, userSearchStrategy } from "../../../search";
 
 export default function ProjectOverview({
   project = {
@@ -84,6 +85,17 @@ export default function ProjectOverview({
     setOpenEditProject(false);
   }
 
+  async function searchUser(input) {
+    if (!input) {
+      return;
+    }
+    searchContext.setStrategy(userSearchStrategy);
+    const query = { firstName: input };
+    const results = await searchContext.executeSearch(query);
+    console.log("Search results", results);
+    return results;
+  }
+
   return (
     <ProjectOverviewThemeProvider>
       <Box
@@ -102,21 +114,20 @@ export default function ProjectOverview({
           <MembersList members={members} />
         </Container>
       </Box>
+
       <EditProject
         open={openEditProject}
         onClose={() => setOpenEditProject(false)}
         project={currentProject}
         onSave={handleProjectSave}
       />
+
       <ManageMembers
         open={openManageMembers}
         onClose={() => setOpenManageMembers(false)}
         members={currentMembers}
         onChangeMembers={setCurrentMembers}
-        fetchUsers={async (q) => {
-          console.log("Received api call ehre", q);
-          return mockResponse;
-        }}
+        fetchUsers={searchUser}
       />
     </ProjectOverviewThemeProvider>
   );

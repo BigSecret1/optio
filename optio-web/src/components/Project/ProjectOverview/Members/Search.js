@@ -88,14 +88,14 @@ export default function Search({ fetchUsers, members, onAddMember }) {
               src={option.avatarUrl}
               sx={{ width: 30, height: 30, mr: 1 }}
             >
-              {initials(option.name)}
+              {initials(option.firstName)}
             </Avatar>
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography variant="body2" noWrap fontWeight={600}>
-                {option.name}
+                {option.firstName}
               </Typography>
               <Typography variant="caption" color="text.secondary" noWrap>
-                {option.email}
+                somemail@gmail.com
               </Typography>
             </Box>
             <Chip

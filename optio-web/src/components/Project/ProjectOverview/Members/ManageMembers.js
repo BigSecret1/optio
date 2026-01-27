@@ -76,8 +76,8 @@ export default function ManageMembers({
             }}
           >
             {members.map((m) => (
-              <Avatar key={m.id} alt={m.name} src={m.avatarUrl}>
-                {initials(m.name)}
+              <Avatar key={m.id} alt={m.firstName} src={m.avatarUrl}>
+                {initials(m.firstName)}
               </Avatar>
             ))}
           </AvatarGroup>
