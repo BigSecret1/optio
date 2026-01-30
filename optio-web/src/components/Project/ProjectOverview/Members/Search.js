@@ -34,27 +34,29 @@ export default function Search({ fetchUsers, members, onAddMember }) {
       return;
     }
 
-    async function callFetchUsers() {
-      const searchResults = await fetchUsers(query);
-      if (!searchResults) {
-        throw console.error("Got response while fetching users!");
-      }
-      setOptions(searchResults);
-    }
-
     callFetchUsers();
   }, [query, fetchUsers]);
 
+  async function callFetchUsers() {
+    const searchResults = await fetchUsers(query);
+    if (!searchResults) {
+      throw console.error("Got response while fetching users!");
+    }
+    setOptions(searchResults);
+  }
+
+  function handleSearchInputChange(e) {
+    setQuery(e.target.value);
+  }
+
   return (
     <Autocomplete
-      freeSolo
-      disableClearable
       options={options}
       inputValue={query}
-      getOptionLabel={(o) =>
-        typeof o === "string" ? o : `${o.name} · ${o.email}`
+      getOptionLabel={(searchResult) =>
+        `${searchResult.firstName} ${searchResult.lastName}`
       }
-      filterOptions={(x) => x}
+      filterOptions={(searchResult) => searchResult} // Don't apply MUI filtering on Search API Response
       onChange={(e, value) => {
         if (
           value &&
@@ -67,17 +69,10 @@ export default function Search({ fetchUsers, members, onAddMember }) {
       }}
       PopperComponent={StyledPopper}
       renderInput={(params) => (
-        <TextField
-          {...params}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by name or email"
-          fullWidth
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: <SearchRoundedIcon />,
-          }}
-          sx={fieldSx}
+        <SearchBox
+          params={params}
+          query={query}
+          handleSearchInputChange={handleSearchInputChange}
         />
       )}
       renderOption={(props, option) => {
@@ -86,13 +81,14 @@ export default function Search({ fetchUsers, members, onAddMember }) {
           <Box component="li" {...props} key={option.id}>
             <Avatar
               src={option.avatarUrl}
-              sx={{ width: 30, height: 30, mr: 1 }}
+              sx={{ width: 38, height: 38, mr: 1 }}
             >
-              {initials(option.firstName)}
+              {initials(`${option.firstName} ${option.lastName}`)}
             </Avatar>
+
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography variant="body2" noWrap fontWeight={600}>
-                {option.firstName}
+                {`${option.firstName} ${option.lastName}`}
               </Typography>
               <Typography variant="caption" color="text.secondary" noWrap>
                 somemail@gmail.com
@@ -122,6 +118,23 @@ export default function Search({ fetchUsers, members, onAddMember }) {
         );
       }}
       sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+    />
+  );
+}
+
+function SearchBox({ params, handleSearchInputChange, query }) {
+  return (
+    <TextField
+      {...params}
+      value={query}
+      onChange={handleSearchInputChange}
+      placeholder="Search by name or email"
+      fullWidth
+      InputProps={{
+        ...params.InputProps,
+        endAdornment: <SearchRoundedIcon />,
+      }}
+      sx={fieldSx}
     />
   );
 }
