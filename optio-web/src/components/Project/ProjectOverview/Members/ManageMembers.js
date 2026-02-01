@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 import Search from "./Search";
-import MembersList from "./MembersList";
+import SelectedMembers from "./SelectedMembers";
 import initials from "./utils/initials";
 
 export default function ManageMembers({
@@ -74,7 +74,7 @@ export default function ManageMembers({
           >
             {members.map((m) => (
               <Avatar key={m.id} alt={m.firstName} src={m.avatarUrl}>
-                {initials(m.firstName)}
+                {initials(`${m.firstName} ${m.lastName}`)}
               </Avatar>
             ))}
           </AvatarGroup>
@@ -91,7 +91,7 @@ export default function ManageMembers({
             members={members}
             addMember={handleAddMember}
           />
-          <MembersList members={members} onRemove={handleRemove} />
+          <SelectedMembers members={members} onRemove={handleRemove} />
         </Stack>
       </DialogContent>
 

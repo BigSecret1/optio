@@ -117,7 +117,7 @@ function MemberSearchResultBar({ option, members = [], ...optionProps }) {
           {`${option.firstName} ${option.lastName}`}
         </Typography>
         <Typography variant="caption" color="text.secondary" noWrap>
-          somemail@gmail.com
+          {option.email}
         </Typography>
       </Box>
 

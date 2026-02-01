@@ -66,7 +66,8 @@ class UserESQuery(ESQuery):
                 results.append({
                     'id': hit.id,
                     'first_name': hit.first_name,
-                    'last_name': hit.last_name
+                    'last_name': hit.last_name,
+                    'email': hit.email
                 })
             return results
         except Exception as e:
