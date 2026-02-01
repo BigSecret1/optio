@@ -27,6 +27,7 @@ const fieldSx = {
 export default function Search({ fetchUsers, members, addMember }) {
   const [query, setQuery] = useState("");
   const [options, setOptions] = useState([]);
+  const [selectedMember, setSelectedMember] = useState(null);
 
   useEffect(() => {
     if (!query) {
@@ -50,19 +51,26 @@ export default function Search({ fetchUsers, members, addMember }) {
   }
 
   function handleAddMember(e, value) {
+    setSelectedMember(value);
     addMember(value);
     setQuery("");
+  }
+
+  function handleInputChange(e, value) {
+    setQuery(value);
   }
 
   return (
     <Autocomplete
       options={options}
       inputValue={query}
+      value={selectedMember}
       getOptionLabel={(searchResult) =>
         `${searchResult.firstName} ${searchResult.lastName}`
       }
       filterOptions={(searchResult) => searchResult} // Don't apply MUI filtering on Search API Response
       onChange={handleAddMember}
+      onInputChange={handleInputChange}
       PopperComponent={StyledPopper}
       renderInput={(params) => (
         <SearchBox
