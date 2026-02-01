@@ -24,7 +24,7 @@ const fieldSx = {
   },
 };
 
-export default function Search({ fetchUsers, members, onAddMember }) {
+export default function Search({ fetchUsers, members, addMember }) {
   const [query, setQuery] = useState("");
   const [options, setOptions] = useState([]);
 
@@ -49,6 +49,11 @@ export default function Search({ fetchUsers, members, onAddMember }) {
     setQuery(e.target.value);
   }
 
+  function handleAddMember(e, value) {
+    addMember(value);
+    setQuery("");
+  }
+
   return (
     <Autocomplete
       options={options}
@@ -57,16 +62,7 @@ export default function Search({ fetchUsers, members, onAddMember }) {
         `${searchResult.firstName} ${searchResult.lastName}`
       }
       filterOptions={(searchResult) => searchResult} // Don't apply MUI filtering on Search API Response
-      onChange={(e, value) => {
-        if (
-          value &&
-          typeof value !== "string" &&
-          !members.some((m) => m.id === value.id)
-        ) {
-          onAddMember(value);
-          setQuery("");
-        }
-      }}
+      onChange={handleAddMember}
       PopperComponent={StyledPopper}
       renderInput={(params) => (
         <SearchBox
@@ -75,48 +71,9 @@ export default function Search({ fetchUsers, members, onAddMember }) {
           handleSearchInputChange={handleSearchInputChange}
         />
       )}
-      renderOption={(props, option) => {
-        const selected = members.some((m) => m.id === option.id);
-        return (
-          <Box component="li" {...props} key={option.id}>
-            <Avatar
-              src={option.avatarUrl}
-              sx={{ width: 38, height: 38, mr: 1 }}
-            >
-              {initials(`${option.firstName} ${option.lastName}`)}
-            </Avatar>
-
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="body2" noWrap fontWeight={600}>
-                {`${option.firstName} ${option.lastName}`}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" noWrap>
-                somemail@gmail.com
-              </Typography>
-            </Box>
-            <Chip
-              size="small"
-              color={selected ? "success" : "primary"}
-              icon={
-                selected ? (
-                  <CheckCircleRoundedIcon />
-                ) : (
-                  <PersonAddAlt1RoundedIcon />
-                )
-              }
-              label={selected ? "Added" : "Add"}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!selected) {
-                  onAddMember(option);
-                  setQuery("");
-                }
-              }}
-              variant={selected ? "outlined" : "filled"}
-            />
-          </Box>
-        );
-      }}
+      renderOption={(props, option) => (
+        <MemberSearchResultBar {...props} option={option} members={members} />
+      )}
       sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
     />
   );
@@ -136,5 +93,35 @@ function SearchBox({ params, handleSearchInputChange, query }) {
       }}
       sx={fieldSx}
     />
+  );
+}
+
+function MemberSearchResultBar({ option, members = [], ...optionProps }) {
+  const selected = members.some((m) => m.id === option.id);
+  return (
+    <Box component="li" {...optionProps} key={option.id}>
+      <Avatar src={option.avatarUrl} sx={{ width: 38, height: 38, mr: 1 }}>
+        {initials(`${option.firstName} ${option.lastName}`)}
+      </Avatar>
+
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography variant="body2" noWrap fontWeight={600}>
+          {`${option.firstName} ${option.lastName}`}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" noWrap>
+          somemail@gmail.com
+        </Typography>
+      </Box>
+
+      <Chip
+        size="small"
+        color={selected ? "success" : "primary"}
+        icon={
+          selected ? <CheckCircleRoundedIcon /> : <PersonAddAlt1RoundedIcon />
+        }
+        label={selected ? "Added" : "Add"}
+        variant={selected ? "outlined" : "filled"}
+      />
+    </Box>
   );
 }

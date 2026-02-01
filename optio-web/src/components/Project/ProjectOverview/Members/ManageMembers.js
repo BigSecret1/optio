@@ -27,13 +27,10 @@ export default function ManageMembers({
 }) {
   const memberIds = useMemo(() => new Set(members.map((m) => m.id)), [members]);
 
-  const handleAdd = useCallback(
-    (user) => {
-      if (memberIds.has(user.id)) return;
-      onChangeMembers([...members, user]);
-    },
-    [memberIds, members, onChangeMembers]
-  );
+  function handleAddMember(member) {
+    if (member == null || memberIds.has(member.id)) return;
+    onChangeMembers([...members, member]);
+  }
 
   const handleRemove = useCallback(
     (userId) => {
@@ -92,7 +89,7 @@ export default function ManageMembers({
             open={open}
             fetchUsers={fetchUsers}
             members={members}
-            onAddMember={handleAdd}
+            addMember={handleAddMember}
           />
           <MembersList members={members} onRemove={handleRemove} />
         </Stack>
