@@ -3,7 +3,7 @@ from .views import (
     ProjectListView,
     ProjectDetailView,
     CreateProjectAPIView,
-    AssignProjectAPIView
+    AssignProjectAPIView,
 )
 
 urlpatterns = [
@@ -14,5 +14,5 @@ urlpatterns = [
         "<int:project_id>/user/<int:user_id>/",
         AssignProjectAPIView.as_view(),
         name="assign-project-member"
-    ),
+    )
 ]

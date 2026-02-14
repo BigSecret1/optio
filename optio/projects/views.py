@@ -16,7 +16,8 @@ from optio.projects.actions.base import (
 from optio.projects.actions.assign_project import (
     assign_project,
     assign_project_to_normal_user,
-    assign_project_to_admin
+    assign_project_to_admin,
+    assign_project_to_users
 )
 
 import logging
@@ -133,3 +134,5 @@ class AssignProjectAPIView(APIView):
             {"message": "User successfully added to project."},
             status=status.HTTP_200_OK
         )
+
+
