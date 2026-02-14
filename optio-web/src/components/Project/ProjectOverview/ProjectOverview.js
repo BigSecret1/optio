@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
 import { Box, Container } from "@mui/material";
 
 import ProjectOverviewThemeProvider from "./ProjectOverviewThemeProvider";
@@ -8,59 +10,36 @@ import EditProject from "./EditProject";
 import { BRAND_PRIMARY, BRAND_SECONDARY } from "../../../constants";
 import ManageMembers from "./Members/ManageMembers";
 import { searchContext, userSearchStrategy } from "../../../search";
+import ApiManager from "../../../api-manager/api-manager";
 
 export default function ProjectOverview({
-  project = {
-    id: 2,
-    name: "Optio : The Project Management Tool For Everyone",
-    description:
-      "This is the project description. Keep it to 2–3 sentences for readability.",
-  },
-  members = [
-    {
-      firstName: "Alice",
-      lastName: "Johnson",
-      username: "alicej",
-      joinedAt: "12 Jan 2024",
-    },
-    {
-      firstName: "Bob",
-      lastName: "Martinez",
-      username: "bmartinez",
-      joinedAt: "05 Mar 2024",
-    },
-    {
-      firstName: "Clara",
-      lastName: "Nguyen",
-      username: "clara.ng",
-      joinedAt: "22 May 2024",
-    },
-    {
-      firstName: "David",
-      lastName: "Singh",
-      username: "dsingh",
-      joinedAt: "10 Jul 2024",
-    },
-    {
-      firstName: "Ella",
-      lastName: "Brown",
-      username: "ella_b",
-      joinedAt: "30 Aug 2024",
-    },
-    {
-      firstName: "Farhan",
-      lastName: "Khan",
-      username: "fkhan",
-      joinedAt: "15 Sep 2024",
-    },
-  ],
   onEdit = () => {},
   onManageMembers = () => {},
 }) {
+  const { projectId } = useParams();
+  const [project, setProject] = useState(null);
+  const [members, setMembers] = useState([]);
+
   const [openEditProject, setOpenEditProject] = useState(false);
   const [currentProject, setCurrentProject] = useState(project);
   const [openManageMembers, setOpenManageMembers] = useState(false);
   const [currentMembers, setCurrentMembers] = useState([]);
+
+  useEffect(() => {
+    fetchProject();
+    fetchProjectMembers();
+  }, [projectId]);
+
+  async function fetchProject() {
+    const result = await ApiManager.fetchProject(projectId);
+    setProject(result);
+    setCurrentProject(result);
+  }
+
+  async function fetchProjectMembers() {
+    const projectMembers = await ApiManager.fetchProjectMembers(projectId);
+    setMembers(projectMembers);
+  }
 
   function handleProjectSave(updatedDetails) {
     setCurrentProject(updatedDetails);
@@ -74,9 +53,21 @@ export default function ProjectOverview({
     searchContext.setStrategy(userSearchStrategy);
     const query = { firstName: input };
     const results = await searchContext.executeSearch(query);
-    console.log("Search results", results);
     return results;
   }
+
+  async function addProjectMembers(selectMembers) {
+    const memberIds = selectMembers.map((member) => member.id);
+
+    try {
+      await ApiManager.addProjectMemebers(memberIds, projectId);
+      await fetchProjectMembers();
+    } catch (e) {
+      console.error("Failed to add members to project", e);
+    }
+  }
+
+  if (!project) return <h1>Loading...</h1>;
 
   return (
     <ProjectOverviewThemeProvider>
@@ -89,7 +80,7 @@ export default function ProjectOverview({
       >
         <Container maxWidth="lg" sx={{ pt: 6 }}>
           <HeaderSection
-            project={currentProject}
+            project={project}
             onProjectEdit={() => setOpenEditProject(true)}
             onManageMembers={() => setOpenManageMembers(true)}
           />
@@ -100,13 +91,14 @@ export default function ProjectOverview({
       <EditProject
         open={openEditProject}
         onClose={() => setOpenEditProject(false)}
-        project={currentProject}
+        project={project}
         onSave={handleProjectSave}
       />
 
       <ManageMembers
         open={openManageMembers}
         onClose={() => setOpenManageMembers(false)}
+        onSave={addProjectMembers}
         members={currentMembers}
         onChangeMembers={setCurrentMembers}
         fetchUsers={searchUser}

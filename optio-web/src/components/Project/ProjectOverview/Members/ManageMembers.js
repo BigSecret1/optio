@@ -16,10 +16,12 @@ import {
 import Search from "./Search";
 import SelectedMembers from "./SelectedMembers";
 import initials from "./utils/initials";
+import ApiManager from "../../../../api-manager/api-manager";
 
 export default function ManageMembers({
   open,
   onClose,
+  onSave,
   members,
   onChangeMembers,
   fetchUsers,
@@ -38,6 +40,11 @@ export default function ManageMembers({
     },
     [members, onChangeMembers]
   );
+
+  function handleSave() {
+    onSave(members);
+    onClose();
+  }
 
   return (
     <Dialog
@@ -100,7 +107,7 @@ export default function ManageMembers({
           Cancel
         </Button>
 
-        <Button variant="save" onClick={onClose}>
+        <Button variant="save" onClick={handleSave}>
           Save
         </Button>
       </DialogActions>

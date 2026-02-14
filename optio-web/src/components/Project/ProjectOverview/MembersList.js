@@ -16,6 +16,7 @@ import {
 import { alpha } from "@mui/material/styles";
 
 function MembersList({ members }) {
+  if (!members) return <h1>No Members Yet !!!</h1>;
   return (
     <Card sx={{ mt: 4 }}>
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
@@ -55,11 +56,11 @@ function MembersList({ members }) {
 
                   {/* User Name (centered) */}
                   <TableCell sx={{ opacity: 0.95 }} align="center">
-                    {m.username}
+                    {m.email}
                   </TableCell>
 
                   {/* Joined At (right aligned) */}
-                  <TableCell align="right">{m.joinedAt}</TableCell>
+                  <TableCell align="right">{m.dateJoined}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
