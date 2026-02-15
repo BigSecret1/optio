@@ -51,4 +51,9 @@ export default class ApiManager {
     const url = ENDPOINTS.FETCH_PROJECT(projectId);
     return ApiMethods.get(url);
   }
+
+  static editProject(param, projectId) {
+    const url = ENDPOINTS.EDIT_PROJECT(projectId);
+    return ApiMethods.patch(url, param)
+  }
 }

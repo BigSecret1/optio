@@ -12,6 +12,7 @@ const ENDPOINTS = {
   ADD_PROJECT_MEMEBERS: (projectId) => `/api/projects/${projectId}/users/`,
   FETCH_PROJECT_MEMBERS: (projectId) => `/api/projects/${projectId}/users/`,
   FETCH_PROJECT: (projectId) => `/api/projects/${projectId}/`,
+  EDIT_PROJECT: (projectId) => `/api/projects/${projectId}/`
 };
 
 export default ENDPOINTS;

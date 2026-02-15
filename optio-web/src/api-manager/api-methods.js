@@ -37,6 +37,10 @@ class ApiMethods {
     return this.apiRequest("PUT", url, data);
   }
 
+  static patch(url, data) {
+    return this.apiRequest("PATCH", url, data);
+  }
+
   static delete(url) {
     return this.apiRequest("DELETE", url);
   }

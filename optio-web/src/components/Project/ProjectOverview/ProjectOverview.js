@@ -12,18 +12,13 @@ import ManageMembers from "./Members/ManageMembers";
 import { searchContext, userSearchStrategy } from "../../../search";
 import ApiManager from "../../../api-manager/api-manager";
 
-export default function ProjectOverview({
-  onEdit = () => {},
-  onManageMembers = () => {},
-}) {
+export default function ProjectOverview() {
   const { projectId } = useParams();
-  const [project, setProject] = useState(null);
-  const [members, setMembers] = useState([]);
 
+  const [project, setProject] = useState(null);
+  const [projectMembers, setProjectMembers] = useState([]);
   const [openEditProject, setOpenEditProject] = useState(false);
-  const [currentProject, setCurrentProject] = useState(project);
   const [openManageMembers, setOpenManageMembers] = useState(false);
-  const [currentMembers, setCurrentMembers] = useState([]);
 
   useEffect(() => {
     fetchProject();
@@ -33,16 +28,15 @@ export default function ProjectOverview({
   async function fetchProject() {
     const result = await ApiManager.fetchProject(projectId);
     setProject(result);
-    setCurrentProject(result);
   }
 
   async function fetchProjectMembers() {
     const projectMembers = await ApiManager.fetchProjectMembers(projectId);
-    setMembers(projectMembers);
+    setProjectMembers(projectMembers);
   }
 
-  function handleProjectSave(updatedDetails) {
-    setCurrentProject(updatedDetails);
+  async function handleProjectSave(updatedDetails) {
+    await ApiManager.editProject(updatedDetails, project.id);
     setOpenEditProject(false);
   }
 
@@ -58,9 +52,8 @@ export default function ProjectOverview({
 
   async function addProjectMembers(selectMembers) {
     const memberIds = selectMembers.map((member) => member.id);
-
     try {
-      await ApiManager.addProjectMemebers(memberIds, projectId);
+      await ApiManager.addProjectMemebers({ userIds: memberIds }, projectId);
       await fetchProjectMembers();
     } catch (e) {
       console.error("Failed to add members to project", e);
@@ -84,7 +77,7 @@ export default function ProjectOverview({
             onProjectEdit={() => setOpenEditProject(true)}
             onManageMembers={() => setOpenManageMembers(true)}
           />
-          <MembersList members={members} />
+          <MembersList projectMembers={projectMembers} />
         </Container>
       </Box>
 
@@ -99,8 +92,6 @@ export default function ProjectOverview({
         open={openManageMembers}
         onClose={() => setOpenManageMembers(false)}
         onSave={addProjectMembers}
-        members={currentMembers}
-        onChangeMembers={setCurrentMembers}
         fetchUsers={searchUser}
       />
     </ProjectOverviewThemeProvider>

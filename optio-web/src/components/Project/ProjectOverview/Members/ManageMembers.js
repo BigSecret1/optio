@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import {
   Avatar,
@@ -22,23 +22,22 @@ export default function ManageMembers({
   open,
   onClose,
   onSave,
-  members,
-  onChangeMembers,
   fetchUsers,
   title = "Manage members",
 }) {
+  const [members, setMembers] = useState([]);
   const memberIds = useMemo(() => new Set(members.map((m) => m.id)), [members]);
 
   function handleAddMember(member) {
     if (member == null || memberIds.has(member.id)) return;
-    onChangeMembers([...members, member]);
+    setMembers([...members, member]);
   }
 
   const handleRemove = useCallback(
     (userId) => {
-      onChangeMembers(members.filter((m) => m.id !== userId));
+      setMembers(members.filter((m) => m.id !== userId));
     },
-    [members, onChangeMembers]
+    [members]
   );
 
   function handleSave() {

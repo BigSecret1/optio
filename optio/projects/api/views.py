@@ -25,3 +25,7 @@ class ProjectAPIView(APIView):
     def get(self, request: Request, project_id=None):
         project_action = ProjectAPIAction()
         return Response(project_action.get_projet(project_id))
+
+    def patch(self, request: Request, project_id):
+        project_action = ProjectAPIAction()
+        return Response(project_action.update_project(request.data, project_id))
