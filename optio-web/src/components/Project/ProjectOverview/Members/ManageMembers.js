@@ -42,6 +42,7 @@ export default function ManageMembers({
 
   function handleSave() {
     onSave(members);
+    setMembers([]);
     onClose();
   }
 
