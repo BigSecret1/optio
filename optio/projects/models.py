@@ -25,3 +25,4 @@ class UserProject(models.Model):
 
     class Meta:
         db_table = "optio_user_projects"
+        unique_together = ("user", "project")

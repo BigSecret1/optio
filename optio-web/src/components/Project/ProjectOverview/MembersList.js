@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-function MembersList({ members }) {
+function MembersList({ projectMembers }) {
+  if (!projectMembers) return <h1>No Members Yet !!!</h1>;
   return (
     <Card sx={{ mt: 4 }}>
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
@@ -24,7 +25,7 @@ function MembersList({ members }) {
         </Typography>
 
         <TableContainer component={Paper} elevation={0}>
-          <Table size="medium" aria-label="project members">
+          <Table size="medium" aria-label="project projectMembers">
             <TableHead>
               <TableRow>
                 <TableCell>First Name</TableCell>
@@ -34,9 +35,9 @@ function MembersList({ members }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {members.map((m) => (
+              {projectMembers.map((m) => (
                 <TableRow
-                  key={m.username}
+                  key={m.id}
                   hover
                   sx={{
                     transition: "background .2s ease",
@@ -55,11 +56,11 @@ function MembersList({ members }) {
 
                   {/* User Name (centered) */}
                   <TableCell sx={{ opacity: 0.95 }} align="center">
-                    {m.username}
+                    {m.email}
                   </TableCell>
 
                   {/* Joined At (right aligned) */}
-                  <TableCell align="right">{m.joinedAt}</TableCell>
+                  <TableCell align="right">{m.dateJoined}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

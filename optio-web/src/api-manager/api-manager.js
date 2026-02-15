@@ -29,12 +29,31 @@ export default class ApiManager {
 
   static getSubtasks(parentTaskId) {
     const url = ENDPOINTS.GET_SUBTASKS(parentTaskId);
-    console.log("Sending list subtasks request on this url ", url);
     return ApiMethods.get(url);
   }
 
   static createSubtask(param) {
     const url = ENDPOINTS.CREATE_SUBTASK;
     return ApiMethods.post(url, param);
+  }
+
+  static addProjectMemebers(param, projectId) {
+    const url = ENDPOINTS.ADD_PROJECT_MEMEBERS(projectId);
+    return ApiMethods.post(url, param);
+  }
+
+  static fetchProjectMembers(projectId) {
+    const url = ENDPOINTS.FETCH_PROJECT_MEMBERS(projectId);
+    return ApiMethods.get(url);
+  }
+
+  static fetchProject(projectId) {
+    const url = ENDPOINTS.FETCH_PROJECT(projectId);
+    return ApiMethods.get(url);
+  }
+
+  static editProject(param, projectId) {
+    const url = ENDPOINTS.EDIT_PROJECT(projectId);
+    return ApiMethods.patch(url, param)
   }
 }

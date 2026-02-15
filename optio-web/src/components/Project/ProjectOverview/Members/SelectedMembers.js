@@ -16,7 +16,7 @@ import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import EmptyMemberstList from "./EmptyMembersList";
 import initials from "./utils/initials";
 
-export default function MemberList({ members, onRemove }) {
+export default function SelectedMembers({ members, onRemove }) {
   return (
     <Box>
       <Typography variant="overline" color="text.secondary">
@@ -48,12 +48,14 @@ export default function MemberList({ members, onRemove }) {
                 }
               >
                 <ListItemAvatar>
-                  <Avatar src={m.avatarUrl}>{initials(m.name)}</Avatar>
+                  <Avatar src={m.avatarUrl}>
+                    {initials(`${m.firstName} ${m.lastName}`)}
+                  </Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   primary={
                     <Typography variant="body2" fontWeight={600}>
-                      {m.name}
+                      {`${m.firstName} ${m.lastName}`}
                     </Typography>
                   }
                   secondary={

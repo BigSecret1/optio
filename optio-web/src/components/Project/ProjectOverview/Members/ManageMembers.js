@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import {
   Avatar,
@@ -14,33 +14,37 @@ import {
 } from "@mui/material";
 
 import Search from "./Search";
-import MembersList from "./MembersList";
+import SelectedMembers from "./SelectedMembers";
 import initials from "./utils/initials";
+import ApiManager from "../../../../api-manager/api-manager";
 
 export default function ManageMembers({
   open,
   onClose,
-  members,
-  onChangeMembers,
+  onSave,
   fetchUsers,
   title = "Manage members",
 }) {
+  const [members, setMembers] = useState([]);
   const memberIds = useMemo(() => new Set(members.map((m) => m.id)), [members]);
 
-  const handleAdd = useCallback(
-    (user) => {
-      if (memberIds.has(user.id)) return;
-      onChangeMembers([...members, user]);
-    },
-    [memberIds, members, onChangeMembers]
-  );
+  function handleAddMember(member) {
+    if (member == null || memberIds.has(member.id)) return;
+    setMembers([...members, member]);
+  }
 
   const handleRemove = useCallback(
     (userId) => {
-      onChangeMembers(members.filter((m) => m.id !== userId));
+      setMembers(members.filter((m) => m.id !== userId));
     },
-    [members, onChangeMembers]
+    [members]
   );
+
+  function handleSave() {
+    onSave(members);
+    setMembers([]);
+    onClose();
+  }
 
   return (
     <Dialog
@@ -76,8 +80,8 @@ export default function ManageMembers({
             }}
           >
             {members.map((m) => (
-              <Avatar key={m.id} alt={m.name} src={m.avatarUrl}>
-                {initials(m.name)}
+              <Avatar key={m.id} alt={m.firstName} src={m.avatarUrl}>
+                {initials(`${m.firstName} ${m.lastName}`)}
               </Avatar>
             ))}
           </AvatarGroup>
@@ -92,9 +96,9 @@ export default function ManageMembers({
             open={open}
             fetchUsers={fetchUsers}
             members={members}
-            onAddMember={handleAdd}
+            addMember={handleAddMember}
           />
-          <MembersList members={members} onRemove={handleRemove} />
+          <SelectedMembers members={members} onRemove={handleRemove} />
         </Stack>
       </DialogContent>
 
@@ -103,7 +107,7 @@ export default function ManageMembers({
           Cancel
         </Button>
 
-        <Button variant="save" onClick={onClose}>
+        <Button variant="save" onClick={handleSave}>
           Save
         </Button>
       </DialogActions>

@@ -9,6 +9,7 @@ urlpatterns = [
     path('comments/', include('optio.comments.api.urls')),
     path('users/', include('users.urls')),
     path('projects/', include('projects.urls')),
+    path('api/projects/', include('optio.projects.api.urls')),
     path("search/", include("search.api.urls")),
     path("quicknotes/", include("quicknotes.api.urls"))
 ]
