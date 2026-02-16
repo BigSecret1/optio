@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
 
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+} from "@mui/material";
 
-import "./styles/new-project.css";
 import { NewContext } from "../../contexts/NewContext";
+import { CancelButton, SubmitButton, FormTextField } from "../common";
 import ProjectAction from "../../project/index";
 
 export default function NewProject() {
@@ -44,27 +47,44 @@ export default function NewProject() {
           },
         }}
       >
-        <DialogTitle className="new-project-dialog-title">Project</DialogTitle>
-        <DialogContent className="new-project-dialog-content">
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+        <DialogTitle
+          sx={{
+            fontWeight: 800,
+            fontSize: { xs: 22, sm: 26 },
+            color: "#ffffff",
+            pb: 1,
+          }}
+        >
+          Create Project
+        </DialogTitle>
+
+        <DialogContent sx={{ pt: 2 }}>
+          <Stack spacing={2.5}>
+            <FormTextField
+              id="name"
+              label="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+
+            <FormTextField
+              id="description"
+              label="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              multiline
+              minRows={5}
+            />
+          </Stack>
         </DialogContent>
 
-        <DialogActions className="new-project-dialog-actions">
-          <Button onClick={handleCancel}>Cancel</Button>
-          <Button onClick={handleCreate}>Create</Button>
+        <DialogActions>
+          <CancelButton onClose={handleCancel} />
+          <SubmitButton
+            actionText="Create"
+            processText="Create"
+            onClick={handleCreate}
+          />
         </DialogActions>
       </Dialog>
     </div>
