@@ -44,22 +44,18 @@ function MembersList({ projectMembers }) {
                     "&:hover": { backgroundColor: alpha("#000", 0.12) },
                   }}
                 >
-                  {/* First Name */}
                   <TableCell>
                     <Stack direction="row" spacing={1.5} alignItems="center">
                       <Typography fontWeight={700}>{m.firstName}</Typography>
                     </Stack>
                   </TableCell>
 
-                  {/* Last Name (centered) */}
                   <TableCell align="center">{m.lastName}</TableCell>
 
-                  {/* User Name (centered) */}
                   <TableCell sx={{ opacity: 0.95 }} align="center">
                     {m.email}
                   </TableCell>
 
-                  {/* Joined At (right aligned) */}
                   <TableCell align="right">{m.dateJoined}</TableCell>
                 </TableRow>
               ))}

@@ -7,12 +7,14 @@ export default function SubmitButton({
   submitting = false,
   processText = "",
   actionText = "",
+  onClick,  
 }) {
   return (
     <Button
       type="submit"
       variant="contained"
       disabled={disabled}
+      onClick={onClick}
       sx={{
         py: 1,
         px: 3,
