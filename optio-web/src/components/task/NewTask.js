@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
   DialogTitle,
-  TextField,
   FormControl,
   FormLabel,
   Select,
   MenuItem,
   Stack,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Popper,
+  Paper,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  TextField,
 } from "@mui/material";
 
 import { TASK_STATUS } from "../../constants";
+import { searchContext, projectSearchStrategy } from "../../search/index";
+import { FormTextField } from "../common";
 
 const fieldSx = {
   "& .MuiOutlinedInput-root": {
@@ -39,25 +47,46 @@ const selectSx = {
   },
 };
 
-export default function NewTask({
-  project = 2,
-  onSubmit,
-  onClose,
-  open,
-  parentTaskId,
-}) {
+export default function NewTask({ onSubmit, onClose, open, parentTaskId }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(TASK_STATUS[0]);
+  const [project, setProject] = useState({ id: null, name: "" });
+  const [searchResults, setSearchResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const anchorRef = useRef(null);
+
+  function handleSearch(e) {
+    const input = e.target.value;
+    setProject((prev) => ({ ...prev, name: input }));
+    if (input.trim() !== "") {
+      search(input);
+    }
+  }
+
+  async function search(input) {
+    const query = { name: input };
+    searchContext.setStrategy(projectSearchStrategy);
+
+    const results = await searchContext.executeSearch(query);
+
+    setSearchResults(results);
+    setShowDropdown(results.length > 0);
+  }
+
+  function handleProjectSelect(item) {
+    setShowDropdown(false);
+    setProject(item);
+  }
 
   function handleSubmit() {
-    onSubmit({
-      title,
-      description,
-      status,
-      project,
-      parentTask: parentTaskId ?? null,
-    });
+    const data = {
+      title: title,
+      description: description,
+      status: status,
+      projectId: project.id,
+    };
+    onSubmit(data);
   }
 
   return (
@@ -110,6 +139,54 @@ export default function NewTask({
               InputLabelProps={{ shrink: false }}
             />
           </FormControl>
+
+          {/* Project */}
+          <FormTextField
+            id="assignee"
+            label="Project"
+            value={project.name}
+            onChange={handleSearch}
+            textFieldSx={fieldSx}
+            textFieldProps={{
+              inputRef: anchorRef,
+              name: "project",
+              placeholder: "Search project...",
+              type: "text",
+              variant: "outlined",
+              autoComplete: "off",
+              onBlur: () => setTimeout(() => setShowDropdown(false), 200),
+              onFocus: () => {
+                if (searchResults.length) setShowDropdown(true);
+              },
+            }}
+          />
+
+          <Popper
+            open={showDropdown && searchResults.length > 0}
+            anchorEl={anchorRef.current}
+            placement="bottom-start"
+            style={{
+              zIndex: 1300,
+              width: anchorRef.current?.offsetWidth || 300,
+            }}
+          >
+            <Paper elevation={3}>
+              <List dense style={{ maxHeight: 240, overflowY: "auto" }}>
+                {searchResults.map((item) => (
+                  <ListItem
+                    key={item.id}
+                    disablePadding
+                    onMouseDown={() => handleProjectSelect(item)}
+                    style={{ borderBottom: "0.2px solid black" }}
+                  >
+                    <ListItemButton>
+                      <ListItemText primary={`${item.name ?? ""} `} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          </Popper>
 
           {/* Description */}
           <FormControl fullWidth>

@@ -41,9 +41,9 @@ export default function Projects() {
     setProjects(data);
     setAllProjects(data);
   }
-
-  function handleSearch(event) {
-    const input = event.target.value;
+  
+  function handleSearch(e) {
+    const input = e.target.value;
     setQuery(input);
 
     if (input.trim() === "") {

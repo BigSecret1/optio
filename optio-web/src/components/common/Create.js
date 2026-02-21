@@ -4,17 +4,16 @@ import { Box, Menu, MenuItem } from "@mui/material";
 import "./styles/create.css";
 import { NewContext } from "../../contexts/NewContext";
 import NewTask from "../task/NewTask";
+import ApiManager from "../../api-manager/api-manager";
 
 export default function Create() {
   const { setOpenCreateProject } = useContext(NewContext);
-  const [isOpen, setIsOpen] = useState(false);
   const [openCreateTask, setOpenCreateTask] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  useEffect(() => {}, []);
-
-  function createTask(taskDetails) {
-    console.log("Creating task with data:", taskDetails);
+  function createTask(data) {
+    ApiManager.createTask(data);
   }
 
   function handleOpenCreateMenu(e) {

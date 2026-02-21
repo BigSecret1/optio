@@ -17,61 +17,53 @@ class BaseSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(
         choices=["To Do", "In Progress", "Completed"],
         required=False,
-        default="To Do",
-        error_messages={
-            "invalid_choice": "Invalid status. Choose from: To Do, In Progress, Completed."},
+        default="To Do"
     )
+
     created_time = serializers.DateTimeField(
-        read_only=True, default=datetime.now, format="%Y-%m-%d %H:%M:%S"
+        read_only=True,
+        format="%Y-%m-%d %H:%M:%S"
     )
-    assignee = UserSerializer(read_only=True)  # for response
-    assignee_id = serializers.PrimaryKeyRelatedField(
-        queryset=UserProfile.objects.all(),  # for input
+
+    project = ProjectSerializer(read_only=True)
+    assignee = UserSerializer(read_only=True)
+
+    project_id = serializers.PrimaryKeyRelatedField(
+        queryset=Project.objects.all(),
         write_only=True,
-        source='assignee'  # maps to the same field
+        source="project"
     )
-    project = ProjectSerializer()
+
+    assignee_id = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),
+        write_only=True,
+        source="assignee",
+        required=False,
+        allow_null=True
+    )
+
+    parent_task = serializers.PrimaryKeyRelatedField(
+        queryset=Task.objects.all(),
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = Task
         fields = [
-            'id', 'title', 'due_date', 'comments', 'description',
-            'status', 'created_time', 'project', 'parent_task', 'assignee',
-            'assignee_id'
+            "id",
+            "title",
+            "description",
+            "due_date",
+            "status",
+            "created_time",
+            "comments",
+            "project",
+            "project_id",
+            "assignee",
+            "assignee_id",
+            "parent_task"
         ]
-        extra_kwargs = {
-            'title': {
-                'error_messages': {
-                    "required": "Title is required.",
-                    "max_length": "Title must not exceed 255 characters."
-                }
-            },
-            'due_date': {
-                'required': False,
-                'allow_null': True,
-                'error_messages': {"invalid": "Due date must be a valid date."}
-            },
-            'description': {
-                'required': False,
-                'allow_null': True,
-                'error_messages': {"invalid": "Description must be valid text."}
-            },
-            'project': {
-                'queryset': Project.objects.all(),
-                'error_messages': {
-                    "required": "Project ID is required.",
-                    "invalid": "Project ID must be a valid integer."
-                }
-            },
-            'parent_task': {
-                'queryset': Task.objects.all(),
-                'required': False,
-                'allow_null': True,
-                'error_messages': {
-                    "invalid": "Parent Task ID must be a valid integer."
-                }
-            }
-        }
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
@@ -85,7 +77,7 @@ class SubTaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = '__all__'
         read_only_fields = ['created_time']
-    
+
 
 class TaskSerializer(BaseSerializer):
     pass
