@@ -27,6 +27,11 @@ export default class ApiManager {
     return ApiMethods.delete(url);
   }
 
+  static createTask(param) {
+    const url = ENDPOINTS.CREATE_TASK;
+    return ApiMethods.post(url, param);
+  }
+
   static getSubtasks(parentTaskId) {
     const url = ENDPOINTS.GET_SUBTASKS(parentTaskId);
     return ApiMethods.get(url);
@@ -54,6 +59,6 @@ export default class ApiManager {
 
   static editProject(param, projectId) {
     const url = ENDPOINTS.EDIT_PROJECT(projectId);
-    return ApiMethods.patch(url, param)
+    return ApiMethods.patch(url, param);
   }
 }

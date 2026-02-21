@@ -23,7 +23,6 @@ export default function SubTasks({ taskId }) {
   async function getSubtasks() {
     const data = await TaskService.getSubtasks(taskId);
     setSubtasks(data);
-    console.log("List of subtasks is ", data);
   }
 
   function handleMenuSelect(option) {
