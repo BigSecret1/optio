@@ -20,7 +20,8 @@ export default function NewProject() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  function handleCreate() {
+  function handleCreateProject(e) {
+    e.preventDefault();
     projectAction.create({
       name: name,
       description: description,
@@ -39,7 +40,7 @@ export default function NewProject() {
         onClose={handleCancel}
         PaperProps={{
           component: "form",
-          onSubmit: handleCreate,
+          onSubmit: handleCreateProject,
           sx: {
             width: "1000px",
             maxWidth: "90vw",
@@ -80,11 +81,7 @@ export default function NewProject() {
 
         <DialogActions>
           <CancelButton onClose={handleCancel} />
-          <SubmitButton
-            actionText="Create"
-            processText="Create"
-            onClick={handleCreate}
-          />
+          <SubmitButton actionText="Create" processText="Create" />
         </DialogActions>
       </Dialog>
     </div>
