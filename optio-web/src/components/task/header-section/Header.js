@@ -11,12 +11,7 @@ import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import EditTaskHeader from "./EditTaskHeader.js";
 import { getAssigneeName } from "../../../util.js";
 
-export default function Header({ taskId }) {
-  /**
-   * This component contains(parent component of)  all the child components which helps to build header
-   * of an opened task.
-   */
-
+export default function Header() {
   const {
     task,
     isEditingTaskHeader,
@@ -110,7 +105,7 @@ export default function Header({ taskId }) {
         <Box component="span">{getAssigneeName(task)}</Box>
       </Typography>
 
-      {isEditingTaskHeader === true ? <EditTaskHeader taskId={taskId} /> : null}
+      {isEditingTaskHeader === true ? <EditTaskHeader /> : null}
     </Box>
   );
 }

@@ -47,7 +47,14 @@ const selectSx = {
   },
 };
 
-export default function NewTask({ onSubmit, onClose, open, parentTaskId }) {
+export default function NewTask({
+  onSubmit,
+  onClose,
+  open,
+  parentTaskId = null,
+  projectId = null,
+  dialogueTitle = "Create Task",
+}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(TASK_STATUS[0]);
@@ -84,7 +91,8 @@ export default function NewTask({ onSubmit, onClose, open, parentTaskId }) {
       title: title,
       description: description,
       status: status,
-      projectId: project.id,
+      parentTask: parentTaskId,
+      projectId: project.id ? project.id : projectId,
     };
     onSubmit(data);
   }
@@ -118,7 +126,7 @@ export default function NewTask({ onSubmit, onClose, open, parentTaskId }) {
           pb: 1,
         }}
       >
-        Create Task
+        {dialogueTitle}
       </DialogTitle>
 
       <DialogContent sx={{ pt: 2 }}>
@@ -141,25 +149,27 @@ export default function NewTask({ onSubmit, onClose, open, parentTaskId }) {
           </FormControl>
 
           {/* Project */}
-          <FormTextField
-            id="assignee"
-            label="Project"
-            value={project.name}
-            onChange={handleSearch}
-            textFieldSx={fieldSx}
-            textFieldProps={{
-              inputRef: anchorRef,
-              name: "project",
-              placeholder: "Search project...",
-              type: "text",
-              variant: "outlined",
-              autoComplete: "off",
-              onBlur: () => setTimeout(() => setShowDropdown(false), 200),
-              onFocus: () => {
-                if (searchResults.length) setShowDropdown(true);
-              },
-            }}
-          />
+          {parentTaskId === null && (
+            <FormTextField
+              id="assignee"
+              label="Project"
+              value={project.name}
+              onChange={handleSearch}
+              textFieldSx={fieldSx}
+              textFieldProps={{
+                inputRef: anchorRef,
+                name: "project",
+                placeholder: "Search project...",
+                type: "text",
+                variant: "outlined",
+                autoComplete: "off",
+                onBlur: () => setTimeout(() => setShowDropdown(false), 200),
+                onFocus: () => {
+                  if (searchResults.length) setShowDropdown(true);
+                },
+              }}
+            />
+          )}
 
           <Popper
             open={showDropdown && searchResults.length > 0}

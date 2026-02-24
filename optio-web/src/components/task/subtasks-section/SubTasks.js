@@ -7,21 +7,22 @@ import { TaskContext } from "../../../contexts/TaskContext.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import OptionMenu from "../../UI/OptionMenu.js";
 import NewTask from "../NewTask.js";
-import TaskService from "../../../task/index.js";
+import TaskService from "../../../task/index";
+import ApiManager from "../../../api-manager/api-manager";
 
-export default function SubTasks({ taskId }) {
+export default function SubTasks() {
   const { task } = useContext(TaskContext);
   const [subtasks, setSubtasks] = useState([]);
   const [openNewTask, setOpenNewTask] = useState(false);
 
   useEffect(() => {
-    if (taskId) {
+    if (task.id) {
       getSubtasks();
     }
-  }, [taskId]);
+  }, [task.id]);
 
   async function getSubtasks() {
-    const data = await TaskService.getSubtasks(taskId);
+    const data = await TaskService.getSubtasks(task.id);
     setSubtasks(data);
   }
 
@@ -35,14 +36,10 @@ export default function SubTasks({ taskId }) {
     setOpenNewTask(false);
   }
 
-  async function handleCreateSubtask(payload) {
-    try {
-      await TaskService.createSubtask(payload);
-      getSubtasks();
-      setOpenNewTask(false);
-    } catch (err) {
-      console.error("Failed to create subtask");
-    }
+  async function handleCreateSubtask(data) {
+    await ApiManager.createTask(data);
+    getSubtasks();
+    setOpenNewTask(false);
   }
 
   return (
@@ -63,9 +60,10 @@ export default function SubTasks({ taskId }) {
         open={openNewTask}
         onClose={handleCloseNewTaskDialogue}
         onSubmit={handleCreateSubtask}
-        parentTaskId={taskId}
-        project={task?.project_id ?? 2}
+        parentTaskId={task.id}
+        projectId={task?.project?.id}
         taskData={{ title: "", description: "", status: "" }}
+        dialogueTitle="Create Subtask"
       />
 
       {/* Subtasks List */}
@@ -75,7 +73,7 @@ export default function SubTasks({ taskId }) {
             <Stack
               key={subtask.id}
               component={RouterLink}
-              to={`/task-manager/${subtask.id}`}
+              to={`/tasks/${subtask.id}`}
               direction="row"
               alignItems="center"
               spacing={1}

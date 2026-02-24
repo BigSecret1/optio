@@ -30,13 +30,11 @@ class BaseSerializer(serializers.ModelSerializer):
 
     project_id = serializers.PrimaryKeyRelatedField(
         queryset=Project.objects.all(),
-        write_only=True,
         source="project"
     )
 
     assignee_id = serializers.PrimaryKeyRelatedField(
         queryset=UserProfile.objects.all(),
-        write_only=True,
         source="assignee",
         required=False,
         allow_null=True
@@ -64,6 +62,8 @@ class BaseSerializer(serializers.ModelSerializer):
             "assignee_id",
             "parent_task"
         ]
+
+        write_only = ["project_id", "assignee_id"]
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)

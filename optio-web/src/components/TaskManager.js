@@ -1,32 +1,17 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import Task from "../services/task/task-service";
 import ShowTask from "./task/ShowTask";
 import Navbar from "./navbar/Navbar";
-import { TaskProvider } from "../contexts/TaskContext";
+import { TaskContext, TaskProvider } from "../contexts/TaskContext";
 
-function TaskManager() {
-  const location = useLocation();
-  const { task } = location.state;
-  const taskInstace = new Task(
-    task.title,
-    task.project_id,
-    task.id,
-    task.subtasks,
-    task.due_date,
-    task.comments,
-    task.description,
-    task.task_status
-  );
+export default function TaskManager() {
+  const { taskId } = useParams();
 
   return (
-    <>
-      <TaskProvider>
-        <Navbar />
-        <ShowTask taskId={taskInstace.id} />
-      </TaskProvider>
-    </>
+    <TaskProvider taskId={taskId}>
+      <Navbar />
+      <ShowTask />
+    </TaskProvider>
   );
 }
-
-export default TaskManager;

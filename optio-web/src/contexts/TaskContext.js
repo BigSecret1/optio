@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 import Task from "../services/task/task-service";
 import SubTasksOperation from "../services/task/sub-task-operations";
@@ -10,7 +10,7 @@ import SubTasksOperation from "../services/task/sub-task-operations";
  */
 export const TaskContext = createContext();
 
-export function TaskProvider({ children }) {
+export function TaskProvider({ taskId, children }) {
   const [task, setTask] = useState(null);
   const [subTasks, setSubTasks] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,6 +30,15 @@ export function TaskProvider({ children }) {
    * for e.g. ("Edit title" : setIsEditingTaskHeader)
    */
   const optionToState = new Map();
+
+  useEffect(() => {
+    async function fetchTask() {
+      const result = await taskService.getTask(taskId);
+      setTask(result);
+    }
+
+    if (taskId) fetchTask();
+  }, [taskId]);
 
   /**
    * This function is used to get task with latest changees.

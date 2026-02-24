@@ -4,25 +4,19 @@ import { useParams } from "react-router-dom";
 import Tasks from "./Tasks";
 import Task from "../../services/task/task-service";
 
-function ProjectTasks() {
+export default function AllProjectTasks() {
   const [tasks, setTasks] = useState([]);
-  const task = new Task();
-  const { projectId } = useParams();
+  const taskAction = new Task();
 
   useEffect(() => {
     async function fetchTasks() {
-      const result = await task.getTasks({ projectId: projectId });
+      const result = await taskAction.getTasks();
       setTasks(result);
     }
-
-    if (projectId) {
-      fetchTasks();
-    }
+    fetchTasks();
   }, []);
 
   return (
     <>{tasks.length === 0 ? <p>Loading ...</p> : <Tasks tasks={tasks} />}</>
   );
 }
-
-export default ProjectTasks;

@@ -8,15 +8,15 @@ import OptionMenu from "../../UI/OptionMenu";
 import EllipsisWithSpacing from "../../UI/ThreeDots";
 import { Box, Typography, Stack } from "@mui/material";
 
-export default function Comment({ taskId }) {
+export default function Comment() {
   const { task, getUpdatedTask } = useContext(TaskContext);
   const [newComment, setNewComment] = useState("");
   const menuOptionsForComment = ["Delete"];
 
   async function handleAddComment(e) {
     e.preventDefault();
-    CommentService.addComment(newComment, taskId);
-    getUpdatedTask(taskId);
+    CommentService.addComment(newComment, task.id);
+    getUpdatedTask(task.id);
     setNewComment("");
   }
 
@@ -28,7 +28,7 @@ export default function Comment({ taskId }) {
 
   async function handleDeleteComment(commentId) {
     CommentService.deleteComment(commentId);
-    getUpdatedTask(taskId);
+    getUpdatedTask(task.id);
   }
 
   function handleChange(e) {
