@@ -52,7 +52,7 @@ const selectSx = {
   },
 };
 
-export default function EditTaskHeader({ taskId }) {
+export default function EditTaskHeader() {
   const { user, logout } = useUser();
   const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask } =
     useContext(TaskContext);
@@ -125,7 +125,6 @@ export default function EditTaskHeader({ taskId }) {
       status: taskHeaders.status,
     };
 
-    console.log("task payload ", data);
     task_actions.updateTask(data);
     setIsEditingTaskHeader(false);
     getUpdatedTask(task.id);

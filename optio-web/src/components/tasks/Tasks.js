@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   TextField,
@@ -19,13 +19,13 @@ import { searchContext, taskSearchStrategy } from "../../search/index";
 import { extractSearchResults } from "../../util";
 import { getAssigneeName } from "../../util";
 
-function Tasks({ projectTasks = [] }) {
+function Tasks({ tasks = [] }) {
   const [searchType, setSearchType] = useState("Task");
   const task = new Task();
 
   const [allTasks, setAllTasks] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const hasSetProjectTasks = useRef(false);
+  // const [tasks, setTasks] = useState([]);
+  // const hasSetProjectTasks = useRef(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState("");
@@ -33,26 +33,26 @@ function Tasks({ projectTasks = [] }) {
   const anchorRef = useRef(null);
 
   useEffect(() => {
-    if (projectTasks.length && !hasSetProjectTasks.current) {
-      setTasks(projectTasks);
-      hasSetProjectTasks.current = true;
-    } else if (projectTasks.length === 0 && !hasSetProjectTasks.current) {
-      fetchTasks();
-    }
-    console.log("Tasks ", tasks);
+    // if (projectTasks.length && !hasSetProjectTasks.current) {
+    //   setTasks(projectTasks);
+    //   hasSetProjectTasks.current = true;
+    // } else if (projectTasks.length === 0 && !hasSetProjectTasks.current) {
+    //   fetchTasks();
+    // }
+    // console.log("Tasks ", tasks);
   }, []);
 
-  async function fetchTasks() {
-    const response = await task.getTasks();
-    setTasks(response);
-    setAllTasks(response);
-  }
+  // async function fetchTasks() {
+  //   const response = await task.getTasks();
+  //   setTasks(response);
+  //   setAllTasks(response);
+  // }
 
   function handleSearch(event) {
     const input = event.target.value;
     setQuery(input);
     if (input.trim() === "") {
-      setTasks(allTasks);
+      // setTasks(allTasks);
       return;
     }
     search(input);
@@ -68,10 +68,17 @@ function Tasks({ projectTasks = [] }) {
     setShowDropdown(true);
   }
 
+  // function handleSelect(item) {
+  //   setShowDropdown(false);
+  //   setQuery(item.title);
+  //   setTasks(extractSearchResults(allTasks, [item]));
+  // }
+
+  const navigate = useNavigate();
+
   function handleSelect(item) {
     setShowDropdown(false);
-    setQuery(item.title);
-    setTasks(extractSearchResults(allTasks, [item]));
+    navigate(`/tasks/${item.id}`);
   }
 
   return (
@@ -122,6 +129,7 @@ function Tasks({ projectTasks = [] }) {
           </Paper>
         </Popper>
       </div>
+
       <div className="tasks-list-container">
         {tasks.map((task, index) => {
           const statusColor =
@@ -153,7 +161,7 @@ function Tasks({ projectTasks = [] }) {
             >
               {/* Title */}
               <Link
-                to={`/task-manager/${task["id"]}`}
+                to={`/tasks/${task["id"]}`}
                 state={{ task }}
                 style={{
                   textDecoration: "none",

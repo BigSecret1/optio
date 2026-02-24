@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useContext } from "react";
 
 import { Box, Grid } from "@mui/material";
@@ -17,18 +17,25 @@ const fieldSx = {
   },
 };
 
-export default function EditTaskDescription({ taskId }) {
+export default function EditTaskDescription() {
   const { task, getUpdatedTask, taskService, setIsEditingTaskDescription } =
     useContext(TaskContext);
-  const [description, setDescription] = useState(task.description);
+  const [description, setDescription] = useState();
+
+  useEffect(() => {
+    setDescription(task.description);
+  }, [task.description]);
 
   function handleEditing(event) {
     setDescription(event.target.value);
   }
 
-  function handleSave() {
-    taskService.updateTask({ id: taskId, description: description });
-    getUpdatedTask(taskId);
+  async function handleSave(e) {
+    e.preventDefault();
+
+    await taskService.updateTask({ id: task.id, description: description });
+    await getUpdatedTask(task.id);
+
     setIsEditingTaskDescription(false);
   }
 
@@ -44,7 +51,7 @@ export default function EditTaskDescription({ taskId }) {
       noValidate
       autoComplete="off"
     >
-      <TextField      
+      <TextField
         value={description}
         onChange={handleEditing}
         fullWidth

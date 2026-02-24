@@ -8,7 +8,7 @@ import OptionMenu from "../../UI/OptionMenu.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import EditTaskDescription from "./EditTaskDescription.js";
 
-export default function Description({ taskId }) {
+export default function Description() {
   const {
     task,
     optionToState,
@@ -54,7 +54,7 @@ export default function Description({ taskId }) {
         </div>
       </div>
       {isEditingTaskDescription === true ? (
-        <EditTaskDescription taskId={taskId} />
+        <EditTaskDescription />
       ) : (
         <Typography sx={{ whiteSpace: "pre-wrap" }}>
           {task.description}

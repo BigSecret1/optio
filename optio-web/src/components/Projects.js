@@ -121,7 +121,7 @@ export default function Projects() {
       </div>
 
       <Stack spacing={2} sx={{ mt: 8 }}>
-        {projects.map((project) => (
+          {projects.map((project) => (
           <Card
             key={project.id}
             component={Link}
