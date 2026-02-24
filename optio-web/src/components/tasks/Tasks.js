@@ -19,40 +19,21 @@ import { searchContext, taskSearchStrategy } from "../../search/index";
 import { extractSearchResults } from "../../util";
 import { getAssigneeName } from "../../util";
 
-function Tasks({ tasks = [] }) {
+export default function Tasks({ tasks = [] }) {
   const [searchType, setSearchType] = useState("Task");
   const task = new Task();
 
   const [allTasks, setAllTasks] = useState([]);
-  // const [tasks, setTasks] = useState([]);
-  // const hasSetProjectTasks = useRef(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState("");
 
   const anchorRef = useRef(null);
 
-  useEffect(() => {
-    // if (projectTasks.length && !hasSetProjectTasks.current) {
-    //   setTasks(projectTasks);
-    //   hasSetProjectTasks.current = true;
-    // } else if (projectTasks.length === 0 && !hasSetProjectTasks.current) {
-    //   fetchTasks();
-    // }
-    // console.log("Tasks ", tasks);
-  }, []);
-
-  // async function fetchTasks() {
-  //   const response = await task.getTasks();
-  //   setTasks(response);
-  //   setAllTasks(response);
-  // }
-
   function handleSearch(event) {
     const input = event.target.value;
     setQuery(input);
     if (input.trim() === "") {
-      // setTasks(allTasks);
       return;
     }
     search(input);
@@ -67,12 +48,6 @@ function Tasks({ tasks = [] }) {
     setSearchResults(results);
     setShowDropdown(true);
   }
-
-  // function handleSelect(item) {
-  //   setShowDropdown(false);
-  //   setQuery(item.title);
-  //   setTasks(extractSearchResults(allTasks, [item]));
-  // }
 
   const navigate = useNavigate();
 
@@ -185,8 +160,8 @@ function Tasks({ tasks = [] }) {
                   display: "flex",
                   alignItems: "center",
                   gap: 2,
-                  color: "#e2e8f0", // light gray text
-                  flexWrap: "wrap", // wraps nicely on small screens
+                  color: "#e2e8f0",
+                  flexWrap: "wrap",
                 }}
               >
                 {/* Status */}
@@ -256,5 +231,3 @@ function Tasks({ tasks = [] }) {
     </div>
   );
 }
-
-export default Tasks;
