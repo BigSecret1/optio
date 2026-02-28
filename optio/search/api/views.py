@@ -5,11 +5,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-import logging
+from optio.search.api.actions.search_action import SearchAPIAction
 
-from optio.tasks.api.actions.query import TaskESQuery
-from optio.projects.query import ProjectESQuery
-from optio.users.query import UserESQuery
+SEARCH_TYPES = ['fuzzy', 'prefix', 'exact', 'substring']
 
 
 class SearchTaskAPIView(APIView):
@@ -17,17 +15,18 @@ class SearchTaskAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        task_es_query = TaskESQuery()
-        try:
-            title = request.data.get("title")
-            search_results = task_es_query.find(title)
-            return Response(search_results, status=status.HTTP_200_OK)
-        except Exception as e:
-            logging.info("error : %s", str(e))
-            return Response(
-                {"msg": "Internal server error"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        action = SearchAPIAction()
+        search_keyword = request.data.get('title')
+        entity_type = 'task'
+
+        return Response(
+            action.search(
+                entity_type,
+                search_keyword,
+                SEARCH_TYPES
+            ),
+            status=status.HTTP_200_OK
+        )
 
 
 class SearchProjectAPIView(APIView):
@@ -35,17 +34,18 @@ class SearchProjectAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request) -> Response:
-        project_es_query = ProjectESQuery()
-        try:
-            name = request.data.get('name')
-            search_results = project_es_query.find(name)
-            return Response(search_results, status=status.HTTP_200_OK)
-        except Exception as e:
-            logging.info("error : %s", str(e))
-            return Response(
-                {"msg": "Internal server error"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        action = SearchAPIAction()
+        search_keyword = request.data.get('name')
+        entity_type = 'project'
+
+        return Response(
+            action.search(
+                entity_type,
+                search_keyword,
+                SEARCH_TYPES
+            ),
+            status=status.HTTP_200_OK
+        )
 
 
 class SearchUserAPIView(APIView):
@@ -53,14 +53,15 @@ class SearchUserAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request):
-        user_es_query = UserESQuery()
-        try:
-            first_name = request.data.get('first_name')
-            search_results = user_es_query.find(first_name)
-            return Response(search_results, status=status.HTTP_200_OK)
-        except Exception as e:
-            logging.info("error : %s", str(e))
-            return Response(
-                {"msg": "Internal server error"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        action = SearchAPIAction()
+        search_keyword = request.data.get('first_name')
+        entity_type = 'user'
+
+        return Response(
+            action.search(
+                entity_type,
+                search_keyword,
+                SEARCH_TYPES
+            ),
+            status=status.HTTP_200_OK
+        )

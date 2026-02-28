@@ -7,6 +7,7 @@ import logging
 import json
 import re
 
+logger = logging.getLogger(__name__)
 
 class CamelCaseToSnakeCaseMiddleware(MiddlewareMixin):
     def process_request(self, request):
@@ -23,7 +24,7 @@ class CamelCaseToSnakeCaseMiddleware(MiddlewareMixin):
                 """
                 request._body = json.dumps(snake_case_body).encode("utf-8")
             except Exception as e:
-                logging.error("Request body transformation failed: %s", str(e))
+                logger.error("Request body transformation failed: %s", str(e))
 
     def camel_to_snake(self, name: str):
         # https://djangosnippets.org/snippets/585/
@@ -62,7 +63,7 @@ class SnakeCaseToCamelCaseMiddleware(MiddlewareMixin):
                 return new_response
 
             except Exception as e:
-                logging.error("Response transformation failed: %s", str(e))
+                logger.error("Response transformation failed: %s", str(e))
 
         return response
 
