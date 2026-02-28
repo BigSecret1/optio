@@ -20,10 +20,10 @@ class SearchAPIAction:
         if search_types is None:
             search_types = []
 
-        entity : EntityFinder = EntityFinderFactory.get_entity(entity_type)
+        entity: EntityFinder = EntityFinderFactory.get_entity(entity_type)
 
         for search_type in search_types:
-            strategy : SearchStrategy = SearchStrategyFactory.get_strategy(search_type)
+            strategy: SearchStrategy = SearchStrategyFactory.get_strategy(search_type)
 
             query = strategy.build_query(
                 entity.get_search_field(),
@@ -37,6 +37,16 @@ class SearchAPIAction:
             except Exception as e:
                 logger.error("Elastic search query execution failed due to %s", e)
 
+        self.search_results = self.__deduplicate(self.search_results)
         return self.search_results
 
+    def __deduplicate(self, documents):
+        unique_ids = set()
+        results = []
 
+        for document in documents:
+            if document["id"] not in unique_ids:
+                unique_ids.add(document["id"])
+                results.append(document)
+
+        return results
