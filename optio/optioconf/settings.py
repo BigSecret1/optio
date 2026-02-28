@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'optio.users',
     'optio.projects',
     'optio.quicknotes',
+    'optio.organizations',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
@@ -74,7 +75,6 @@ CORS_ALLOWED_ORIGINS = [
     for origin in config("CORS_ALLOWED_ORIGINS", "").split(",")
     if origin.strip()
 ]
-
 
 ROOT_URLCONF = 'optioconf.urls'
 
@@ -182,7 +182,6 @@ SIMPLE_JWT = {
 }
 
 STATIC_ROOT = os.environ.get('STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
-
 
 import logging.config
 

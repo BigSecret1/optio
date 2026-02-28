@@ -16,15 +16,23 @@ class ProjectUserAPIAction:
 
 class ProjectAPIAction:
 
-    def get_projet(self, project_id):
-        project = get_object_or_404(Project, id=project_id)
+    def get_projet(self, project_id, organization_id):
+        if not project_id or not organization_id:
+            return []
+
+        project = get_object_or_404(
+            Project, id=project_id,
+            organization_id=organization_id
+        )
         return ProjectSerializer(project).data
 
-    def update_project(self, data, project_id):
+    def update_project(self, data, project_id, organization_id):
+        if not project_id or not organization_id:
+            return []
+
         project = get_object_or_404(Project, id=project_id)
         serializer = ProjectSerializer(project, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return serializer.data
         return {"Message": "Project update failed!!!"}
-

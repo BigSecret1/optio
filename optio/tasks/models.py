@@ -1,6 +1,7 @@
 from django.db import models
 from optio.projects.models import Project
 from optio.users.models import UserProfile
+from optio.organizations.models import Organization
 
 
 class Task(models.Model):
@@ -31,6 +32,12 @@ class Task(models.Model):
         blank=True,
         null=True,
         db_column="assignee_id"
+    )
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name="tasks",
+        db_column="organization_id"
     )
 
     class Meta:

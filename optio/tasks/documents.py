@@ -42,6 +42,7 @@ class TaskDocument(Document):
             'raw': fields.KeywordField(),
         }
     )
+    organization_id = fields.IntegerField()
 
     class Index:
         name = 'tasks_index'
@@ -57,3 +58,6 @@ class TaskDocument(Document):
             'id',
             'status'
         ]
+
+    def prepare_organization(self, instance):
+        return instance.organization_id

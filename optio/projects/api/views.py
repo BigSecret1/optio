@@ -7,6 +7,17 @@ from optio.projects.actions.assign_project import assign_project_to_users
 from optio.projects.api.actions import ProjectUserAPIAction, ProjectAPIAction
 
 
+class ProjectAPIView(APIView):
+
+    def get(self, request: Request, project_id=None, organization_id=None):
+        project_action = ProjectAPIAction()
+        return Response(project_action.get_projet(project_id, organization_id))
+
+    def patch(self, request: Request, project_id=None, organization_id=None):
+        project_action = ProjectAPIAction()
+        return Response(project_action.update_project(request.data, project_id))
+
+
 class ProjectUsersAPIView(APIView):
 
     def get(self, request: Request, project_id):
@@ -18,14 +29,3 @@ class ProjectUsersAPIView(APIView):
         user_ids = request.data.get("user_ids")
         result = assign_project_to_users(project_id, user_ids)
         return Response({"data": result})
-
-
-class ProjectAPIView(APIView):
-
-    def get(self, request: Request, project_id=None):
-        project_action = ProjectAPIAction()
-        return Response(project_action.get_projet(project_id))
-
-    def patch(self, request: Request, project_id):
-        project_action = ProjectAPIAction()
-        return Response(project_action.update_project(request.data, project_id))

@@ -1,5 +1,6 @@
 from django.db import models
 from optio.users.models import UserProfile
+from optio.organizations.models import Organization
 
 
 class Project(models.Model):
@@ -11,6 +12,12 @@ class Project(models.Model):
         through="UserProject",
         related_name="assigned_projects"
     )
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name="projects",
+        db_column="organization_id"
+    )
 
     class Meta:
         db_table = "optio_projects"
@@ -19,6 +26,7 @@ class Project(models.Model):
         return self.name
 
 
+# This model is redundant and has to be removed in the future
 class UserProject(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
