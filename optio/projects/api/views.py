@@ -1,31 +1,51 @@
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
-from optio.projects.actions.assign_project import assign_project_to_users
+from optio.permissions import MethodPermissionMixin
 from optio.projects.api.actions import ProjectUserAPIAction, ProjectAPIAction
+from optio.organizations.api.permissions import (
+    IsOrganizationMember,
+    IsOrganizationAdmin
+)
+from optio.organizations.api.views import BaseOrganizationAPIView
 
 
-class ProjectAPIView(APIView):
+class ProjectAPIView(BaseOrganizationAPIView, MethodPermissionMixin):
+    permission_classes_by_method = {
+        "GET": [IsAuthenticated, IsOrganizationMember],
+        "PATCH": [IsAuthenticated, IsOrganizationAdmin],
+    }
 
-    def get(self, request: Request, project_id=None, organization_id=None):
-        project_action = ProjectAPIAction()
-        return Response(project_action.get_projet(project_id, organization_id))
+    def get(self, request: Request, organization_id=None, project_id=None):
+        action: ProjectAPIAction = ProjectAPIAction(request.organization)
+        return Response(action.get_project(project_id))
 
-    def patch(self, request: Request, project_id=None, organization_id=None):
-        project_action = ProjectAPIAction()
-        return Response(project_action.update_project(request.data, project_id))
+    def patch(self, request: Request, organization_id=None, project_id=None):
+        action: ProjectAPIAction = ProjectAPIAction(request.organization)
+        return Response(
+            action.update_project(project_id, request.data)
+        )
 
 
-class ProjectUsersAPIView(APIView):
+class ProjectUsersAPIView(BaseOrganizationAPIView, MethodPermissionMixin):
+    permission_classes_by_method = {
+        "GET": [IsAuthenticated, IsOrganizationMember],
+        "POST": [IsAuthenticated, IsOrganizationAdmin],
+    }
 
-    def get(self, request: Request, project_id):
-        project_user_api_action = ProjectUserAPIAction()
-        users = project_user_api_action.get_project_users(project_id)
-        return Response(users)
+    def get(self, request, organization_id, project_id):
+        action: ProjectUserAPIAction = ProjectUserAPIAction(request.organization)
+        return Response(
+            action.get_project_users(project_id)
+        )
 
-    def post(self, request: Request, project_id):
-        user_ids = request.data.get("user_ids")
-        result = assign_project_to_users(project_id, user_ids)
-        return Response({"data": result})
+    def post(self, request, organization_id, project_id):
+        action = ProjectUserAPIAction(request.organization)
+
+        return Response({
+            "data": action.assign_users(
+                project_id=project_id,
+                user_ids=request.data.get("user_ids"),
+            )
+        })
