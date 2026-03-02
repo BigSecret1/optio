@@ -1,16 +1,16 @@
 from django.db import models
+
 from optio.projects.models import Project
 from optio.users.models import UserProfile
 from optio.organizations.models import Organization
+from optio.models import BaseAuditModel
 
 
-class Task(models.Model):
+class Task(BaseAuditModel):
     title = models.CharField(max_length=255)
     due_date = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=50, blank=True, null=True)
-    created_time = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,

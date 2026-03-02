@@ -14,18 +14,33 @@ class ProjectAPIAction:
         self.organization = organization
 
     def _get_project(self, project_id):
-        """
-        Internal helper to fetch project scoped to organization.
-        """
         return get_object_or_404(
             Project,
             pk=project_id,
             organization=self.organization
         )
 
+    def create_project(self, data):
+        serializer = ProjectSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save(organization=self.organization)
+
+        return serializer.data
+
     def get_project(self, project_id):
         project = self._get_project(project_id)
         return ProjectSerializer(project).data
+
+    def list_projects(self):
+        """
+        Retrieve all projects under an organization
+        """
+        queryset = Project.objects.filter(
+            organization=self.organization
+        ).order_by("-created_at")
+
+        return ProjectSerializer(queryset, many=True).data
 
     def update_project(self, project_id, data):
         project = self._get_project(project_id)
@@ -40,15 +55,19 @@ class ProjectAPIAction:
 
         return serializer.data
 
+    def delete_project(self, project_id):
+        project = self._get_project(project_id)
+
+        project.delete()
+
+        return {"message": "Project deleted successfully"}
+
 
 class ProjectUserAPIAction:
     def __init__(self, organization):
         self.organization = organization
 
     def _get_project(self, project_id):
-        """
-        Internal helper to fetch project scoped to organization.
-        """
         return get_object_or_404(
             Project,
             pk=project_id,
@@ -61,7 +80,6 @@ class ProjectUserAPIAction:
             pk=project_id,
             organization=self.organization
         )
-        print("project", project)
 
         queryset = UserProfile.objects.filter(
             userproject__project=project

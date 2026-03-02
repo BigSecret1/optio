@@ -5,10 +5,10 @@ from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
-    path('tasks/', include('optio.tasks.api.urls')),
+    path('api/orgs/<int:organization_id>/tasks/', include('optio.tasks.api.urls')),
     path('comments/', include('optio.comments.api.urls')),
     path('users/', include('users.urls')),
-    path('projects/', include('projects.urls')),
+    path('projects/', include('projects.urls')), # Has to be removed
     path('api/orgs/<int:organization_id>/projects/', include('optio.projects.api.urls')),
     path("search/", include("search.api.urls")),
     path("quicknotes/", include("quicknotes.api.urls"))

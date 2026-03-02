@@ -1,7 +1,5 @@
 from rest_framework import serializers
 
-from datetime import date, datetime
-from copy import deepcopy
 
 from optio.projects.models import Project
 from optio.tasks.models import Task
@@ -11,7 +9,7 @@ from optio.users.models import UserProfile
 from optio.comments.api.interface import CommentInterface
 
 
-class BaseSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
 
     status = serializers.ChoiceField(
@@ -72,12 +70,3 @@ class BaseSerializer(serializers.ModelSerializer):
         return CommentInterface.get_comments(obj.id)
 
 
-class SubTaskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = '__all__'
-        read_only_fields = ['created_time']
-
-
-class TaskSerializer(BaseSerializer):
-    pass
