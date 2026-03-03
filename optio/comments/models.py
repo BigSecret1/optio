@@ -1,9 +1,10 @@
 from django.db import models
 from optio.tasks.models import Task
 from optio.users.models import UserProfile
+from optio.models import BaseAuditModel
 
 
-class Comment(models.Model):
+class Comment(BaseAuditModel):
     comment = models.TextField()
 
     task = models.ForeignKey(
@@ -19,8 +20,6 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name="comments"
     )
-
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "optio_comments"

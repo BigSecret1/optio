@@ -1,20 +1,7 @@
-from optio.comments.models import Comment
-from optio.comments.api.actions.comment import CommentAPIAction
+from optio.comments.api.actions import CommentAPIAction
 
 
+#
 class CommentInterface:
-    @staticmethod
-    def get_comments(task_id: int):
-        return CommentAPIAction.fetch_all_comments(task_id)
-
-
-
-
- 
-
-
-
-
-
-
-
+    def get_comments(self, task_id: int):
+        pass
