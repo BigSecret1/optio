@@ -3,7 +3,7 @@ from rest_framework import serializers
 from optio.projects.models import Project
 from optio.tasks.models import Task
 from optio.projects.serializers import ProjectSerializer
-from optio.users.serializers import UserSerializer
+from optio.users.api.serializers import UserSerializer
 from optio.users.models import UserProfile
 from optio.comments.api.interface import CommentInterface
 

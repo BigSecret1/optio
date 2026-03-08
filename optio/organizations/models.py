@@ -8,13 +8,13 @@ class Organization(models.Model):
     owner = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
-        related_name="owned_organizations"
+        related_name='owned_organizations'
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "optio_organizations"
+        db_table = 'optio_organizations'
 
     def __str__(self):
         return self.name
@@ -23,19 +23,19 @@ class Organization(models.Model):
 class Membership(models.Model):
 
     class Role(models.TextChoices):
-        ADMIN = "admin", "Admin"
-        MEMBER = "member", "Member"
+        ADMIN = 'admin', 'Admin'
+        MEMBER = 'member', 'Member'
 
     user = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
-        related_name="memberships"
+        related_name='memberships'
     )
 
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
-        related_name="memberships"
+        related_name='memberships'
     )
 
     role = models.CharField(
@@ -47,8 +47,12 @@ class Membership(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "optio_memberships"
-        unique_together = ("user", "organization")
+        db_table = 'optio_memberships'
+        unique_together = ('user', 'organization')
+
+    @property
+    def is_admin(self):
+        return self.role == self.Role.ADMIN
 
     def __str__(self):
-        return f"{self.user.email} - {self.organization.name} ({self.role})"
+        return f'{self.user.email} - {self.organization.name} ({self.role})'

@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 
 from optio.projects.serializers import ProjectSerializer
-from optio.users.serializers import UserSerializer
+from optio.users.api.serializers import UserSerializer
 from optio.projects.models import Project, UserProject
 from optio.users.models import UserProfile
 from optio.organizations.models import Membership
