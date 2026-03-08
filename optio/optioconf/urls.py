@@ -13,6 +13,6 @@ urlpatterns = [
         'api/orgs/<int:organization_id>/projects/',
         include('optio.projects.api.urls')
     ),
-    path('search/', include('search.api.urls')),
+    path('api/orgs/<int:organization_id>/search/', include('optio.search.api.urls')),
     path('quicknotes/', include('quicknotes.api.urls'))
 ]

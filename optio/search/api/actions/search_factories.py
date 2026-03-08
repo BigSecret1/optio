@@ -12,22 +12,26 @@ from optio.search.api.actions.search_entities import (
 )
 
 
+from optio.tasks.api.serializers import TaskSerializer
+from optio.projects.serializers import ProjectSerializer
+from optio.users.api.serializers import UserSerializer
+
 class SearchStrategyFactory:
 
     @staticmethod
     def get_strategy(search_type: str):
         search_type = search_type.lower()
 
-        if search_type == "fuzzy":
+        if search_type == 'fuzzy':
             return FuzzySearchStrategy()
-        elif search_type == "prefix":
+        elif search_type == 'prefix':
             return PrefixSearchStrategy()
-        elif search_type == "substring":
+        elif search_type == 'substring':
             return SubstringSearchStrategy()
-        elif search_type == "exact":
+        elif search_type == 'exact':
             return ExactSearchStrategy()
         else:
-            raise ValueError("Invalid search type")
+            raise ValueError('Invalid search type')
 
 
 class EntityFinderFactory:
@@ -36,11 +40,27 @@ class EntityFinderFactory:
     def get_entity(entity_type: str):
         entity_type = entity_type.lower()
 
-        if entity_type == "task":
+        if entity_type == 'task':
             return TaskEntityFinder()
-        elif entity_type == "project":
+        elif entity_type == 'project':
             return ProjectEntityFinder()
-        elif entity_type == "user":
+        elif entity_type == 'user':
             return UserEntityFinder()
         else:
-            raise ValueError("Invalid entity type")
+            raise ValueError('Invalid entity type')
+
+
+class SearchSerializerFactory:
+
+    @staticmethod
+    def get_serializer(entity_type: str):
+        entity_type = entity_type.lower()
+
+        if entity_type == 'task':
+            return TaskSerializer
+        elif entity_type == 'project':
+            return ProjectSerializer
+        elif entity_type == 'user':
+            return UserSerializer
+        else:
+            raise ValueError('Invalid entity type')

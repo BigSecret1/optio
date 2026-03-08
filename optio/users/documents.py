@@ -3,6 +3,8 @@ from django_elasticsearch_dsl.registries import registry
 from elasticsearch_dsl import analyzer, tokenizer
 
 from optio.users.models import UserProfile
+from optio.organizations.models import Membership
+
 
 prefix_analyzer = analyzer(
     'prefix_analyzer',
@@ -26,7 +28,6 @@ substring_analyzer = analyzer(
     filter=['lowercase']
 )
 
-from optio.organizations.models import Membership
 
 
 @registry.register_document
