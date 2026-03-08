@@ -11,10 +11,12 @@ from optio.search.api.actions.search_entities import (
     UserEntityFinder,
 )
 
+from optio.search.api.serializers import (
+    TaskSearchSerializer,
+    ProjectSearchSerializer,
+    UserSearchSerializer
+)
 
-from optio.tasks.api.serializers import TaskSerializer
-from optio.projects.serializers import ProjectSerializer
-from optio.users.api.serializers import UserSerializer
 
 class SearchStrategyFactory:
 
@@ -57,10 +59,10 @@ class SearchSerializerFactory:
         entity_type = entity_type.lower()
 
         if entity_type == 'task':
-            return TaskSerializer
+            return TaskSearchSerializer
         elif entity_type == 'project':
-            return ProjectSerializer
+            return ProjectSearchSerializer
         elif entity_type == 'user':
-            return UserSerializer
+            return UserSearchSerializer
         else:
             raise ValueError('Invalid entity type')

@@ -42,7 +42,7 @@ class TaskDocument(Document):
             'raw': fields.KeywordField(),
         }
     )
-    organization_id = fields.IntegerField()
+    organization_ids = fields.IntegerField()
 
     class Index:
         name = 'tasks_index'
@@ -54,10 +54,7 @@ class TaskDocument(Document):
 
     class Django:
         model = Task
-        fields = [
-            'id',
-            'status'
-        ]
+        fields = ['id', 'status']
 
-    def prepare_organization(self, instance):
+    def prepare_organization_ids(self, instance):
         return instance.organization_id

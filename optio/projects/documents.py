@@ -40,7 +40,7 @@ class ProjectDocument(Document):
             'raw': fields.KeywordField(),
         }
     )
-    organization_id = fields.IntegerField()
+    organization_ids = fields.IntegerField()
 
     class Index:
         name = 'projects_index'
@@ -54,5 +54,5 @@ class ProjectDocument(Document):
         model = Project
         fields = ['id']
 
-    def prepare_organization(self, instance):
+    def prepare_organization_ids(self, instance):
         return instance.organization_id

@@ -45,7 +45,7 @@ class UserDocument(Document):
         }
     )
 
-    organization_ids = fields.KeywordField(multi=True)
+    organization_ids = fields.IntegerField(multi=True)
 
     class Index:
         name = 'users_index'

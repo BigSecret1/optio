@@ -37,6 +37,7 @@ class SearchAPIAction:
             try:
                 print("executing query on elastic search ", query)
                 response = Search(index=entity.get_index()).query(query).execute()
+                print("Search result", response)
                 documents = [hit.to_dict() for hit in response]
                 self.search_results.extend(documents)
             except Exception as e:
