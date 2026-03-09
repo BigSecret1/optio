@@ -6,24 +6,16 @@ import React, {
   useContext,
 } from "react";
 
-import { login as authLogin } from "../utils/auth";
 import { signOut } from "../user/actions/signOut";
+import ApiManager from "../api-client/api-manager";
 
 export const UserContext = createContext();
 
-/** Hook to access the current user and auth actions from any component. */
 export function useUser() {
   const ctx = useContext(UserContext);
-  if (!ctx) {
-    throw new Error("useUser must be used within a UserProvider");
-  }
   return ctx;
 }
 
-/**
- * Hydrates user from localStorage when a valid session (accessToken) exists.
- * Keeps localStorage and context in sync on init and after login/logout.
- */
 function getUserFromStorage() {
   const token = localStorage.getItem("accessToken");
   if (!token) return null;
@@ -42,23 +34,33 @@ export function UserProvider({ children }) {
     setUser(getUserFromStorage());
   }, []);
 
-  const login = useCallback(async (email, password) => {
-    const { accessToken, refreshToken, user: userData } = await authLogin(
-      email,
-      password
-    );
-    if (!accessToken) return { ok: false };
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData);
-    return { ok: true };
-  }, []);
+  async function login(email, password) {
+    const res = await ApiManager.login({ email: email, password: password });
 
-  const logout = useCallback(async () => {
+    const { access, refresh, user, organizations } = res;
+
+    localStorage.setItem("accessToken", access);
+    localStorage.setItem("refreshToken", refresh);
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("organizations", JSON.stringify(organizations));
+
+    const currentOrg = organizations[0]?.organizationId;
+    localStorage.setItem("currentOrganizationId", currentOrg);
+
+    setUser({
+      ...user,
+      organizations,
+      currentOrganizationId: currentOrg,
+    });
+    console.log("User", user);
+
+    return { ok: true };
+  }
+
+  async function logout() {
     await signOut();
     setUser(null);
-  }, []);
+  }
 
   return (
     <UserContext.Provider

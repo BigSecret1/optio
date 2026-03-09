@@ -10,7 +10,7 @@ import EditProject from "./EditProject";
 import { BRAND_PRIMARY, BRAND_SECONDARY } from "../../../constants";
 import ManageMembers from "./Members/ManageMembers";
 import { searchContext, userSearchStrategy } from "../../../search";
-import ApiManager from "../../../api-manager/api-manager";
+import ApiManager from "../../../api-client/api-manager";
 
 export default function ProjectOverview() {
   const { projectId } = useParams();

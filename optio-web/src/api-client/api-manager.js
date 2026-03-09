@@ -2,6 +2,10 @@ import ApiMethods from "./api-methods";
 import ENDPOINTS from "./endpoints";
 
 export default class ApiManager {
+  static login(params) {
+    return ApiMethods.post(ENDPOINTS.USER_LOGIN, params);
+  }
+
   static searchTask(params) {
     const url = ENDPOINTS.SEARCH_TASK;
     return ApiMethods.post(url, params);
@@ -60,5 +64,9 @@ export default class ApiManager {
   static editProject(param, projectId) {
     const url = ENDPOINTS.EDIT_PROJECT(projectId);
     return ApiMethods.patch(url, param);
+  }
+
+  static fetchProjects(org_id) {
+    return ApiMethods.get(ENDPOINTS.FETCH_PROJECTS);
   }
 }

@@ -8,7 +8,7 @@ import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import OptionMenu from "../../UI/OptionMenu.js";
 import NewTask from "../NewTask.js";
 import TaskService from "../../../task/index";
-import ApiManager from "../../../api-manager/api-manager";
+import ApiManager from "../../../api-client/api-manager";
 
 export default function SubTasks() {
   const { task } = useContext(TaskContext);

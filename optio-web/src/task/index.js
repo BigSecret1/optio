@@ -1,4 +1,4 @@
-import ApiManager from "../api-manager/api-manager";
+import ApiManager from "../api-client/api-manager";
 
 export default class TaskService {
   static getSubtasks(parentTaskId) {

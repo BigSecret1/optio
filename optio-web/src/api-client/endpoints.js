@@ -1,7 +1,11 @@
 import { SERVER_HOST } from "../constants";
 
-export const BASE_URL = SERVER_HOST;
+const currentOrgId = localStorage.getItem("currentOrganizationId");
+
+export const BASE_URL = SERVER_HOST + "/api";
+
 const ENDPOINTS = {
+  USER_LOGIN: "/security/login/",
   SEARCH_TASK: "/search/task/",
   SEARCH_PROJECT: "/search/project/",
   SEARCH_USER: "/search/user/",
@@ -10,6 +14,7 @@ const ENDPOINTS = {
   CREATE_TASK: "/tasks/create/",
   GET_SUBTASKS: (parentTaskId) => `/tasks/${parentTaskId}/subtasks/`,
   CREATE_SUBTASK: "/tasks/create-subtask/",
+  FETCH_PROJECTS: `/orgs/${currentOrgId}/projects/`,
   ADD_PROJECT_MEMEBERS: (projectId) => `/api/projects/${projectId}/users/`,
   FETCH_PROJECT_MEMBERS: (projectId) => `/api/projects/${projectId}/users/`,
   FETCH_PROJECT: (projectId) => `/api/projects/${projectId}/`,
