@@ -16,9 +16,9 @@ const ENDPOINTS = {
   CREATE_SUBTASK: "/tasks/create-subtask/",
   FETCH_PROJECTS: `/orgs/${currentOrgId}/projects/`,
   ADD_PROJECT_MEMEBERS: (projectId) => `/api/projects/${projectId}/users/`,
-  FETCH_PROJECT_MEMBERS: (projectId) => `/api/projects/${projectId}/users/`,
-  FETCH_PROJECT: (projectId) => `/api/projects/${projectId}/`,
-  EDIT_PROJECT: (projectId) => `/api/projects/${projectId}/`,
+  FETCH_PROJECT_MEMBERS: (projectId) => `/orgs/${currentOrgId}/projects/${projectId}/users/`,
+  FETCH_PROJECT: (projectId) => `/orgs/${currentOrgId}/projects/${projectId}/`,
+  EDIT_PROJECT: (projectId) => `/orgs/${currentOrgId}/projects/${projectId}/`,
 };
 
 export default ENDPOINTS;

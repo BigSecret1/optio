@@ -29,26 +29,6 @@ class ProjectAction {
       throw error;
     }
   }
-
-  async fetchAll() {
-    const url = this.host + "/projects/list";
-    const accessToken = localStorage.getItem("accessToken");
-
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      const projects = await response.json();
-
-      return projects;
-    } catch (err) {
-      console.error("Failed to fetch tasks ", err);
-    }
-  }
 }
 
 export default ProjectAction;

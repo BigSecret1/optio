@@ -38,7 +38,7 @@ class ProjectAPIAction:
         """
         queryset = Project.objects.filter(
             organization=self.organization
-        ).order_by("-created_at")
+        ).order_by("-updated_at")
 
         return ProjectSerializer(queryset, many=True).data
 
