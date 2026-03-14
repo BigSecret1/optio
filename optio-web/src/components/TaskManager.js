@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import Task from "../services/task/task-service";
+import React from "react";
+import { useParams } from "react-router-dom";
 import ShowTask from "./task/ShowTask";
 import Navbar from "./navbar/Navbar";
-import { TaskContext, TaskProvider } from "../contexts/TaskContext";
+import { TaskProvider } from "../contexts/TaskContext";
 
 export default function TaskManager() {
   const { taskId } = useParams();

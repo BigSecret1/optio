@@ -17,10 +17,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import "./styles/list-users.css";
-import { User } from "../../user/index";
+import ApiManager from "../../api-client/api-manager";
 
 function ListUsers() {
-  const userAction = new User();
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
@@ -34,7 +33,7 @@ function ListUsers() {
 
   async function handleDelete(id) {
     try {
-      await userAction.deleteUser(id);
+      await ApiManager.deleteUser(id);
       await fetchUsers();
     } catch (error) {
       console.error("Deletion failed", error);
@@ -42,9 +41,12 @@ function ListUsers() {
   }
 
   async function fetchUsers() {
-    console.log("Calling list users method ");
-    const usersList = await userAction.listUsers();
-    setUsers(usersList);
+    try {
+      const usersList = await ApiManager.getUsers();
+      setUsers(usersList);
+    } catch (error) {
+      console.error("Failed to fetch users", error);
+    }
   }
 
   function handleCreateUser() {

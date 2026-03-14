@@ -12,6 +12,14 @@ import { isAdmin } from "../../utils/user";
 
 const LOG_OUT = "Log out";
 
+function getUserRole(user) {
+  if (!user?.organizations || !user?.currentOrganizationId) return null;
+  const org = user.organizations.find(
+    (o) => String(o.organizationId) === String(user.currentOrganizationId)
+  );
+  return org?.role ?? null;
+}
+
 function ProfileMenu() {
   const navigate = useNavigate();
   const { user, logout } = useUser();
@@ -43,11 +51,9 @@ function ProfileMenu() {
   }
 
   const profileMenuOptions = ["Your profile", "Change password"];
-  const groups = user?.groups ?? [];
-  const userIsAdmin = isAdmin(groups);
-  if (userIsAdmin) {
-    const optionsForAdmin = ["List users"];
-    profileMenuOptions.push(...optionsForAdmin);
+  const role = getUserRole(user);
+  if (role === "admin") {
+    profileMenuOptions.push("List users");
   }
   profileMenuOptions.push("Log out");
 

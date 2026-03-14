@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { Container, Paper, Box, Grid, FormHelperText } from "@mui/material";
-import { User } from "../../user/index";
+import ApiManager from "../../api-client/api-manager";
 
 import HeaderCard from "./ManageUser/HeaderCard";
 import TextInput from "./ManageUser/TextInput";
@@ -26,7 +26,6 @@ export const textFieldSx = {
 
 export default function EditUser() {
   const { id } = useParams();
-  const userAction = new User();
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
@@ -37,11 +36,11 @@ export default function EditUser() {
 
   useEffect(() => {
     async function fetchUser() {
-      const userDetail = await userAction.listUsers(id);
+      const userDetail = await ApiManager.getUser(id);
       setUserData(userDetail);
     }
     fetchUser();
-  }, []);
+  }, [id]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -55,12 +54,11 @@ export default function EditUser() {
     e.preventDefault();
     try {
       const groups = [userData.groups];
-      await userAction.updateUser(
-        userData.id,
-        userData.firstName,
-        userData.lastName,
-        groups
-      );
+      await ApiManager.updateUser(userData.id, {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        groups: groups,
+      });
       navigate("/users/list");
     } catch (err) {
       console.error("Update failed:", err);

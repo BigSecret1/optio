@@ -2,14 +2,16 @@ import { getToken } from "../user/actions/token";
 import { BASE_URL } from "./endpoints";
 
 function getHeaders() {
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${getToken()}`,
-  };
+  const headers = { "Content-Type": "application/json" };
+  const token = getToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
 }
 
 class ApiMethods {
-  static apiRequest(method, endpoint, body) {
+  static async apiRequest(method, endpoint, body) {
     const url = BASE_URL + endpoint;
 
     const options = {
@@ -17,12 +19,26 @@ class ApiMethods {
       headers: getHeaders(),
     };
 
-    // Sending empty body object in GET/HEAD request can throw an error, so prevention is required
     if (body && method !== "GET" && method !== "HEAD") {
       options.body = JSON.stringify(body);
     }
 
-    return fetch(url, options).then((res) => res.json());
+    const res = await fetch(url, options);
+
+    if (res.status === 204) {
+      return null;
+    }
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      const error = new Error(data.detail || data.message || res.statusText);
+      error.status = res.status;
+      error.data = data;
+      throw error;
+    }
+
+    return data;
   }
 
   static get(url) {

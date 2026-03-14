@@ -24,7 +24,11 @@ class TaskAPIView(BaseOrganizationAPIView, MethodPermissionMixin):
         if task_id:
             return Response(action.get_task(task_id))
 
-        return Response({"detail": "Invalid request"}, status=400)
+        project_id = request.query_params.get("project_id")
+        if project_id:
+            return Response(action.list_tasks(project_id))
+
+        return Response({"detail": "project_id query parameter is required"}, status=400)
 
     def post(self, request, organization_id=None):
         action = TaskAPIAction(request.organization)

@@ -7,24 +7,17 @@ import { TaskContext } from "../../../contexts/TaskContext.js";
 import EllipsisWithSpacing from "../../UI/ThreeDots.js";
 import OptionMenu from "../../UI/OptionMenu.js";
 import NewTask from "../NewTask.js";
-import TaskService from "../../../task/index";
 import ApiManager from "../../../api-client/api-manager";
 
 export default function SubTasks() {
-  const { task } = useContext(TaskContext);
-  const [subtasks, setSubtasks] = useState([]);
+  const { task, refreshSubTasks, subTasks } = useContext(TaskContext);
   const [openNewTask, setOpenNewTask] = useState(false);
 
   useEffect(() => {
-    if (task.id) {
-      getSubtasks();
+    if (task?.id) {
+      refreshSubTasks(task.id);
     }
-  }, [task.id]);
-
-  async function getSubtasks() {
-    const data = await TaskService.getSubtasks(task.id);
-    setSubtasks(data);
-  }
+  }, [task?.id]);
 
   function handleMenuSelect(option) {
     if (option.toLowerCase() === "create subtask") {
@@ -38,7 +31,7 @@ export default function SubTasks() {
 
   async function handleCreateSubtask(data) {
     await ApiManager.createTask(data);
-    getSubtasks();
+    refreshSubTasks(task.id);
     setOpenNewTask(false);
   }
 
@@ -68,8 +61,8 @@ export default function SubTasks() {
 
       {/* Subtasks List */}
       <Stack spacing={1.5} mt={2}>
-        {subtasks.length > 0 ? (
-          subtasks.map((subtask, index) => (
+        {subTasks && subTasks.length > 0 ? (
+          subTasks.map((subtask, index) => (
             <Stack
               key={subtask.id}
               component={RouterLink}

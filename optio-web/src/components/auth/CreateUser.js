@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Container, Paper, Box, Grid, FormHelperText } from "@mui/material";
-import { User } from "../../user/index";
+import ApiManager from "../../api-client/api-manager";
 
 import HeaderCard from "./ManageUser/HeaderCard";
 import TextInput from "./ManageUser/TextInput";
@@ -26,7 +26,6 @@ export const textFieldSx = {
 };
 
 export default function CreateUser() {
-  const userAction = new User();
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
@@ -71,7 +70,7 @@ export default function CreateUser() {
     setSubmitting(true);
 
     try {
-      await userAction.createUser(userData);
+      await ApiManager.createUser(userData);
       navigate("/users/list");
     } catch (err) {
       console.error("create user failed", err);

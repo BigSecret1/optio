@@ -1,11 +1,2 @@
-import ApiManager from "../api-client/api-manager";
+// Task service operations are handled directly via ApiManager
 
-export default class TaskService {
-  static getSubtasks(parentTaskId) {
-    return ApiManager.getSubtasks(parentTaskId);
-  }
-
-  static createSubtask(param) {
-    return ApiManager.createSubtask(param);
-  }
-}

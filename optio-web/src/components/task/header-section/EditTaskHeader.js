@@ -13,7 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import Task from "../../../services/task/task-service";
+import ApiManager from "../../../api-client/api-manager";
 import { TaskContext } from "../../../contexts/TaskContext";
 import { TASK_STATUS } from "../../../constants";
 import "./styles/edit-task-header.css";
@@ -54,7 +54,7 @@ const selectSx = {
 
 export default function EditTaskHeader() {
   const { user, logout } = useUser();
-  const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask } =
+  const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask, updateTask } =
     useContext(TaskContext);
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -66,7 +66,6 @@ export default function EditTaskHeader() {
     status: task.status,
   });
   const [assigneeId, setAssigneeId] = useState(user.id);
-  const task_actions = new Task();
 
   useEffect(() => {}, [task]);
 
@@ -117,17 +116,16 @@ export default function EditTaskHeader() {
     setShowDropdown(false);
   }
 
-  function handleSave(e) {
+  async function handleSave(e) {
+    e.preventDefault();
     const data = {
-      id: task.id,
       title: taskHeaders.title,
       assigneeId: assigneeId,
       status: taskHeaders.status,
     };
 
-    task_actions.updateTask(data);
+    await updateTask(task.id, data);
     setIsEditingTaskHeader(false);
-    getUpdatedTask(task.id);
   }
 
   function handleCancel() {

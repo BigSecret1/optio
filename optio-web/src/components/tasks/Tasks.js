@@ -13,15 +13,12 @@ import {
   Box,
 } from "@mui/material";
 
-import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 import { searchContext, taskSearchStrategy } from "../../search/index";
-import { extractSearchResults } from "../../util";
 import { getAssigneeName } from "../../util";
 
 export default function Tasks({ tasks = [] }) {
   const [searchType, setSearchType] = useState("Task");
-  const task = new Task();
 
   const [allTasks, setAllTasks] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);

@@ -1,24 +1,38 @@
 import { SERVER_HOST } from "../constants";
 
-const currentOrgId = localStorage.getItem("currentOrganizationId");
-
 export const BASE_URL = SERVER_HOST + "/api";
 
+export function getOrgId() {
+  return localStorage.getItem("currentOrganizationId");
+}
+
 const ENDPOINTS = {
-  USER_LOGIN: "/security/login/",
-  SEARCH_TASK: "/search/task/",
-  SEARCH_PROJECT: "/search/project/",
-  SEARCH_USER: "/search/user/",
-  ADD_COMMENT: "/comments/",
-  DELETE_COMMENT: (commentId) => `/comments/delete/${commentId}/`,
-  CREATE_TASK: "/tasks/create/",
-  GET_SUBTASKS: (parentTaskId) => `/tasks/${parentTaskId}/subtasks/`,
-  CREATE_SUBTASK: "/tasks/create-subtask/",
-  FETCH_PROJECTS: `/orgs/${currentOrgId}/projects/`,
-  ADD_PROJECT_MEMEBERS: (projectId) => `/api/projects/${projectId}/users/`,
-  FETCH_PROJECT_MEMBERS: (projectId) => `/orgs/${currentOrgId}/projects/${projectId}/users/`,
-  FETCH_PROJECT: (projectId) => `/orgs/${currentOrgId}/projects/${projectId}/`,
-  EDIT_PROJECT: (projectId) => `/orgs/${currentOrgId}/projects/${projectId}/`,
+  // Auth
+  LOGIN: "/security/login/",
+  LOGOUT: "/security/logout/",
+  TOKEN_REFRESH: "/token/refresh/",
+
+  // Tasks
+  TASKS: (orgId) => `/orgs/${orgId}/tasks/`,
+  TASK: (orgId, taskId) => `/orgs/${orgId}/tasks/${taskId}/`,
+
+  // Comments
+  TASK_COMMENTS: (orgId, taskId) => `/orgs/${orgId}/tasks/${taskId}/comments/`,
+  COMMENT: (orgId, commentId) => `/orgs/${orgId}/comments/${commentId}/`,
+
+  // Projects
+  PROJECTS: (orgId) => `/orgs/${orgId}/projects/`,
+  PROJECT: (orgId, projectId) => `/orgs/${orgId}/projects/${projectId}/`,
+  PROJECT_USERS: (orgId, projectId) => `/orgs/${orgId}/projects/${projectId}/users/`,
+
+  // Users
+  USERS: (orgId) => `/orgs/${orgId}/users/`,
+  USER: (orgId, userId) => `/orgs/${orgId}/users/${userId}/`,
+
+  // Search
+  SEARCH_TASKS: (orgId) => `/orgs/${orgId}/search/tasks/`,
+  SEARCH_PROJECTS: (orgId) => `/orgs/${orgId}/search/projects/`,
+  SEARCH_USERS: (orgId) => `/orgs/${orgId}/search/users/`,
 };
 
 export default ENDPOINTS;

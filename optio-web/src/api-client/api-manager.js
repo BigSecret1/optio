@@ -1,72 +1,118 @@
 import ApiMethods from "./api-methods";
-import ENDPOINTS from "./endpoints";
+import ENDPOINTS, { getOrgId } from "./endpoints";
 
 export default class ApiManager {
+  // Auth
   static login(params) {
-    return ApiMethods.post(ENDPOINTS.USER_LOGIN, params);
+    return ApiMethods.post(ENDPOINTS.LOGIN, params);
   }
 
-  static searchTask(params) {
-    const url = ENDPOINTS.SEARCH_TASK;
-    return ApiMethods.post(url, params);
+  static logout(params) {
+    return ApiMethods.post(ENDPOINTS.LOGOUT, params);
   }
 
-  static searchProject(param) {
-    const url = ENDPOINTS.SEARCH_PROJECT;
-    return ApiMethods.post(url, param);
+  static refreshToken(params) {
+    return ApiMethods.post(ENDPOINTS.TOKEN_REFRESH, params);
   }
 
-  static searchUser(param) {
-    const url = ENDPOINTS.SEARCH_USER;
-    return ApiMethods.post(url, param);
+  // Tasks
+  static getTasksByProject(projectId, orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.TASKS(orgId) + `?project_id=${projectId}`);
   }
 
-  static addComment(param) {
-    const url = ENDPOINTS.ADD_COMMENT;
-    return ApiMethods.post(url, param);
+  static getTask(taskId, orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.TASK(orgId, taskId));
   }
 
-  static deleteComment(commentId) {
-    const url = ENDPOINTS.DELETE_COMMENT(commentId);
-    return ApiMethods.delete(url);
+  static createTask(params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.TASKS(orgId), params);
   }
 
-  static createTask(param) {
-    const url = ENDPOINTS.CREATE_TASK;
-    return ApiMethods.post(url, param);
+  static updateTask(taskId, params, orgId = getOrgId()) {
+    return ApiMethods.patch(ENDPOINTS.TASK(orgId, taskId), params);
   }
 
-  static getSubtasks(parentTaskId) {
-    const url = ENDPOINTS.GET_SUBTASKS(parentTaskId);
-    return ApiMethods.get(url);
+  static deleteTask(taskId, orgId = getOrgId()) {
+    return ApiMethods.delete(ENDPOINTS.TASK(orgId, taskId));
   }
 
-  static createSubtask(param) {
-    const url = ENDPOINTS.CREATE_SUBTASK;
-    return ApiMethods.post(url, param);
+  // Comments
+  static getComments(taskId, orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.TASK_COMMENTS(orgId, taskId));
   }
 
-  static addProjectMemebers(param, projectId) {
-    const url = ENDPOINTS.ADD_PROJECT_MEMEBERS(projectId);
-    return ApiMethods.post(url, param);
+  static addComment(taskId, params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.TASK_COMMENTS(orgId, taskId), params);
   }
 
-  static fetchProjectMembers(projectId) {
-    const url = ENDPOINTS.FETCH_PROJECT_MEMBERS(projectId);
-    return ApiMethods.get(url);
+  static updateComment(commentId, params, orgId = getOrgId()) {
+    return ApiMethods.patch(ENDPOINTS.COMMENT(orgId, commentId), params);
   }
 
-  static fetchProject(projectId) {
-    const url = ENDPOINTS.FETCH_PROJECT(projectId);
-    return ApiMethods.get(url);
+  static deleteComment(commentId, orgId = getOrgId()) {
+    return ApiMethods.delete(ENDPOINTS.COMMENT(orgId, commentId));
   }
 
-  static editProject(param, projectId) {
-    const url = ENDPOINTS.EDIT_PROJECT(projectId);
-    return ApiMethods.patch(url, param);
+  // Projects
+  static getProjects(orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.PROJECTS(orgId));
   }
 
-  static fetchProjects(org_id) {
-    return ApiMethods.get(ENDPOINTS.FETCH_PROJECTS);
+  static getProject(projectId, orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.PROJECT(orgId, projectId));
+  }
+
+  static createProject(params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.PROJECTS(orgId), params);
+  }
+
+  static updateProject(projectId, params, orgId = getOrgId()) {
+    return ApiMethods.patch(ENDPOINTS.PROJECT(orgId, projectId), params);
+  }
+
+  static deleteProject(projectId, orgId = getOrgId()) {
+    return ApiMethods.delete(ENDPOINTS.PROJECT(orgId, projectId));
+  }
+
+  static getProjectUsers(projectId, orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.PROJECT_USERS(orgId, projectId));
+  }
+
+  static addProjectUsers(projectId, params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.PROJECT_USERS(orgId, projectId), params);
+  }
+
+  // Users
+  static getUsers(orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.USERS(orgId));
+  }
+
+  static getUser(userId, orgId = getOrgId()) {
+    return ApiMethods.get(ENDPOINTS.USER(orgId, userId));
+  }
+
+  static createUser(params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.USERS(orgId), params);
+  }
+
+  static updateUser(userId, params, orgId = getOrgId()) {
+    return ApiMethods.patch(ENDPOINTS.USER(orgId, userId), params);
+  }
+
+  static deleteUser(userId, orgId = getOrgId()) {
+    return ApiMethods.delete(ENDPOINTS.USER(orgId, userId));
+  }
+
+  // Search
+  static searchTasks(params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.SEARCH_TASKS(orgId), params);
+  }
+
+  static searchProjects(params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.SEARCH_PROJECTS(orgId), params);
+  }
+
+  static searchUsers(params, orgId = getOrgId()) {
+    return ApiMethods.post(ENDPOINTS.SEARCH_USERS(orgId), params);
   }
 }

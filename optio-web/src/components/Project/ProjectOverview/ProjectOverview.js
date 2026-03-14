@@ -26,17 +26,17 @@ export default function ProjectOverview() {
   }, [projectId]);
 
   async function fetchProject() {
-    const result = await ApiManager.fetchProject(projectId);
+    const result = await ApiManager.getProject(projectId);
     setProject(result);
   }
 
   async function fetchProjectMembers() {
-    const projectMembers = await ApiManager.fetchProjectMembers(projectId);
+    const projectMembers = await ApiManager.getProjectUsers(projectId);
     setProjectMembers(projectMembers);
   }
 
   async function handleProjectSave(updatedDetails) {
-    await ApiManager.editProject(updatedDetails, project.id);
+    await ApiManager.updateProject(project.id, updatedDetails);
     setOpenEditProject(false);
   }
 
@@ -53,7 +53,7 @@ export default function ProjectOverview() {
   async function addProjectMembers(selectMembers) {
     const memberIds = selectMembers.map((member) => member.id);
     try {
-      await ApiManager.addProjectMemebers({ userIds: memberIds }, projectId);
+      await ApiManager.addProjectUsers(projectId, { userIds: memberIds });
       await fetchProjectMembers();
     } catch (e) {
       console.error("Failed to add members to project", e);

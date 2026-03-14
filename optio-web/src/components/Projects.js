@@ -17,14 +17,11 @@ import {
 } from "@mui/material";
 
 import "./Projects.css";
-import ProjectAction from "../project/index";
 import { searchContext, projectSearchStrategy } from "../search/index";
 import { extractSearchResults } from "../util";
 import ApiManager from "../api-client/api-manager";
 
 export default function Projects() {
-  const projectAction = new ProjectAction();
-
   const [allProjects, setAllProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -38,7 +35,7 @@ export default function Projects() {
   }, []);
 
   async function fetchProjects() {
-    const data = await ApiManager.fetchProjects();
+    const data = await ApiManager.getProjects();
     setProjects(data);
     setAllProjects(data);
   }
