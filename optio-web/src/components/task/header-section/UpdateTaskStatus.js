@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
 import { TaskContext } from "../../../contexts/TaskContext";
-import { ALL_STATUS } from "../../../services/task/task-service";
+import { TASK_STATUS } from "../../../constants";
 
 // For Dialogue box which comes after menu option selection
 import Button from "@mui/material/Button";
@@ -23,18 +23,17 @@ import Box from "@mui/material/Box";
     in header section.
 */
 export default function UpdateTaskStatus({ taskId }) {
-  const { task, getUpdatedTask, taskService, setIsEditingTaskStatus } =
-    useContext(TaskContext);
+  const { task, updateTask, setIsEditingTaskStatus } = useContext(TaskContext);
 
-  const [status, setStatus] = useState(task.task_status);
+  const [status, setStatus] = useState(task.status);
 
   const [fullWidth, setFullWidth] = useState(true);
   const [maxWidth, setMaxWidth] = useState("sm");
 
-  const change = "Task Staus";
+  const change = "Task Status";
   const changeInfo = "Feel free to update your task status.";
-  let allStatus = ALL_STATUS;
-  const currentTaskStatus = task.task_status;
+  let allStatus = [...TASK_STATUS];
+  const currentTaskStatus = task.status;
   allStatus = PlaceCurrentTaskStatusAtFirst(allStatus, currentTaskStatus);
 
   function PlaceCurrentTaskStatusAtFirst(allStatus, currentStatus) {
@@ -48,9 +47,8 @@ export default function UpdateTaskStatus({ taskId }) {
     return allStatus;
   }
 
-  function handleSave(event) {
-    taskService.updateTask({ id: taskId, task_status: status });
-    getUpdatedTask(taskId);
+  async function handleSave(event) {
+    await updateTask(taskId, { status: status });
     setIsEditingTaskStatus(false);
   }
 

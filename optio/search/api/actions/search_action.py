@@ -1,9 +1,10 @@
 import logging
-
 from elasticsearch_dsl import Search
+
 from optio.search.api.actions.search_factories import (
     SearchStrategyFactory,
-    EntityFinderFactory
+    EntityFinderFactory,
+    SearchStrategyFactory, SearchSerializerFactory
 )
 from optio.search.api.actions.search_entities import EntityFinder
 from optio.search.api.actions.search_strategies import SearchStrategy
@@ -13,7 +14,8 @@ logger = logging.getLogger(__name__)
 
 class SearchAPIAction:
 
-    def __init__(self):
+    def __init__(self, organization_id):
+        self.organization_id = organization_id
         self.search_results = []
 
     def search(self, entity_type: str, search_keyword: str, search_types=None):
@@ -21,6 +23,7 @@ class SearchAPIAction:
             search_types = []
 
         entity: EntityFinder = EntityFinderFactory.get_entity(entity_type)
+        serializer_class = SearchSerializerFactory.get_serializer(entity_type)
 
         for search_type in search_types:
             strategy: SearchStrategy = SearchStrategyFactory.get_strategy(search_type)
@@ -28,6 +31,7 @@ class SearchAPIAction:
             query = strategy.build_query(
                 entity.get_search_field(),
                 search_keyword,
+                self.organization_id
             )
 
             try:
@@ -38,7 +42,8 @@ class SearchAPIAction:
                 logger.error("Elastic search query execution failed due to %s", e)
 
         self.search_results = self.__deduplicate(self.search_results)
-        return self.search_results
+        serializer = serializer_class(self.search_results, many=True)
+        return serializer.data
 
     def __deduplicate(self, documents):
         unique_ids = set()

@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 
-import Task from "../services/task/task-service";
-import SubTasksOperation from "../services/task/sub-task-operations";
+import ApiManager from "../api-client/api-manager";
 
 /**
  * TaskContext provides the necessary states and functions for managing tasks.
@@ -20,38 +19,29 @@ export function TaskProvider({ taskId, children }) {
   const [isEditingTaskDescription, setIsEditingTaskDescription] =
     useState(false);
 
-  const taskService = new Task();
-  const subTasksOperation = new SubTasksOperation();
-
-  /**
-   * For each selected option in option menu of different sections(header, description etc.)
-   * a mapping is needed with there respective state which is responsible for rednering
-   * editing components.
-   * for e.g. ("Edit title" : setIsEditingTaskHeader)
-   */
   const optionToState = new Map();
 
   useEffect(() => {
-    async function fetchTask() {
-      const result = await taskService.getTask(taskId);
-      setTask(result);
+    if (taskId) {
+      fetchTask(taskId);
     }
-
-    if (taskId) fetchTask();
   }, [taskId]);
 
-  /**
-   * This function is used to get task with latest changees.
-   * This is helper functino specially in those cases when there is any
-   * change made for a task and those
-   * latest changes should be reflected.
-   * The function call ensure to fetch tasks and updated task state (setTask) with reponse.
-   */
-  async function getUpdatedTask(taskId) {
+  async function fetchTask(id) {
     try {
-      const currentTask = await taskService.getTask(taskId);
+      const result = await ApiManager.getTask(id);
+      setTask(result);
+    } catch (error) {
+      console.error("Failed to fetch task", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-      // latest comment should be on the top[shift this logic in backend asap: update query]
+  async function getUpdatedTask(id) {
+    try {
+      const currentTask = await ApiManager.getTask(id);
+
       if (currentTask.comments == null) {
         currentTask.comments = [];
       } else {
@@ -60,16 +50,25 @@ export function TaskProvider({ taskId, children }) {
 
       setTask(currentTask);
     } catch (error) {
-      console.error("Failed to get updated task, an error occured", error);
+      console.error("Failed to get updated task", error);
     } finally {
       setLoading(false);
     }
   }
 
-  async function refreshSubTasks(taskId) {
+  async function updateTask(id, params) {
     try {
-      const latestSubTasks = await subTasksOperation.getSubTasks(taskId);
-      setSubTasks(latestSubTasks);
+      await ApiManager.updateTask(id, params);
+      await getUpdatedTask(id);
+    } catch (error) {
+      console.error("Failed to update task", error);
+    }
+  }
+
+  async function refreshSubTasks(parentTaskId) {
+    try {
+      const parentTask = await ApiManager.getTask(parentTaskId);
+      setSubTasks(parentTask.subTasks || []);
     } catch (error) {
       console.error("Failed to fetch subtasks", error);
     } finally {
@@ -92,10 +91,9 @@ export function TaskProvider({ taskId, children }) {
         isEditingTaskDescription,
         setIsEditingTaskDescription,
         subTasks,
-        taskService,
-        subTasksOperation,
         optionToState,
         getUpdatedTask,
+        updateTask,
         refreshSubTasks,
       }}
     >

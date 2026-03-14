@@ -3,6 +3,8 @@ from django_elasticsearch_dsl.registries import registry
 from elasticsearch_dsl import analyzer, tokenizer
 
 from optio.users.models import UserProfile
+from optio.organizations.models import Membership
+
 
 prefix_analyzer = analyzer(
     'prefix_analyzer',
@@ -27,8 +29,10 @@ substring_analyzer = analyzer(
 )
 
 
+
 @registry.register_document
 class UserDocument(Document):
+
     first_name = fields.TextField(
         analyzer=substring_analyzer,
         search_analyzer=substring_analyzer,
@@ -41,6 +45,8 @@ class UserDocument(Document):
         }
     )
 
+    organization_ids = fields.IntegerField(multi=True)
+
     class Index:
         name = 'users_index'
         settings = {
@@ -52,3 +58,13 @@ class UserDocument(Document):
     class Django:
         model = UserProfile
         fields = ['id', 'last_name', 'email']
+        related_models = [Membership]
+
+    def prepare_organization_ids(self, instance):
+        return list(
+            instance.memberships.values_list("organization_id", flat=True)
+        )
+
+    def get_instances_from_related(self, related_instance):
+        if isinstance(related_instance, Membership):
+            return [related_instance.user]

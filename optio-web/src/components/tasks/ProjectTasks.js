@@ -2,27 +2,33 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Tasks from "./Tasks";
-import Task from "../../services/task/task-service";
+import ApiManager from "../../api-client/api-manager";
 
 function ProjectTasks() {
   const [tasks, setTasks] = useState([]);
-  const task = new Task();
+  const [loading, setLoading] = useState(true);
   const { projectId } = useParams();
 
   useEffect(() => {
     async function fetchTasks() {
-      const result = await task.getTasks({ projectId: projectId });
-      setTasks(result);
+      try {
+        const result = await ApiManager.getTasksByProject(projectId);
+        setTasks(result);
+      } catch (error) {
+        console.error("Failed to fetch project tasks", error);
+      } finally {
+        setLoading(false);
+      }
     }
 
     if (projectId) {
       fetchTasks();
     }
-  }, []);
+  }, [projectId]);
 
-  return (
-    <>{tasks.length === 0 ? <p>Loading ...</p> : <Tasks tasks={tasks} />}</>
-  );
+  if (loading) return <p>Loading ...</p>;
+
+  return <Tasks tasks={tasks} />;
 }
 
 export default ProjectTasks;

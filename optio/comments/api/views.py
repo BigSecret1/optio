@@ -1,118 +1,40 @@
-from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.views import APIView
-from rest_framework.exceptions import ValidationError, PermissionDenied
 
-from django.core.exceptions import ObjectDoesNotExist
-
-import logging
-
+from optio.organizations.api.views import BaseOrganizationAPIView
+from optio.organizations.api.permissions import IsOrganizationMember
+from optio.permissions import MethodPermissionMixin
 from optio.comments.api.actions import CommentAPIAction
-from optio.utils.exceptions import perm_required_error
-from optio.permissions import check_permission
-
-error_message: str = "Internal server error"
-validation_error_message: str = "Received invalid data in request please check"
 
 
-class CreateCommentAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+class CommentAPIView(BaseOrganizationAPIView, MethodPermissionMixin):
+    permission_classes_by_method = {
+        "GET": [IsAuthenticated, IsOrganizationMember],
+        "POST": [IsAuthenticated, IsOrganizationMember],
+        "PATCH": [IsAuthenticated, IsOrganizationMember],
+        "DELETE": [IsAuthenticated, IsOrganizationMember],
+    }
 
-    def post(self, request: Request) -> Response:
-        if not check_permission(request.user, "comments", "Comment", "create"):
-            raise PermissionDenied(perm_required_error)
+    def get(self, request, organization_id=None, task_id=None, comment_id=None):
+        action = CommentAPIAction(request.organization, request.user)
 
-        try:
-            return Response(
-                CommentAPIAction.add_comment(request.data, user=request.user),
-                status=status.HTTP_200_OK
-            )
-        except ValidationError as e:
-            logging.error("Validation error %s", str(e))
-            return Response(
-                {"error": "Invalid request body"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error("%s exception occured while adding comment", str(e))
-            return Response(
-                {"error": error_message},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        if comment_id:
+            return Response(action.get_comment(comment_id))
 
+        return Response(action.list_comments(task_id))
 
-class ListCommentAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    def post(self, request, organization_id=None, task_id=None):
+        action = CommentAPIAction(request.organization, request.user)
 
-    def get(self, request: Request, task_id: int) -> Response:
-        if not check_permission(request.user, "comments", "Comment", "view"):
-            raise PermissionDenied(perm_required_error)
+        return Response(action.create_comment(task_id, request.data), status=201
+                        )
 
-        try:
-            return Response(
-                CommentAPIAction.fetch_all_comments(task_id),
-                status=status.HTTP_200_OK
-            )
-        except Exception:
-            return Response(
-                {"error": error_message},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+    def patch(self, request, organization_id=None, comment_id=None):
+        action = CommentAPIAction(request.organization, request.user)
 
+        return Response(action.update_comment(comment_id, request.data))
 
-class EditCommentAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    def delete(self, request, organization_id=None, comment_id=None):
+        action = CommentAPIAction(request.organization, request.user)
 
-    def put(self, request: Request, comment_id: int) -> Response:
-        if not check_permission(request.user, "comments", "Comment", "edit"):
-            raise PermissionDenied(perm_required_error)
-
-        try:
-            CommentAPIAction.update_comment(comment_id, request.data)
-            return Response(
-                {"success": "comment was update successfully"},
-                status=status.HTTP_200_OK
-            )
-        except ValidationError as e:
-            return Response(
-                {"error": "Invalid request body"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error("%s exception occured while updating the comment", str(e))
-            return Response(
-                {"error": error_message},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-
-class DeleteCommentAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def delete(self, request: Request, comment_id: int) -> Response:
-        if not check_permission(request.user, "comments", "Comment", "delete"):
-            raise PermissionDenied(perm_required_error)
-
-        try:
-            CommentAPIAction.delete_comment(comment_id)
-            return Response(
-                {"success": "Deleted comment successfully"},
-                status=status.HTTP_200_OK
-            )
-        except ObjectDoesNotExist:
-            return Response({
-                "error": f"Comment with id {comment_id} doesn't exist"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            return Response(
-                {"error": error_message},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        return Response(action.delete_comment(comment_id), status=204)

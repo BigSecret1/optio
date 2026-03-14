@@ -52,6 +52,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 class UserGroup(models.Model):
     """
     Custom junction model for many to many relation between users and groups
+    This might be remove in the furture!
     """
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)

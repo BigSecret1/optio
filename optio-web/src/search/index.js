@@ -1,4 +1,4 @@
-import ApiManager from "../api-manager/api-manager";
+import ApiManager from "../api-client/api-manager";
 
 class SearchStrategy {
   search(query) {
@@ -12,7 +12,7 @@ class TaskSearchStrategy extends SearchStrategy {
   }
 
   search(query) {
-    return ApiManager.searchTask(query);
+    return ApiManager.searchTasks(query);
   }
 }
 
@@ -22,7 +22,7 @@ class ProjectSearchStrategy extends SearchStrategy {
   }
 
   search(query) {
-    return ApiManager.searchProject(query);
+    return ApiManager.searchProjects(query);
   }
 }
 
@@ -32,7 +32,7 @@ class UserSearchStrategy extends SearchStrategy {
   }
 
   search(query) {
-    return ApiManager.searchUser(query);
+    return ApiManager.searchUsers(query);
   }
 }
 

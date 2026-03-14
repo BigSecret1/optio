@@ -40,6 +40,7 @@ class ProjectDocument(Document):
             'raw': fields.KeywordField(),
         }
     )
+    organization_ids = fields.IntegerField()
 
     class Index:
         name = 'projects_index'
@@ -52,3 +53,6 @@ class ProjectDocument(Document):
     class Django:
         model = Project
         fields = ['id']
+
+    def prepare_organization_ids(self, instance):
+        return instance.organization_id

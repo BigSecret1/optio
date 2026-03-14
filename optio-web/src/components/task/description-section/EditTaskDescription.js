@@ -18,7 +18,7 @@ const fieldSx = {
 };
 
 export default function EditTaskDescription() {
-  const { task, getUpdatedTask, taskService, setIsEditingTaskDescription } =
+  const { task, getUpdatedTask, updateTask, setIsEditingTaskDescription } =
     useContext(TaskContext);
   const [description, setDescription] = useState();
 
@@ -33,9 +33,7 @@ export default function EditTaskDescription() {
   async function handleSave(e) {
     e.preventDefault();
 
-    await taskService.updateTask({ id: task.id, description: description });
-    await getUpdatedTask(task.id);
-
+    await updateTask(task.id, { description: description });
     setIsEditingTaskDescription(false);
   }
 

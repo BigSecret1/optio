@@ -4,7 +4,7 @@ import { Box, Menu, MenuItem } from "@mui/material";
 import "./styles/create.css";
 import { NewContext } from "../../contexts/NewContext";
 import NewTask from "../task/NewTask";
-import ApiManager from "../../api-manager/api-manager";
+import ApiManager from "../../api-client/api-manager";
 
 export default function Create() {
   const { setOpenCreateProject } = useContext(NewContext);

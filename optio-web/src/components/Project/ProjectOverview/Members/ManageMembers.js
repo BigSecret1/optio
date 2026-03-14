@@ -16,7 +16,7 @@ import {
 import Search from "./Search";
 import SelectedMembers from "./SelectedMembers";
 import initials from "./utils/initials";
-import ApiManager from "../../../../api-manager/api-manager";
+import ApiManager from "../../../../api-client/api-manager";
 
 export default function ManageMembers({
   open,

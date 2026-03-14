@@ -13,15 +13,12 @@ import {
   Box,
 } from "@mui/material";
 
-import Task from "../../services/task/task-service";
 import "../../styles/Tasks.css";
 import { searchContext, taskSearchStrategy } from "../../search/index";
-import { extractSearchResults } from "../../util";
 import { getAssigneeName } from "../../util";
 
 export default function Tasks({ tasks = [] }) {
   const [searchType, setSearchType] = useState("Task");
-  const task = new Task();
 
   const [allTasks, setAllTasks] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -111,8 +108,8 @@ export default function Tasks({ tasks = [] }) {
             task.status === "Completed"
               ? "#16a34a"
               : task.status === "In Progress"
-              ? "#f59e0b"
-              : "#64748b";
+                ? "#f59e0b"
+                : "#64748b";
 
           return (
             <Paper
@@ -180,8 +177,8 @@ export default function Tasks({ tasks = [] }) {
                         task.status === "Completed"
                           ? "#16a34a"
                           : task.status === "In Progress"
-                          ? "#f59e0b"
-                          : "#64748b",
+                            ? "#f59e0b"
+                            : "#64748b",
                       color: "#fff",
                       px: 1.5,
                       py: 0.3,

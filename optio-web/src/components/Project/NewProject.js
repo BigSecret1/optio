@@ -11,18 +11,16 @@ import {
 
 import { NewContext } from "../../contexts/NewContext";
 import { CancelButton, SubmitButton, FormTextField } from "../common";
-import ProjectAction from "../../project/index";
+import ApiManager from "../../api-client/api-manager";
 
 export default function NewProject() {
-  const projectAction = new ProjectAction();
-
   const { openCreateProject, setOpenCreateProject } = useContext(NewContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  function handleCreateProject(e) {
+  async function handleCreateProject(e) {
     e.preventDefault();
-    projectAction.create({
+    await ApiManager.createProject({
       name: name,
       description: description,
     });

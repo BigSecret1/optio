@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState, createContext, useContext } from "react";
 
 import { TaskContext } from "../../../contexts/TaskContext";
-import CommentService from "../../../comment/index";
+import ApiManager from "../../../api-client/api-manager";
 import { TextBox, SubmitButton, CancelButton } from "../../common";
 import OptionMenu from "../../UI/OptionMenu";
 import EllipsisWithSpacing from "../../UI/ThreeDots";
@@ -15,8 +15,8 @@ export default function Comment() {
 
   async function handleAddComment(e) {
     e.preventDefault();
-    CommentService.addComment(newComment, task.id);
-    getUpdatedTask(task.id);
+    await ApiManager.addComment(task.id, { comment: newComment });
+    await getUpdatedTask(task.id);
     setNewComment("");
   }
 
@@ -27,8 +27,8 @@ export default function Comment() {
   }
 
   async function handleDeleteComment(commentId) {
-    CommentService.deleteComment(commentId);
-    getUpdatedTask(task.id);
+    await ApiManager.deleteComment(commentId);
+    await getUpdatedTask(task.id);
   }
 
   function handleChange(e) {
