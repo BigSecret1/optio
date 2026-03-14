@@ -108,8 +108,8 @@ export default function Tasks({ tasks = [] }) {
             task.status === "Completed"
               ? "#16a34a"
               : task.status === "In Progress"
-              ? "#f59e0b"
-              : "#64748b";
+                ? "#f59e0b"
+                : "#64748b";
 
           return (
             <Paper
@@ -177,8 +177,8 @@ export default function Tasks({ tasks = [] }) {
                         task.status === "Completed"
                           ? "#16a34a"
                           : task.status === "In Progress"
-                          ? "#f59e0b"
-                          : "#64748b",
+                            ? "#f59e0b"
+                            : "#64748b",
                       color: "#fff",
                       px: 1.5,
                       py: 0.3,

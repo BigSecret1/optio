@@ -145,7 +145,14 @@ function App() {
             }
           />
 
-          <Route path="/tasks/:taskId" element={<TaskManager />} />
+          <Route
+            path="/tasks/:taskId"
+            element={
+              <PrivateRoute>
+                <TaskManager />
+              </PrivateRoute>
+            }
+          />
 
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>

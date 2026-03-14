@@ -105,7 +105,7 @@ function ListUsers() {
                 <TableCell>{user.lastName}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.isActive ? "Yes" : "No"}</TableCell>
-                <TableCell>{user.groups}</TableCell>
+                <TableCell>{user.role}</TableCell>
               </TableRow>
             ))}
           </TableBody>

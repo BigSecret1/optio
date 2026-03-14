@@ -169,7 +169,7 @@ export default function Projects() {
                   fontSize: "0.9rem",
                 }}
               >
-                Modified: some_time
+                Modified: {new Date(project.updatedAt).toLocaleDateString()}
               </Typography>
             </CardContent>
           </Card>

@@ -6,3 +6,11 @@ export function isAdmin(roles) {
   }
   return false;
 }
+
+export function getUserRole(user) {
+  if (!user?.organizations || !user?.currentOrganizationId) return null;
+  const org = user.organizations.find(
+    (o) => String(o.organizationId) === String(user.currentOrganizationId),
+  );
+  return org?.role ?? null;
+}

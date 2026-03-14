@@ -21,7 +21,14 @@ function getUserFromStorage() {
   if (!token) return null;
   try {
     const raw = localStorage.getItem("user");
-    return raw ? JSON.parse(raw) : null;
+    const user = raw ? JSON.parse(raw) : null;
+    if (!user) return null;
+
+    const orgsRaw = localStorage.getItem("organizations");
+    const organizations = orgsRaw ? JSON.parse(orgsRaw) : [];
+    const currentOrganizationId = localStorage.getItem("currentOrganizationId");
+
+    return { ...user, organizations, currentOrganizationId };
   } catch {
     return null;
   }

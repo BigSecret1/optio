@@ -23,7 +23,8 @@ const ENDPOINTS = {
   // Projects
   PROJECTS: (orgId) => `/orgs/${orgId}/projects/`,
   PROJECT: (orgId, projectId) => `/orgs/${orgId}/projects/${projectId}/`,
-  PROJECT_USERS: (orgId, projectId) => `/orgs/${orgId}/projects/${projectId}/users/`,
+  PROJECT_USERS: (orgId, projectId) =>
+    `/orgs/${orgId}/projects/${projectId}/users/`,
 
   // Users
   USERS: (orgId) => `/orgs/${orgId}/users/`,

@@ -54,8 +54,13 @@ const selectSx = {
 
 export default function EditTaskHeader() {
   const { user, logout } = useUser();
-  const { task, setIsEditingTaskHeader, isEditingTaskHeader, getUpdatedTask, updateTask } =
-    useContext(TaskContext);
+  const {
+    task,
+    setIsEditingTaskHeader,
+    isEditingTaskHeader,
+    getUpdatedTask,
+    updateTask,
+  } = useContext(TaskContext);
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [query, setQuery] = useState(task?.assignee || "");

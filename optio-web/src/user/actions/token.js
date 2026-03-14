@@ -1,3 +1,3 @@
 export function getToken() {
-    return localStorage.getItem("accessToken");
+  return localStorage.getItem("accessToken");
 }

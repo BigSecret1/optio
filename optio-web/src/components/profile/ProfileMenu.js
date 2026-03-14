@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -8,59 +8,67 @@ import { deepOrange } from "@mui/material/colors";
 import "./styles/profile-menu.css";
 import { useUser } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import { isAdmin } from "../../utils/user";
+import { getUserRole } from "../../utils/user";
 
-const LOG_OUT = "Log out";
+const MenuOption = Object.freeze({
+  YOUR_PROFILE: "Your profile",
+  CHANGE_PASSWORD: "Change password",
+  LIST_USERS: "List users",
+  LOG_OUT: "Log out",
+});
 
-function getUserRole(user) {
-  if (!user?.organizations || !user?.currentOrganizationId) return null;
-  const org = user.organizations.find(
-    (o) => String(o.organizationId) === String(user.currentOrganizationId)
-  );
-  return org?.role ?? null;
-}
+const BASE_OPTIONS = [MenuOption.YOUR_PROFILE, MenuOption.CHANGE_PASSWORD];
+const ADMIN_OPTIONS = [MenuOption.LIST_USERS];
 
-function ProfileMenu() {
+export default function ProfileMenu() {
   const navigate = useNavigate();
   const { user, logout } = useUser();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  function handleAvatarClick(event) {
+  const role = getUserRole(user);
+
+  const menuOptions = useMemo(() => {
+    const options = [...BASE_OPTIONS];
+    if (role === "admin") {
+      options.push(...ADMIN_OPTIONS);
+    }
+    options.push(MenuOption.LOG_OUT);
+    return options;
+  }, [role]);
+
+  function handleOpen(event) {
     setAnchorEl(event.currentTarget);
   }
 
-  function routeToLoginPage() {
-    navigate("/login");
-  }
-
-  function routeToListUsesrsPage() {
-    navigate("/users/list");
-  }
-
-  async function handleClose(option) {
-    if (option === LOG_OUT) {
-      await logout();
-      routeToLoginPage();
-    }
-    if (option === "List users") {
-      routeToListUsesrsPage();
-    }
+  function handleClose() {
     setAnchorEl(null);
   }
 
-  const profileMenuOptions = ["Your profile", "Change password"];
-  const role = getUserRole(user);
-  if (role === "admin") {
-    profileMenuOptions.push("List users");
+  async function handleMenuSelect(option) {
+    handleClose();
+
+    switch (option) {
+      case MenuOption.LOG_OUT:
+        await logout();
+        navigate("/login");
+        break;
+      case MenuOption.LIST_USERS:
+        navigate("/users/list");
+        break;
+      case MenuOption.YOUR_PROFILE:
+        navigate("/profile");
+        break;
+      default:
+        break;
+    }
   }
-  profileMenuOptions.push("Log out");
 
   return (
     <div className="profile-menu-container">
       <Avatar
-        onClick={handleAvatarClick}
+        onClick={handleOpen}
         sx={{ bgcolor: deepOrange[500], cursor: "pointer" }}
         alt={
           user
@@ -72,10 +80,10 @@ function ProfileMenu() {
         {user?.firstName?.[0] ?? user?.email?.[0] ?? "?"}
       </Avatar>
 
-      <Menu 
+      <Menu
         anchorEl={anchorEl}
         open={open}
-        onClose={() => setAnchorEl(null)}
+        onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
@@ -88,8 +96,8 @@ function ProfileMenu() {
           className: "profile-menu",
         }}
       >
-        {profileMenuOptions.map((option) => (
-          <MenuItem key={option} onClick={() => handleClose(option)}>
+        {menuOptions.map((option) => (
+          <MenuItem key={option} onClick={() => handleMenuSelect(option)}>
             {option}
           </MenuItem>
         ))}
@@ -97,5 +105,3 @@ function ProfileMenu() {
     </div>
   );
 }
-
-export default ProfileMenu;

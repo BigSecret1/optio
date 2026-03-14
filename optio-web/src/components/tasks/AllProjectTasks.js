@@ -12,7 +12,7 @@ export default function AllProjectTasks() {
       try {
         const projects = await ApiManager.getProjects();
         const taskPromises = projects.map((p) =>
-          ApiManager.getTasksByProject(p.id).catch(() => [])
+          ApiManager.getTasksByProject(p.id).catch(() => []),
         );
         const taskArrays = await Promise.all(taskPromises);
         setTasks(taskArrays.flat());
