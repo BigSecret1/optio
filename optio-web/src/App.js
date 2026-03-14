@@ -12,7 +12,6 @@ import Projects from "./components/Projects";
 import AllProjectTasks from "./components/tasks/AllProjectTasks";
 import ProjectTasks from "./components/tasks/ProjectTasks";
 import TaskManager from "./components/TaskManager";
-import NewTask from "./components/task/NewTask";
 import Profile from "./components/profile/Profile";
 import Note from "./components/quicknotes/Note";
 import Create from "./components/common/Create";
@@ -31,6 +30,8 @@ function PrivateRoute({ children }) {
   return (
     <>
       <Navbar />
+      <Create />
+      <NewProject />
       {children}
     </>
   );
@@ -40,10 +41,6 @@ function App() {
   return (
     <UserProvider>
       <NewProvider>
-        <Create />
-        <NewProject />
-        <NewTask />
-
         <Routes>
           <Route
             path="/users/create"
@@ -114,15 +111,6 @@ function App() {
             element={
               <PrivateRoute>
                 <AllProjectTasks />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="/new/task"
-            element={
-              <PrivateRoute>
-                <NewTask />
               </PrivateRoute>
             }
           />
